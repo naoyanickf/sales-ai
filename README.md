@@ -3,22 +3,8 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+## Front-end (React)
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- React and ReactDOM are installed via Yarn. Run `yarn install` after pulling changes.
+- React components for prototyping live under `app/javascript/dev/react`. A sample `HelloWorld` component renders on the home page (`/`).
+- Compile assets with `yarn build` or run `bin/dev` to keep esbuild watching for changes.
