@@ -10,5 +10,6 @@ This repository hosts a Ruby on Rails 8 application with a React front-end that 
 - **Database**: MySQL (see `config/database.yml`)
 - **Processes**: Foreman via `bin/dev` / `Procfile.dev`
 
-## Others
+## Documents
+- spec is written on `README.md`
 - todo is written on `TODO.md`
