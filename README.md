@@ -106,11 +106,9 @@ Conversation
 
 #### Workspace（ワークスペース）
 - id: ワークスペースID
+- uuid: ワークスペースuuid
 - name: ワークスペース名
-- owner_type: 所有者タイプ（個人/法人）
-- owner_name: 所有者名
-- plan: プラン（無料/スタンダード/プレミアムなど）
-- is_active: 有効/無効
+- disabled_at: 無効化日時
 - created_at: 作成日時
 - updated_at: 更新日時
 
@@ -118,7 +116,7 @@ Conversation
 - id: ID
 - workspace_id: ワークスペースID
 - user_id: ユーザーID
-- role: 役割（管理者/メンバー/閲覧者）
+- role: 役割（管理者/参加者）
 - joined_at: 参加日時
 
 ### 2. ユーザー関連

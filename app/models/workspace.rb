@@ -1,0 +1,23 @@
+class Workspace < ApplicationRecord
+  acts_as_paranoid
+
+  has_many :workspace_users, dependent: :destroy
+  has_many :users, through: :workspace_users
+
+  before_validation :set_uuid, on: :create
+
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :uuid, presence: true, uniqueness: true
+
+  scope :active, -> { where(deleted_at: nil) }
+
+  def to_param
+    uuid
+  end
+
+  private
+
+  def set_uuid
+    self.uuid ||= SecureRandom.uuid
+  end
+end

@@ -1,0 +1,42 @@
+<section class="workspace-manage">
+  <h1>ワークスペース管理</h1>
+  <p>このワークスペースの管理者のみがアクセスできます。</p>
+
+  <div class="workspace-section">
+    <h2>基本情報</h2>
+    <%= form_with model: @workspace, url: workspace_path(@workspace), method: :patch do |form| %>
+      <% if @workspace.errors.any? %>
+        <ul class="form-errors">
+          <% @workspace.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :name, "ワークスペース名" %>
+        <%= form.text_field :name, autofocus: true %>
+      </div>
+
+      <%= form.submit "名前を更新する" %>
+    <% end %>
+  </div>
+
+  <div class="workspace-section danger-zone">
+    <h2>ワークスペースの削除</h2>
+    <p>削除すると復元できません。確認のためにワークスペース名（<strong><%= @workspace.name %></strong>）を入力してください。</p>
+
+    <%= form_with url: workspace_path(@workspace), method: :delete do |form| %>
+      <% if @deletion_error.present? %>
+        <p class="form-errors"><%= @deletion_error %></p>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :confirm_name, "確認用ワークスペース名" %>
+        <%= form.text_field :confirm_name %>
+      </div>
+
+      <%= form.submit "ワークスペースを削除する", data: { turbo_confirm: "本当に削除しますか？" } %>
+    <% end %>
+  </div>
+</section>
