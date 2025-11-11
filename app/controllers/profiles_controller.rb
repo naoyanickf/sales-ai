@@ -30,6 +30,12 @@ class ProfilesController < ApplicationController
       return
     end
 
+    if @user.workspace_users.where(role: :admin).joins(:workspace).where(workspaces: { deleted_at: nil }).exists?
+      @deletion_error = "管理しているワークスペースがあるため、アカウントを削除できません。"
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
     @user.destroy!
     sign_out @user
     redirect_to root_path, notice: "アカウントを削除しました。"
