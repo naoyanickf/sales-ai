@@ -2,7 +2,7 @@ class WorkspacesController < ApplicationController
   before_action :authenticate_user!
   before_action :redirect_if_workspace_exists, only: %i[new create]
   before_action :set_workspace, only: %i[show update destroy]
-  before_action :require_admin!, only: %i[show update destroy]
+  before_action :require_admin!, only: %i[update destroy]
 
   def new
     @workspace = Workspace.new
@@ -57,6 +57,7 @@ class WorkspacesController < ApplicationController
   def set_workspace
     @workspace = current_user.workspaces.find_by!(uuid: params[:uuid])
     @workspace_membership = @workspace.workspace_users.find_by!(user: current_user)
+    @workspace_users = @workspace.workspace_users.includes(:user).order(:created_at)
   end
 
   def require_admin!
