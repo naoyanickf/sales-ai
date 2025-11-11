@@ -3,7 +3,11 @@
   <p>営業支援をスマートにするアプリケーションです。</p>
 
   <% if user_signed_in? %>
-    <p>ログイン中: <strong><%= current_user.email %></strong></p>
+    <p>
+      ログイン中:
+      <strong><%= current_user.email %></strong>
+      (<%= link_to "プロフィール設定", edit_profile_path, class: "profile-link" %>)
+    </p>
     <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
 
     <div class="workspace-list">

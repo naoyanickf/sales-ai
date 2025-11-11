@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   get "dev/react"
+  resource :profile, only: %i[new create edit update destroy]
   resources :workspaces, only: %i[new create show update destroy], param: :uuid
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

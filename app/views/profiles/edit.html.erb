@@ -1,0 +1,41 @@
+<section class="profile-settings">
+  <h1>プロフィール設定</h1>
+
+  <div class="profile-section">
+    <h2>名前の変更</h2>
+    <%= form_with model: @user, url: profile_path, method: :patch do |form| %>
+      <% if @user.errors.any? %>
+        <ul class="form-errors">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :name, "名前" %>
+        <%= form.text_field :name, autofocus: true %>
+      </div>
+
+      <%= form.submit "更新する" %>
+    <% end %>
+  </div>
+
+  <div class="profile-section danger-zone">
+    <h2>アカウント削除</h2>
+    <p>アカウントを削除すると復元できません。確認のために現在の名前（<strong><%= @user.name %></strong>）を入力してください。</p>
+
+    <%= form_with url: profile_path, method: :delete do |form| %>
+      <% if @deletion_error.present? %>
+        <p class="form-errors"><%= @deletion_error %></p>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :confirm_name, "確認用の名前" %>
+        <%= form.text_field :confirm_name %>
+      </div>
+
+      <%= form.submit "アカウントを削除する", data: { turbo_confirm: "本当に削除してよろしいですか？" } %>
+    <% end %>
+  </div>
+</section>
