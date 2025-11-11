@@ -50,6 +50,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "letter_opener_web"
 end
 
 group :test do
@@ -59,3 +60,6 @@ group :test do
 end
 
 gem "image_processing", "~> 1.2"
+gem 'devise'
+gem 'rails-i18n'
+gem 'devise-i18n-views'
