@@ -19,9 +19,7 @@
             <% next if workspace.nil? %>
             <li>
               <%= workspace.name %>
-              <% if membership.admin? %>
-                <%= link_to "管理", workspace_path(workspace), class: "workspace-manage-link" %>
-              <% end %>
+              <%= link_to "管理", workspace_path(workspace), class: "workspace-manage-link" %>
             </li>
           <% end %>
         <% else %>
