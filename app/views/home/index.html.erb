@@ -1,1 +1,14 @@
-<h1>Hello World</h1>
+<section class="home-hero">
+  <h1>Sales AI</h1>
+  <p>営業支援をスマートにするアプリケーションです。</p>
+
+  <% if user_signed_in? %>
+    <p>ログイン中: <strong><%= current_user.email %></strong></p>
+    <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
+  <% else %>
+    <div class="auth-links">
+      <%= link_to "ログイン", new_user_session_path, class: "auth-link" %>
+      <%= link_to "新規登録", new_user_registration_path, class: "auth-link" %>
+    </div>
+  <% end %>
+</section>
