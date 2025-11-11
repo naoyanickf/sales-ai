@@ -21,13 +21,14 @@ class ApplicationController < ActionController::Base
   end
 
   def skip_profile_check?
-    !user_signed_in? || devise_controller? || controller_path == "profiles"
+    !user_signed_in? || devise_controller? || controller_path == "profiles" || controller_path == "invitations"
   end
 
   def skip_workspace_check?
     return true unless user_signed_in?
     return true if devise_controller?
     return true if controller_path == "profiles"
+    return true if controller_path == "invitations"
     return true if controller_path == "workspaces" && %w[new create].include?(action_name)
 
     false

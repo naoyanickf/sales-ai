@@ -50,6 +50,47 @@
     </ul>
   </div>
 
+  <% if @workspace_membership.admin? %>
+    <div class="workspace-section">
+      <h2>メンバー招待</h2>
+      <%= form_with model: @new_invitation, url: workspace_invitations_path(@workspace), method: :post do |form| %>
+        <% if @new_invitation&.errors&.any? %>
+          <ul class="form-errors">
+            <% @new_invitation.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        <% end %>
+
+        <div class="field">
+          <%= form.label :email, "招待するメールアドレス" %>
+          <%= form.email_field :email, required: true %>
+        </div>
+
+        <%= form.hidden_field :role, value: "participant" %>
+
+        <%= form.submit "招待メールを送信する" %>
+      <% end %>
+    </div>
+
+    <div class="workspace-section">
+      <h2>保留中の招待</h2>
+      <% if @pending_invitations.any? %>
+        <ul>
+          <% @pending_invitations.each do |invitation| %>
+            <li>
+              <strong><%= invitation.email %></strong>
+              （招待者: <%= invitation.inviter.name.presence || invitation.inviter.email %> /
+              招待日時: <%= l(invitation.created_at) %>）
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>現在、保留中の招待はありません。</p>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="workspace-section danger-zone">
     <h2>ワークスペースの削除</h2>
     <% if @workspace_membership.admin? %>

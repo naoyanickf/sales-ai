@@ -58,6 +58,8 @@ class WorkspacesController < ApplicationController
     @workspace = current_user.workspaces.find_by!(uuid: params[:uuid])
     @workspace_membership = @workspace.workspace_users.find_by!(user: current_user)
     @workspace_users = @workspace.workspace_users.includes(:user).order(:created_at)
+    @pending_invitations = @workspace.workspace_invitations.pending.order(created_at: :desc)
+    @new_invitation = WorkspaceInvitation.new
   end
 
   def require_admin!
