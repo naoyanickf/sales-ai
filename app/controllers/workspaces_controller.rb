@@ -49,13 +49,13 @@ class WorkspacesController < ApplicationController
   end
 
   def redirect_if_workspace_exists
-    return unless current_user.active_workspaces.exists?
+    return unless current_user.workspaces.exists?
 
     redirect_to root_path, alert: "すでにワークスペースが存在します。"
   end
 
   def set_workspace
-    @workspace = current_user.active_workspaces.find_by!(uuid: params[:uuid])
+    @workspace = current_user.workspaces.find_by!(uuid: params[:uuid])
     @workspace_membership = @workspace.workspace_users.find_by!(user: current_user)
   end
 

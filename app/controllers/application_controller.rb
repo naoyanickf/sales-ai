@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def ensure_workspace!
     return if skip_workspace_check?
-    return if current_user.active_workspaces.exists?
+    return if current_user.workspaces.exists?
 
     redirect_to new_workspace_path
   end

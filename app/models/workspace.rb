@@ -9,8 +9,6 @@ class Workspace < ApplicationRecord
   validates :name, presence: true, length: { maximum: 80 }
   validates :uuid, presence: true, uniqueness: true
 
-  scope :active, -> { where(deleted_at: nil) }
-
   def to_param
     uuid
   end
