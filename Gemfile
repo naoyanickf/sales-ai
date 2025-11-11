@@ -57,3 +57,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "image_processing", "~> 1.2"
