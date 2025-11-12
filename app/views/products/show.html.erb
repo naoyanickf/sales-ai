@@ -63,7 +63,7 @@
                                     class: "form-control",
                                     required: true,
                                     direct_upload: true %>
-                <div class="form-text">PDF / Office / CSV / TXT など 300MB まで</div>
+                <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
                 <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
               </div>
               <div class="text-end">
@@ -108,6 +108,167 @@
             </div>
           <% else %>
             <p class="text-muted mb-0">まだ資料がありません。</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mt-1">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">先輩営業マン</h2>
+            <% if @can_manage_products %>
+              <span class="text-muted small">製品ごとのロールモデルを登録</span>
+            <% end %>
+          </div>
+
+          <% if @can_manage_products %>
+            <%= form_with model: [@product, @sales_expert], class: "mb-4" do |form| %>
+              <%= render "shared/form_errors", object: @sales_expert %>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <%= form.label :name, "氏名", class: "form-label" %>
+                  <%= form.text_field :name, class: "form-control", required: true %>
+                </div>
+                <div class="col-md-4">
+                  <%= form.label :avatar_url, "アバターURL", class: "form-label" %>
+                  <%= form.text_field :avatar_url, class: "form-control", placeholder: "https://example.com/avatar.png" %>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="form-check mt-4">
+                    <%= form.check_box :is_active, class: "form-check-input" %>
+                    <%= form.label :is_active, "公開状態で追加", class: "form-check-label" %>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <%= form.label :description, "説明", class: "form-label" %>
+                  <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "得意領域や実績など" %>
+                </div>
+              </div>
+              <div class="text-end mt-3">
+                <%= form.submit "先輩営業マンを追加", class: "btn btn-primary" %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @sales_experts.any? %>
+            <div class="list-group">
+              <% @sales_experts.each do |expert| %>
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                      <p class="fw-semibold mb-1 d-flex align-items-center gap-2">
+                        <span><%= expert.name %></span>
+                        <span class="badge <%= expert.is_active? ? "bg-success" : "bg-secondary" %>">
+                          <%= expert.is_active? ? "公開中" : "非公開" %>
+                        </span>
+                      </p>
+                      <p class="text-muted small mb-2">
+                        <% if expert.avatar_url.present? %>
+                          <span class="me-2 text-truncate"><i data-lucide="link-2" class="me-1" aria-hidden="true"></i><%= expert.avatar_url %></span>・
+                        <% end %>
+                        登録日: <%= l expert.created_at, format: :short %>
+                      </p>
+                      <p class="mb-0"><%= expert.description.presence || "自己紹介文はまだありません。" %></p>
+                    </div>
+                    <% if @can_manage_products %>
+                      <%= button_to "削除",
+                                    product_sales_expert_path(@product, expert),
+                                    method: :delete,
+                                    form: { data: { turbo_confirm: "この先輩営業マンを削除しますか？" } },
+                                    class: "btn btn-sm btn-outline-danger" %>
+                    <% end %>
+                  </div>
+
+                  <div class="mt-4">
+                    <h3 class="h6 mb-3 d-flex align-items-center gap-2">
+                      <i data-lucide="book-open-check" aria-hidden="true"></i>
+                      ナレッジ
+                      <span class="badge bg-secondary text-white"><%= expert.expert_knowledges.count %>件</span>
+                    </h3>
+
+                    <% if expert.expert_knowledges.any? %>
+                      <div class="list-group mb-3">
+                        <% expert.expert_knowledges.each do |knowledge| %>
+                          <div class="list-group-item">
+                            <div class="d-flex justify-content-between flex-wrap gap-3">
+                              <div>
+                                <p class="mb-1 fw-semibold"><%= knowledge.content_type %></p>
+                                <p class="text-muted small mb-1">
+                                  <%= knowledge.file_name %>
+                                  <% if knowledge.file.attached? %>
+                                    （<%= number_to_human_size(knowledge.file.byte_size) %>）
+                                  <% end %>
+                                </p>
+                                <p class="text-muted small mb-0">
+                                  <%= knowledge.uploader.name %>・<%= l knowledge.created_at, format: :short %>
+                                </p>
+                              </div>
+                              <div class="d-flex align-items-center gap-2">
+                                <% if knowledge.file.attached? %>
+                                  <%= link_to "ダウンロード",
+                                              rails_blob_path(knowledge.file, disposition: :attachment),
+                                              class: "btn btn-sm btn-outline-primary",
+                                              target: "_blank",
+                                              rel: "noopener" %>
+                                <% end %>
+                                <% if @can_manage_products %>
+                                  <%= button_to "削除",
+                                                product_sales_expert_expert_knowledge_path(@product, expert, knowledge),
+                                                method: :delete,
+                                                form: { data: { turbo_confirm: "このナレッジを削除しますか？" } },
+                                                class: "btn btn-sm btn-outline-danger" %>
+                                <% end %>
+                              </div>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% else %>
+                      <p class="text-muted">まだ登録されたナレッジはありません。</p>
+                    <% end %>
+
+                    <% if @can_manage_products %>
+                      <%= form_with model: [@product, expert, @sales_expert_with_error == expert ? @expert_knowledge : ExpertKnowledge.new],
+                                    html: { multipart: true },
+                                    class: "border rounded p-3" do |form| %>
+                        <% if @sales_expert_with_error == expert %>
+                          <%= render "shared/form_errors", object: @expert_knowledge %>
+                        <% end %>
+                        <div class="row g-3 align-items-end">
+                          <div class="col-md-4">
+                            <%= form.label :content_type, "コンテンツタイプ", class: "form-label" %>
+                            <% content_options = [["商談録音", "商談録音"], ["動画", "動画"], ["テキスト", "テキスト"], ["その他", "その他"]] %>
+                            <%= form.select :content_type,
+                                            options_for_select(content_options, form.object.content_type.presence || "商談録音"),
+                                            {},
+                                            class: "form-select",
+                                            required: true %>
+                          </div>
+                          <div class="col-md-8">
+                            <%= form.label :file, "ファイル", class: "form-label" %>
+                            <%= form.file_field :file,
+                                                class: "form-control",
+                                                required: true,
+                                                direct_upload: true %>
+                            <div class="form-text">音声/動画/PDF など 1000MB まで</div>
+                            <div class="direct-upload-status list-group small mt-2 d-none"></div>
+                          </div>
+                        </div>
+                        <div class="text-end mt-3">
+                          <%= form.submit "ナレッジを追加", class: "btn btn-outline-light" %>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">まだ先輩営業マンが登録されていません。</p>
           <% end %>
         </div>
       </div>

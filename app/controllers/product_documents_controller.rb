@@ -1,4 +1,5 @@
 class ProductDocumentsController < ApplicationController
+  include ProductShowContext
   before_action :authenticate_user!
   before_action :set_product
   before_action :require_workspace_admin!
@@ -11,7 +12,7 @@ class ProductDocumentsController < ApplicationController
     if @product_document.save
       redirect_to product_path(@product), notice: "資料をアップロードしました。"
     else
-      load_product_documents
+      prepare_product_show_context(@product)
       @can_manage_products = true
       render "products/show", status: :unprocessable_entity
     end
@@ -30,13 +31,6 @@ class ProductDocumentsController < ApplicationController
 
   def set_product_document
     @product_document = @product.product_documents.find(params[:id])
-  end
-
-  def load_product_documents
-    @product_documents = @product.product_documents
-                                 .with_attached_file
-                                 .includes(:uploader)
-                                 .order(created_at: :desc)
   end
 
   def product_document_params
