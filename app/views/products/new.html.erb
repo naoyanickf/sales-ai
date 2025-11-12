@@ -1,0 +1,16 @@
+<% content_for :title, "製品を追加" %>
+
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3">製品を追加</h1>
+    <p class="text-muted mb-0">ワークスペースに紐づく製品情報を登録します。</p>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <%= form_with model: @product do |form| %>
+        <%= render "form", form: form, product: @product %>
+      <% end %>
+    </div>
+  </div>
+</div>

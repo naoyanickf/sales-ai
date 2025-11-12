@@ -1,0 +1,39 @@
+<% content_for :title, "製品一覧" %>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">Workspace</p>
+      <h1 class="h3 mb-0"><%= current_workspace&.name %> の製品</h1>
+    </div>
+    <% if @can_manage_products %>
+      <%= link_to "新しい製品を追加", new_product_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @products.any? %>
+    <div class="list-group shadow-sm">
+      <% @products.each do |product| %>
+        <%= link_to product_path(product), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center" do %>
+          <div>
+            <p class="fw-semibold mb-1"><%= product.name %></p>
+            <% if product.category.present? %>
+              <p class="mb-0 text-muted small"><%= product.category %></p>
+            <% end %>
+          </div>
+          <span class="badge <%= product.is_active? ? "bg-success" : "bg-secondary" %>">
+            <%= product.status_badge %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-5 border rounded bg-white">
+      <p class="mb-2 fw-semibold">まだ製品が登録されていません</p>
+      <p class="text-muted mb-4">製品を追加すると、資料アップロードや学習データ生成ができるようになります。</p>
+      <% if @can_manage_products %>
+        <%= link_to "最初の製品を作成", new_product_path, class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

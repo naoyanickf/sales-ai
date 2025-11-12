@@ -15,6 +15,11 @@ class User < ApplicationRecord
            foreign_key: :invited_user_id,
            inverse_of: :invited_user,
            dependent: :nullify
+  has_many :uploaded_product_documents,
+           class_name: "ProductDocument",
+           foreign_key: :upload_user_id,
+           inverse_of: :uploader,
+           dependent: :nullify
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

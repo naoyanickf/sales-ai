@@ -65,3 +65,5 @@ gem 'rails-i18n'
 gem 'devise-i18n-views'
 gem "acts_as_paranoid"
 gem 'dotenv-rails'
+gem "carrierwave", "~> 3.0"
+gem "fog-aws", "~> 3.0"

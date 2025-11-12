@@ -1,0 +1,103 @@
+<% content_for :title, @product.name %>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">製品</p>
+      <h1 class="h3 mb-1"><%= @product.name %></h1>
+      <% if @product.category.present? %>
+        <p class="text-muted mb-0"><%= @product.category %></p>
+      <% end %>
+    </div>
+    <% if @can_manage_products %>
+      <div class="btn-group">
+        <%= link_to "編集", edit_product_path(@product), class: "btn btn-outline-secondary" %>
+        <%= button_to "削除", product_path(@product), method: :delete,
+                      data: { turbo_confirm: "この製品を削除しますか？" },
+                      class: "btn btn-outline-danger" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5 mb-3">概要</h2>
+          <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted">状態</dt>
+            <dd class="col-sm-8">
+              <span class="badge <%= @product.is_active? ? "bg-success" : "bg-secondary" %>">
+                <%= @product.status_badge %>
+              </span>
+            </dd>
+            <dt class="col-sm-4 text-muted">カテゴリ</dt>
+            <dd class="col-sm-8"><%= @product.category.presence || "-" %></dd>
+            <dt class="col-sm-4 text-muted">説明</dt>
+            <dd class="col-sm-8">
+              <%= simple_format(@product.description.presence || "説明が登録されていません。") %>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5 mb-3">資料</h2>
+
+          <% if @can_manage_products %>
+            <%= form_with model: [@product, @product_document], html: { multipart: true }, class: "mb-4" do |form| %>
+              <%= render "shared/form_errors", object: @product_document %>
+              <div class="mb-3">
+                <%= form.label :document_name, "資料名", class: "form-label" %>
+                <%= form.text_field :document_name, class: "form-control", required: true %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :document_type, "種類", class: "form-label" %>
+                <%= form.text_field :document_type, class: "form-control" %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :file, "ファイル", class: "form-label" %>
+                <%= form.file_field :file, class: "form-control", required: true %>
+                <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
+              </div>
+              <div class="text-end">
+                <%= form.submit "アップロード", class: "btn btn-primary" %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @product_documents.any? %>
+            <div class="list-group">
+              <% @product_documents.each do |document| %>
+                <div class="list-group-item d-flex justify-content-between align-items-start">
+                  <div>
+                    <p class="fw-semibold mb-1"><%= document.document_name %></p>
+                    <p class="mb-0 text-muted small">
+                      <%= document.document_type.presence || "未分類" %>・
+                      <%= l document.created_at, format: :short %>・
+                      <%= document.uploader.name %>
+                    </p>
+                  </div>
+                  <div class="d-flex flex-column align-items-end gap-2">
+                    <%= link_to "ダウンロード", document.file.url, class: "btn btn-sm btn-outline-primary", target: "_blank", rel: "noopener" %>
+                    <% if @can_manage_products %>
+                      <%= button_to "削除",
+                                    product_product_document_path(@product, document),
+                                    method: :delete,
+                                    form: { data: { turbo_confirm: "この資料を削除しますか？" } },
+                                    class: "btn btn-sm btn-outline-danger" %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">まだ資料がありません。</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

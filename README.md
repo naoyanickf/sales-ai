@@ -82,6 +82,17 @@ SalesAI Assistant（仮）
 - **ベクトルDB**: Amazon OpenSearch Serverless
 - **音声処理**: Amazon Transcribe
 
+### 開発環境セットアップ
+1. 依存パッケージをインストール: `bundle install` / `yarn install`
+2. `.env.example` をコピーして `.env` を作成し、以下の値を設定
+   - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+   - `AWS_REGION`
+   - `AWS_S3_BUCKET`
+   - `ASSET_HOST`（CloudFront 等の任意のアセットホスト。不要なら空で可）
+3. `bin/rails db:setup` を実行し、開発用 DB を作成
+
+CarrierWave は本番/任意の環境で `AWS_S3_BUCKET` が設定されている場合に S3 へアップロードします。開発/テスト環境で値を空にすると `storage/uploads` 以下にローカル保存されます。
+
 ### データモデル（簡略版）
 ```
 Workspace
