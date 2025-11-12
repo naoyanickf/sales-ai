@@ -36,3 +36,18 @@
     min-width: 0;
   }
 }
+
+.sidebar-workspace-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+  margin: 0;
+}
+
+.sidebar-workspace-list__item {
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

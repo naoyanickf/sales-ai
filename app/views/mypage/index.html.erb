@@ -4,22 +4,31 @@
   <div class="mypage-layout__wrapper d-flex flex-column flex-lg-row min-vh-100">
     <aside class="mypage-layout__sidebar bg-dark text-white p-4 d-flex flex-column">
       <div class="d-flex align-items-center gap-3 mb-4">
-        <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center fw-semibold" style="width: 48px; height: 48px;">
-          SA
+        <%= link_to root_path, class: "rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center text-decoration-none text-white", style: "width: 48px; height: 48px;" do %>
+          <span class="visually-hidden">ホーム</span>
+          <i data-lucide="sparkles" aria-hidden="true"></i>
+        <% end %>
+        <div class="flex-grow-1">
+          <% if memberships.any? %>
+            <div class="sidebar-workspace-list rounded-3 w-100">
+              <% memberships.each do |membership| %>
+                <% workspace = membership.workspace %>
+                <% next if workspace.nil? %>
+                <div class="sidebar-workspace-list__item d-flex justify-content-between align-items-center gap-2">
+                  <span class="text-truncate"><%= workspace.name %></span>
+                  <%= link_to workspace_path(workspace), class: "btn btn-link text-white p-0", title: "#{workspace.name}を管理" do %>
+                    <span class="visually-hidden"><%= workspace.name %>の管理ページ</span>
+                    <i data-lucide="settings-2" aria-hidden="true"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-white-50 small">
+              まだワークスペースに参加していません。
+            </div>
+          <% end %>
         </div>
-        <div>
-          <p class="text-uppercase small text-white-50 mb-1">Sales AI</p>
-          <p class="mb-0 fw-semibold">Workspace Hub</p>
-        </div>
-      </div>
-
-      <%= link_to "新しいワークスペース", new_workspace_path, class: "btn btn-primary w-100 mb-3" %>
-      <%= link_to "プロフィール設定", edit_profile_path, class: "btn btn-outline-light w-100 mb-4" %>
-
-      <p class="text-uppercase small text-white-50 mb-2">メニュー</p>
-      <div class="d-grid gap-2">
-        <%= link_to "ダッシュボード", authenticated_root_path, class: "btn btn-light text-start fw-semibold" %>
-        <%= link_to "ワークスペース一覧", new_workspace_path, class: "btn btn-outline-light text-start" %>
       </div>
 
       <div class="mt-auto pt-4 border-top border-white border-opacity-25">
@@ -58,44 +67,6 @@
           </header>
 
         <div class="row gy-4">
-            <div class="col-12">
-              <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-                    <div>
-                      <h2 class="fs-4 fw-semibold mb-1">参加中のワークスペース</h2>
-                      <p class="text-body-secondary mb-0"><%= memberships.count %> 件のワークスペースに参加しています</p>
-                    </div>
-                    <%= link_to "ワークスペースを作成", new_workspace_path, class: "btn btn-outline-primary" %>
-                  </div>
-
-                  <% if memberships.any? %>
-                    <div class="list-group list-group-flush">
-                      <% memberships.each do |membership| %>
-                        <% workspace = membership.workspace %>
-                        <% next if workspace.nil? %>
-                        <div class="list-group-item list-group-item-action d-flex flex-wrap justify-content-between align-items-center gap-3">
-                          <div>
-                            <p class="mb-1 fw-semibold"><%= workspace.name %></p>
-                            <p class="mb-0 text-body-secondary small">
-                              役割: <%= membership.admin? ? "管理者" : "参加者" %>
-                            </p>
-                          </div>
-                          <%= link_to "管理ページへ", workspace_path(workspace), class: "btn btn-sm btn-outline-primary" %>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% else %>
-                    <div class="text-center py-5">
-                      <p class="fw-semibold mb-2">まだワークスペースに参加していません</p>
-                      <p class="text-body-secondary mb-4">チームを招待して最初のワークスペースを作成しましょう。</p>
-                      <%= link_to "新しく作成", new_workspace_path, class: "btn btn-primary" %>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-
             <div class="col-12 col-xl-6">
               <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
