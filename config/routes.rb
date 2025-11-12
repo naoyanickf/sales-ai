@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
     resources :invitations, only: :create, controller: :workspace_invitations
   end
+  resources :transcriptions, only: [] do
+    post :refine, on: :member
+  end
   post "workspaces/switch", to: "workspace_switches#create", as: :switch_workspace
   get "invitations/:token/accept", to: "invitations#accept", as: :accept_invitation
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

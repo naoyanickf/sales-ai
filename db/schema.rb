@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -46,10 +46,23 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
     t.string "file_name", null: false
     t.json "metadata"
     t.bigint "sales_expert_id", null: false
+    t.datetime "transcription_completed_at"
+    t.string "transcription_status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.bigint "upload_user_id", null: false
     t.index ["sales_expert_id"], name: "index_expert_knowledges_on_sales_expert_id"
     t.index ["upload_user_id"], name: "index_expert_knowledges_on_upload_user_id"
+  end
+
+  create_table "knowledge_chunks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "bedrock_data_source_id"
+    t.text "chunk_text"
+    t.datetime "created_at", null: false
+    t.bigint "expert_knowledge_id", null: false
+    t.json "metadata"
+    t.json "transcription_segment_ids"
+    t.datetime "updated_at", null: false
+    t.index ["expert_knowledge_id"], name: "index_knowledge_chunks_on_expert_knowledge_id"
   end
 
   create_table "product_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -211,6 +224,47 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "transcription_jobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.bigint "expert_knowledge_id", null: false
+    t.string "external_job_id"
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expert_knowledge_id"], name: "index_transcription_jobs_on_expert_knowledge_id"
+    t.index ["external_job_id"], name: "index_transcription_jobs_on_external_job_id"
+    t.index ["status"], name: "index_transcription_jobs_on_status"
+  end
+
+  create_table "transcription_segments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "confidence"
+    t.datetime "created_at", null: false
+    t.float "end_time"
+    t.integer "sequence_number"
+    t.string "speaker_label"
+    t.string "speaker_name"
+    t.float "start_time"
+    t.text "text"
+    t.bigint "transcription_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["transcription_id", "sequence_number"], name: "idx_on_transcription_id_sequence_number_1e2105d1a7"
+    t.index ["transcription_id"], name: "index_transcription_segments_on_transcription_id"
+  end
+
+  create_table "transcriptions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.float "duration_seconds"
+    t.bigint "expert_knowledge_id", null: false
+    t.text "full_text"
+    t.string "language", default: "ja-JP", null: false
+    t.integer "speaker_count"
+    t.json "structured_data"
+    t.datetime "updated_at", null: false
+    t.index ["expert_knowledge_id"], name: "index_transcriptions_on_expert_knowledge_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
@@ -273,6 +327,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
 
   add_foreign_key "expert_knowledges", "sales_experts"
   add_foreign_key "expert_knowledges", "users", column: "upload_user_id"
+  add_foreign_key "knowledge_chunks", "expert_knowledges"
   add_foreign_key "product_documents", "products"
   add_foreign_key "product_documents", "users", column: "upload_user_id"
   add_foreign_key "products", "workspaces"
@@ -283,6 +338,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "transcription_jobs", "expert_knowledges"
+  add_foreign_key "transcription_segments", "transcriptions"
+  add_foreign_key "transcriptions", "expert_knowledges"
   add_foreign_key "workspace_invitations", "users", column: "invited_user_id"
   add_foreign_key "workspace_invitations", "users", column: "inviter_id"
   add_foreign_key "workspace_invitations", "workspaces"

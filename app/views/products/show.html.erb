@@ -312,6 +312,12 @@
                                                         method: :delete,
                                                         form: { data: { turbo_confirm: "このナレッジを削除しますか？" } },
                                                         class: "btn btn-sm btn-outline-danger" %>
+                                          <% if knowledge.transcription.present? %>
+                                            <%= button_to "日本語校正を実行",
+                                                          refine_transcription_path(knowledge.transcription),
+                                                          method: :post,
+                                                          class: "btn btn-sm btn-outline-secondary" %>
+                                          <% end %>
                                         <% end %>
                                       </div>
                                     </div>
