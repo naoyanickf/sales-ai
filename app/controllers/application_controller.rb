@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  before_action :basic_auth
   allow_browser versions: :modern
   layout :determine_layout
   before_action :ensure_profile_name!
@@ -9,6 +10,14 @@ class ApplicationController < ActionController::Base
   helper_method :sidebar_memberships, :current_workspace, :current_workspace_membership
 
   private
+
+  def basic_auth
+    if Rails.env.production?
+      authenticate_or_request_with_http_basic do |username, password|
+        username == 'sales' && password == 'ai'
+      end
+    end
+  end
 
   def determine_layout
     return "application" if !user_signed_in? || devise_controller?
