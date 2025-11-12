@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_12_103100) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_12_105000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -72,14 +72,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_103100) do
     t.boolean "is_active", default: true, null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.string "uuid", null: false
     t.bigint "workspace_id", null: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
+    t.index ["uuid"], name: "index_products_on_uuid", unique: true
     t.index ["workspace_id", "name"], name: "index_products_on_workspace_id_and_name"
     t.index ["workspace_id"], name: "index_products_on_workspace_id"
   end
 
   create_table "sales_experts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "avatar_url"
     t.datetime "created_at", null: false
     t.text "description"
     t.boolean "is_active", default: true, null: false

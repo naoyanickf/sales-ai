@@ -45,7 +45,7 @@ SalesAI Assistant（仮）
 - **製品資料**: PDF、Word、Excel、PowerPointのアップロード
 - **営業トーク**: 音声・動画ファイルの文字起こしと学習
 - **自動同期**: S3アップロード時にKnowledge Base自動更新
-- **先輩営業マン**: 製品ごとにロールモデルを登録し、音声/動画/PDFなどのナレッジを直接アップロード
+- **先輩営業マン**: 製品ごとに社内エキスパートを登録し、音声/動画/PDFなどのナレッジを直接アップロード
 
 ### 3. メンバー招待
 - 管理者がメールアドレスを指定して参加者として招待
@@ -188,7 +188,6 @@ Conversation
 - product_id: 製品ID
 - name: 名前（例：山田太郎）
 - description: 説明（経歴、得意分野など）
-- avatar_url: アバター画像URL
 - is_active: 有効/無効
 - created_at: 作成日時
 - updated_at: 更新日時

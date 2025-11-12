@@ -26,7 +26,7 @@ class ProductDocumentsController < ApplicationController
   private
 
   def set_product
-    @product = current_workspace.products.find(params[:product_id])
+    @product = current_workspace.products.find_by!(uuid: params[:product_id])
   end
 
   def set_product_document

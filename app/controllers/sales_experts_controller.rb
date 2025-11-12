@@ -4,7 +4,7 @@ class SalesExpertsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_product
   before_action :require_workspace_admin!
-  before_action :set_sales_expert, only: :destroy
+  before_action :set_sales_expert, only: %i[edit update destroy]
 
   def create
     @sales_expert = @product.sales_experts.new(sales_expert_params)
@@ -18,6 +18,16 @@ class SalesExpertsController < ApplicationController
     end
   end
 
+  def edit; end
+
+  def update
+    if @sales_expert.update(sales_expert_params)
+      redirect_to product_path(@product), notice: "先輩営業マンを更新しました。"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @sales_expert.destroy!
     redirect_to product_path(@product), notice: "先輩営業マンを削除しました。"
@@ -26,7 +36,7 @@ class SalesExpertsController < ApplicationController
   private
 
   def set_product
-    @product = current_workspace.products.find(params[:product_id])
+    @product = current_workspace.products.find_by!(uuid: params[:product_id])
   end
 
   def set_sales_expert
@@ -34,6 +44,6 @@ class SalesExpertsController < ApplicationController
   end
 
   def sales_expert_params
-    params.require(:sales_expert).permit(:name, :description, :avatar_url, :is_active)
+    params.require(:sales_expert).permit(:name, :description, :is_active)
   end
 end

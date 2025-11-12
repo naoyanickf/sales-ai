@@ -120,27 +120,20 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h5 mb-0">先輩営業マン</h2>
-            <% if @can_manage_products %>
-              <span class="text-muted small">製品ごとのロールモデルを登録</span>
-            <% end %>
           </div>
 
           <% if @can_manage_products %>
             <%= form_with model: [@product, @sales_expert], class: "mb-4" do |form| %>
               <%= render "shared/form_errors", object: @sales_expert %>
               <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <%= form.label :name, "氏名", class: "form-label" %>
-                  <%= form.text_field :name, class: "form-control", required: true %>
+                  <%= form.text_field :name, class: "form-control", required: true, maxlength: 80 %>
                 </div>
-                <div class="col-md-4">
-                  <%= form.label :avatar_url, "アバターURL", class: "form-label" %>
-                  <%= form.text_field :avatar_url, class: "form-control", placeholder: "https://example.com/avatar.png" %>
-                </div>
-                <div class="col-md-4 d-flex align-items-center">
-                  <div class="form-check mt-4">
-                    <%= form.check_box :is_active, class: "form-check-input" %>
-                    <%= form.label :is_active, "公開状態で追加", class: "form-check-label" %>
+                <div class="col-md-6 d-flex align-items-center">
+                  <div class="form-check form-switch w-100 mt-4">
+                    <%= form.check_box :is_active, class: "form-check-input", role: "switch" %>
+                    <%= form.label :is_active, "有効にする", class: "form-check-label" %>
                   </div>
                 </div>
                 <div class="col-12">
@@ -167,19 +160,21 @@
                         </span>
                       </p>
                       <p class="text-muted small mb-2">
-                        <% if expert.avatar_url.present? %>
-                          <span class="me-2 text-truncate"><i data-lucide="link-2" class="me-1" aria-hidden="true"></i><%= expert.avatar_url %></span>・
-                        <% end %>
                         登録日: <%= l expert.created_at, format: :short %>
                       </p>
                       <p class="mb-0"><%= expert.description.presence || "自己紹介文はまだありません。" %></p>
                     </div>
                     <% if @can_manage_products %>
-                      <%= button_to "削除",
-                                    product_sales_expert_path(@product, expert),
-                                    method: :delete,
-                                    form: { data: { turbo_confirm: "この先輩営業マンを削除しますか？" } },
-                                    class: "btn btn-sm btn-outline-danger" %>
+                      <div class="d-flex gap-2">
+                        <%= link_to "編集",
+                                    edit_product_sales_expert_path(@product, expert),
+                                    class: "btn btn-sm btn-outline-secondary" %>
+                        <%= button_to "削除",
+                                      product_sales_expert_path(@product, expert),
+                                      method: :delete,
+                                      form: { data: { turbo_confirm: "この先輩営業マンを削除しますか？" } },
+                                      class: "btn btn-sm btn-outline-danger" %>
+                      </div>
                     <% end %>
                   </div>
 
@@ -234,12 +229,12 @@
                     <% if @can_manage_products %>
                       <%= form_with model: [@product, expert, @sales_expert_with_error == expert ? @expert_knowledge : ExpertKnowledge.new],
                                     html: { multipart: true },
-                                    class: "border rounded p-3" do |form| %>
+                                    class: "border rounded-3 p-3 bg-dark bg-opacity-25" do |form| %>
                         <% if @sales_expert_with_error == expert %>
                           <%= render "shared/form_errors", object: @expert_knowledge %>
                         <% end %>
-                        <div class="row g-3 align-items-end">
-                          <div class="col-md-4">
+                        <div class="row g-3">
+                          <div class="col-12 col-md-4">
                             <%= form.label :content_type, "コンテンツタイプ", class: "form-label" %>
                             <% content_options = [["商談録音", "商談録音"], ["動画", "動画"], ["テキスト", "テキスト"], ["その他", "その他"]] %>
                             <%= form.select :content_type,
@@ -248,7 +243,7 @@
                                             class: "form-select",
                                             required: true %>
                           </div>
-                          <div class="col-md-8">
+                          <div class="col-12 col-md-8">
                             <%= form.label :file, "ファイル", class: "form-label" %>
                             <%= form.file_field :file,
                                                 class: "form-control",
@@ -259,7 +254,7 @@
                           </div>
                         </div>
                         <div class="text-end mt-3">
-                          <%= form.submit "ナレッジを追加", class: "btn btn-outline-light" %>
+                          <%= form.submit "ナレッジを追加", class: "btn btn-primary" %>
                         </div>
                       <% end %>
                     <% end %>

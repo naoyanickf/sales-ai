@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
   resources :products do
     resources :product_documents, only: %i[create destroy]
-    resources :sales_experts, only: %i[create destroy] do
+    resources :sales_experts, only: %i[create edit update destroy] do
       resources :expert_knowledges, only: %i[create destroy]
     end
   end

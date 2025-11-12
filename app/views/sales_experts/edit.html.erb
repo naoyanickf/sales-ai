@@ -1,0 +1,17 @@
+<% content_for :title, "先輩営業マンを編集" %>
+
+<div class="container py-4">
+  <div class="card glass-card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <p class="text-uppercase text-muted small mb-1">先輩営業マン</p>
+          <h1 class="h4 mb-0"><%= @sales_expert.name %> の情報を編集</h1>
+        </div>
+        <%= link_to "製品詳細へ戻る", product_path(@product), class: "btn btn-outline-light" %>
+      </div>
+
+      <%= render "form", product: @product, sales_expert: @sales_expert %>
+    </div>
+  </div>
+</div>
