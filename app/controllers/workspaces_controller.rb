@@ -1,6 +1,5 @@
 class WorkspacesController < ApplicationController
   before_action :authenticate_user!
-  before_action :redirect_if_workspace_exists, only: %i[new create]
   before_action :set_workspace, only: %i[show update destroy]
   before_action :require_admin!, only: %i[update destroy]
 
@@ -39,19 +38,13 @@ class WorkspacesController < ApplicationController
     end
 
     @workspace.destroy!
-    redirect_to new_workspace_path, notice: "ワークスペースを削除しました。新しいワークスペースを作成してください。"
+    redirect_to authenticated_root_path, notice: "ワークスペースを削除しました。"
   end
 
   private
 
   def workspace_params
     params.require(:workspace).permit(:name)
-  end
-
-  def redirect_if_workspace_exists
-    return unless current_user.workspaces.exists?
-
-    redirect_to root_path, alert: "すでにワークスペースが存在します。"
   end
 
   def set_workspace
