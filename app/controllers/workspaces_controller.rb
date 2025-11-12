@@ -1,6 +1,5 @@
 class WorkspacesController < ApplicationController
   before_action :authenticate_user!
-  before_action :redirect_if_workspace_exists, only: %i[new create]
   before_action :set_workspace, only: %i[show update destroy]
   before_action :require_admin!, only: %i[update destroy]
 
@@ -14,6 +13,7 @@ class WorkspacesController < ApplicationController
     ActiveRecord::Base.transaction do
       @workspace.save!
       @workspace.workspace_users.create!(user: current_user, role: :admin)
+      session[:current_workspace_id] = @workspace.id
     end
 
     redirect_to root_path, notice: "ワークスペースを作成しました。"
@@ -39,7 +39,7 @@ class WorkspacesController < ApplicationController
     end
 
     @workspace.destroy!
-    redirect_to new_workspace_path, notice: "ワークスペースを削除しました。新しいワークスペースを作成してください。"
+    redirect_to authenticated_root_path, notice: "ワークスペースを削除しました。"
   end
 
   private
@@ -48,18 +48,13 @@ class WorkspacesController < ApplicationController
     params.require(:workspace).permit(:name)
   end
 
-  def redirect_if_workspace_exists
-    return unless current_user.workspaces.exists?
-
-    redirect_to root_path, alert: "すでにワークスペースが存在します。"
-  end
-
   def set_workspace
     @workspace = current_user.workspaces.find_by!(uuid: params[:uuid])
     @workspace_membership = @workspace.workspace_users.find_by!(user: current_user)
     @workspace_users = @workspace.workspace_users.includes(:user).order(:created_at)
     @pending_invitations = @workspace.workspace_invitations.pending.order(created_at: :desc)
     @new_invitation = WorkspaceInvitation.new
+    session[:current_workspace_id] = @workspace.id
   end
 
   def require_admin!

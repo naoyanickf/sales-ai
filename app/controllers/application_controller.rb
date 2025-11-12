@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :ensure_workspace!
   before_action :prepare_sidebar_context, if: :user_signed_in?
 
-  helper_method :sidebar_memberships
+  helper_method :sidebar_memberships, :current_workspace
 
   private
 
@@ -50,5 +50,15 @@ class ApplicationController < ActionController::Base
 
   def sidebar_memberships
     @sidebar_memberships || []
+  end
+
+  def current_workspace
+    return nil unless user_signed_in?
+
+    @current_workspace ||= begin
+      selected_id = session[:current_workspace_id]
+      scope = current_user.workspaces.where(workspaces: { deleted_at: nil })
+      scope.find_by(id: selected_id) || scope.first
+    end
   end
 end
