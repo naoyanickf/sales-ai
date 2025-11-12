@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Sales Ai" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="bg-light min-vh-100">
+    <div class="auth-shell d-flex min-vh-100">
+      <%= render "shared/sidebar" %>
+      <div class="auth-shell__body flex-grow-1 bg-light d-flex flex-column">
+        <main class="auth-shell__main flex-grow-1">
+          <div class="auth-shell__flash container-fluid">
+            <% flash.each do |type, message| %>
+              <% bootstrap_class = case type.to_sym
+                 when :notice then "alert-success"
+                 when :alert then "alert-danger"
+                 else "alert-secondary"
+                 end %>
+              <div class="alert <%= bootstrap_class %> mb-4" role="alert">
+                <%= message %>
+              </div>
+            <% end %>
+          </div>
+          <div class="auth-shell__content">
+            <%= yield %>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <%= javascript_tag do %>
+      function renderLucideIcons() {
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          window.lucide.createIcons();
+        }
+      }
+
+      if (document.readyState !== "loading") {
+        renderLucideIcons();
+      } else {
+        document.addEventListener("DOMContentLoaded", renderLucideIcons);
+      }
+      document.addEventListener("turbo:load", renderLucideIcons);
+      document.addEventListener("turbo:frame-load", renderLucideIcons);
+    <% end %>
+  </body>
+</html>

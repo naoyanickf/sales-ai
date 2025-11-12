@@ -1,0 +1,50 @@
+<aside class="auth-sidebar bg-dark text-white p-4 d-flex flex-column">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <%= link_to root_path, class: "rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center text-decoration-none text-white", style: "width: 48px; height: 48px;" do %>
+      <span class="visually-hidden">ホーム</span>
+      <i data-lucide="sparkles" aria-hidden="true"></i>
+    <% end %>
+    <div class="flex-grow-1">
+      <% if sidebar_memberships.any? %>
+        <div class="sidebar-workspace-list rounded-3 w-100">
+          <% sidebar_memberships.each do |membership| %>
+            <% workspace = membership.workspace %>
+            <% next if workspace.nil? %>
+            <div class="sidebar-workspace-list__item">
+              <span class="sidebar-workspace-list__name text-truncate"><%= workspace.name %></span>
+              <%= link_to workspace_path(workspace), class: "btn btn-link text-white p-0", title: "#{workspace.name}を管理" do %>
+                <span class="visually-hidden"><%= workspace.name %>の管理ページ</span>
+                <i data-lucide="settings-2" aria-hidden="true"></i>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-white-50 small mb-0">
+          まだワークスペースに参加していません。
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-auto pt-4 border-top border-white border-opacity-25">
+    <div class="d-flex align-items-center justify-content-between gap-3">
+      <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 0;">
+        <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center text-white" style="width: 44px; height: 44px;">
+          <i data-lucide="user-round" aria-hidden="true"></i>
+        </div>
+        <div class="text-start flex-grow-1" style="min-width: 0;">
+          <p class="mb-0 fw-semibold text-truncate" style="max-width: 160px;"><%= current_user.name %></p>
+          <p class="mb-0 text-white-50 small text-truncate" style="max-width: 160px;"><%= current_user.email.split("@").first %></p>
+        </div>
+      </div>
+      <%= link_to edit_profile_path, class: "btn btn-link text-white p-0 d-flex align-items-center justify-content-center", style: "width: 36px; height: 36px;", title: "設定" do %>
+        <span class="visually-hidden">設定</span>
+        <i data-lucide="settings" aria-hidden="true"></i>
+      <% end %>
+    </div>
+    <div class="mt-3">
+      <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-outline-light w-100 text-start", form: { class: "w-100" } %>
+    </div>
+  </div>
+</aside>
