@@ -63,3 +63,5 @@ gem "image_processing", "~> 1.2"
 gem 'devise'
 gem 'rails-i18n'
 gem 'devise-i18n-views'
+gem "acts_as_paranoid"
+gem 'dotenv-rails'

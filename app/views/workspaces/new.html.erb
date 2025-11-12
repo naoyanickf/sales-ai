@@ -1,0 +1,22 @@
+<section class="workspace-new">
+  <h1>ワークスペースを作成</h1>
+
+  <p>最初のワークスペースを作成してください。</p>
+
+  <%= form_with model: @workspace, url: workspaces_path do |form| %>
+    <% if @workspace.errors.any? %>
+      <ul class="form-errors">
+        <% @workspace.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <div class="field">
+      <%= form.label :name, "ワークスペース名" %>
+      <%= form.text_field :name, autofocus: true %>
+    </div>
+
+    <%= form.submit "作成する" %>
+  <% end %>
+</section>

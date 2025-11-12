@@ -46,7 +46,12 @@ SalesAI Assistant（仮）
 - **営業トーク**: 音声・動画ファイルの文字起こしと学習
 - **自動同期**: S3アップロード時にKnowledge Base自動更新
 
-### 3. 学習システム
+### 3. メンバー招待
+- 管理者がメールアドレスを指定して参加者として招待
+- 招待メールのリンク経由で受諾し、既存アカウント/新規登録どちらでも参加可能
+- 招待状況（pending/accepted）をワークスペース内で追跡できる
+
+### 4. 学習システム
 - **RAG（Retrieval-Augmented Generation）**:
   - Amazon Bedrock Knowledge Base使用
   - ベクトルデータベースで高速検索
@@ -106,11 +111,9 @@ Conversation
 
 #### Workspace（ワークスペース）
 - id: ワークスペースID
+- uuid: ワークスペースuuid
 - name: ワークスペース名
-- owner_type: 所有者タイプ（個人/法人）
-- owner_name: 所有者名
-- plan: プラン（無料/スタンダード/プレミアムなど）
-- is_active: 有効/無効
+- disabled_at: 無効化日時
 - created_at: 作成日時
 - updated_at: 更新日時
 
@@ -118,8 +121,20 @@ Conversation
 - id: ID
 - workspace_id: ワークスペースID
 - user_id: ユーザーID
-- role: 役割（管理者/メンバー/閲覧者）
+- role: 役割（管理者/参加者）
 - joined_at: 参加日時
+
+#### WorkspaceInvitation（ワークスペース招待）
+- id: 招待ID
+- workspace_id: ワークスペースID
+- inviter_id: 招待したユーザーID
+- invited_user_id: 招待を受諾したユーザーID（未受諾時はnull）
+- email: 招待先メールアドレス
+- role: 付与される役割（現状は参加者）
+- token: 受諾URLで使用するトークン
+- status: 招待状態（pending/accepted/cancelled）
+- accepted_at: 受諾日時
+- expires_at: 有効期限（拡張用）
 
 ### 2. ユーザー関連
 

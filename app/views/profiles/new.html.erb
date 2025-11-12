@@ -1,0 +1,21 @@
+<section class="profile-name-setup">
+  <h1>お名前を登録してください</h1>
+  <p>ユーザー名の登録が必要です。</p>
+
+  <%= form_with model: @user, url: profile_path, method: :post do |form| %>
+    <% if @user.errors.any? %>
+      <ul class="form-errors">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <div class="field">
+      <%= form.label :name, "名前" %>
+      <%= form.text_field :name, autofocus: true %>
+    </div>
+
+    <%= form.submit "登録する" %>
+  <% end %>
+</section>
