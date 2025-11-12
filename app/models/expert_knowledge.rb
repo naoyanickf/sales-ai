@@ -40,7 +40,8 @@ class ExpertKnowledge < ApplicationRecord
     return unless file.attached?
 
     if file.byte_size > MAX_FILE_SIZE
-      errors.add(:file, "のサイズが大きすぎます（最大 1000MB）")
+      max_mb = MAX_FILE_SIZE / 1.megabyte
+      errors.add(:file, "のサイズが大きすぎます（最大 #{max_mb}MB）")
     end
   end
 end

@@ -2,7 +2,9 @@
 
 <%
   has_document_errors = @product_document&.errors&.any?
-  has_sales_errors = @sales_expert&.errors&.any? || @sales_expert_with_error.present?
+  sales_expert_form_errors = @sales_expert&.errors&.any?
+  knowledge_form_errors = @sales_expert_with_error.present?
+  has_sales_errors = sales_expert_form_errors || knowledge_form_errors
 
   if has_document_errors
     documents_tab_active = true
@@ -14,6 +16,13 @@
     documents_tab_active = true
     sales_experts_tab_active = false
   end
+
+  documents_allowed_formats = ProductDocument::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")
+  documents_max_size = number_to_human_size(ProductDocument::MAX_FILE_SIZE)
+  knowledge_allowed_formats = ExpertKnowledge::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")
+  knowledge_max_size = number_to_human_size(ExpertKnowledge::MAX_FILE_SIZE)
+  documents_form_expanded = has_document_errors
+  sales_expert_form_expanded = sales_expert_form_errors
 %>
 
 <div class="container py-4">
@@ -99,30 +108,46 @@
               <div class="d-flex flex-column gap-4">
                 <% if @can_manage_products %>
                   <section>
-                    <h3 class="h6 mb-3">資料をアップロード</h3>
-                    <%= form_with model: [@product, @product_document], html: { multipart: true } do |form| %>
-                      <%= render "shared/form_errors", object: @product_document %>
-                      <div class="mb-3">
-                        <%= form.label :document_name, "資料名", class: "form-label" %>
-                        <%= form.text_field :document_name, class: "form-control", required: true %>
+                    <button class="btn btn-outline-primary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#document-upload-form"
+                            aria-expanded="<%= documents_form_expanded %>"
+                            aria-controls="document-upload-form">
+                      新規資料を追加
+                    </button>
+                    <div class="collapse mt-3 <%= "show" if documents_form_expanded %>" id="document-upload-form">
+                      <div class="card border-0 bg-light">
+                        <div class="card-body">
+                          <h3 class="h6 mb-3">資料をアップロード</h3>
+                          <%= form_with model: [@product, @product_document], html: { multipart: true } do |form| %>
+                            <%= render "shared/form_errors", object: @product_document %>
+                            <div class="mb-3">
+                              <%= form.label :document_name, "資料名", class: "form-label" %>
+                              <%= form.text_field :document_name, class: "form-control", required: true %>
+                            </div>
+                            <div class="mb-3">
+                              <%= form.label :document_type, "種類", class: "form-label" %>
+                              <%= form.text_field :document_type, class: "form-control" %>
+                            </div>
+                            <div class="mb-3">
+                              <%= form.label :file, "ファイル", class: "form-label" %>
+                              <%= form.file_field :file,
+                                                  class: "form-control",
+                                                  required: true,
+                                                  direct_upload: true %>
+                              <div class="form-text">
+                                対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %>
+                              </div>
+                              <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
+                            </div>
+                            <div class="text-end">
+                              <%= form.submit "アップロード", class: "btn btn-primary" %>
+                            </div>
+                          <% end %>
+                        </div>
                       </div>
-                      <div class="mb-3">
-                        <%= form.label :document_type, "種類", class: "form-label" %>
-                        <%= form.text_field :document_type, class: "form-control" %>
-                      </div>
-                      <div class="mb-3">
-                        <%= form.label :file, "ファイル", class: "form-label" %>
-                        <%= form.file_field :file,
-                                            class: "form-control",
-                                            required: true,
-                                            direct_upload: true %>
-                        <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
-                        <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
-                      </div>
-                      <div class="text-end">
-                        <%= form.submit "アップロード", class: "btn btn-primary" %>
-                      </div>
-                    <% end %>
+                    </div>
                   </section>
                 <% end %>
 
@@ -176,29 +201,43 @@
               <div class="d-flex flex-column gap-4">
                 <% if @can_manage_products %>
                   <section>
-                    <h3 class="h6 mb-3">先輩営業マンを追加</h3>
-                    <%= form_with model: [@product, @sales_expert] do |form| %>
-                      <%= render "shared/form_errors", object: @sales_expert %>
-                      <div class="row g-3">
-                        <div class="col-md-6">
-                          <%= form.label :name, "氏名", class: "form-label" %>
-                          <%= form.text_field :name, class: "form-control", required: true, maxlength: 80 %>
-                        </div>
-                        <div class="col-md-6 d-flex align-items-center">
-                          <div class="form-check form-switch w-100 mt-4">
-                            <%= form.check_box :is_active, class: "form-check-input", role: "switch" %>
-                            <%= form.label :is_active, "有効にする", class: "form-check-label" %>
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <%= form.label :description, "説明", class: "form-label" %>
-                          <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "得意領域や実績など" %>
+                    <button class="btn btn-outline-primary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#sales-expert-form"
+                            aria-expanded="<%= sales_expert_form_expanded %>"
+                            aria-controls="sales-expert-form">
+                      新規先輩営業マンを追加
+                    </button>
+                    <div class="collapse mt-3 <%= "show" if sales_expert_form_expanded %>" id="sales-expert-form">
+                      <div class="card border-0 bg-light">
+                        <div class="card-body">
+                          <h3 class="h6 mb-3">先輩営業マンを追加</h3>
+                          <%= form_with model: [@product, @sales_expert] do |form| %>
+                            <%= render "shared/form_errors", object: @sales_expert %>
+                            <div class="row g-3">
+                              <div class="col-md-6">
+                                <%= form.label :name, "氏名", class: "form-label" %>
+                                <%= form.text_field :name, class: "form-control", required: true, maxlength: 80 %>
+                              </div>
+                              <div class="col-md-6 d-flex align-items-center">
+                                <div class="form-check form-switch w-100 mt-4">
+                                  <%= form.check_box :is_active, class: "form-check-input", role: "switch" %>
+                                  <%= form.label :is_active, "有効にする", class: "form-check-label" %>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <%= form.label :description, "説明", class: "form-label" %>
+                                <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "得意領域や実績など" %>
+                              </div>
+                            </div>
+                            <div class="text-end mt-3">
+                              <%= form.submit "先輩営業マンを追加", class: "btn btn-primary" %>
+                            </div>
+                          <% end %>
                         </div>
                       </div>
-                      <div class="text-end mt-3">
-                        <%= form.submit "先輩営業マンを追加", class: "btn btn-primary" %>
-                      </div>
-                    <% end %>
+                    </div>
                   </section>
                 <% end %>
 
@@ -306,7 +345,9 @@
                                                         class: "form-control",
                                                         required: true,
                                                         direct_upload: true %>
-                                    <div class="form-text">音声/動画/PDF など 1000MB まで</div>
+                                    <div class="form-text">
+                                      対応形式: <%= knowledge_allowed_formats %> ／ 上限サイズ: <%= knowledge_max_size %>
+                                    </div>
                                     <div class="direct-upload-status list-group small mt-2 d-none"></div>
                                   </div>
                                 </div>
