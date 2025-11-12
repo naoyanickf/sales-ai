@@ -1,21 +1,8 @@
 # TODO
-- [x] WorkSpace関連の実装　イメージとしては、Userが最初にログインしたあとで、WorkSpaceが一つも存在しなければ、WorkSpace名を入力させるかたちで、最初の一つを作成させる
-  - [x] Workspaceモデルの実装
-  - [x] WorkspaceUserモデル（中間テーブル）の実装
-  - [x] ユーザーとワークスペースの関連付け
-  - [x] 役割（管理者/参加者）
-- [x] WorkSpace管理画面を用意してほしい。要件として、そのWorkSpaceの管理者しかアクセスできない。
-  - [x] 名前の変更ができる。
-  - [x] WorkSpaceの削除ができる。削除時には、deleted_atを埋めるだけの簡易仕様。ワークスペース名を入力させて、破壊的な確認をする。
-  - [x] 管理者の表示
-  - [x] 管理ページの表示は管理者でも参加者でもできるようにする
-  - [x] 名前の変更、削除は管理者しかできないようにする  
-- [x] Userモデルに名前の追加
-  - [x] migrationの追加 必須項目
-  - [x] Userが最初にログインしたあとで、名前がなければ登録させる。ワークスペース作成の前
-  - [x] profile画面で、名前の変更ができるようにする
-  - [x] ユーザの削除機能　act_as_paranoidを使って
-  - [x] ユーザーを削除時に、emailの後ろに、+deleted-at-#{Timestamp} をつけて、書き換えてください。
-- [x] WorkSpaceの招待機能
-  - [x] 参加者として招待する
-  - [x] メールで通知  
+- [x] Bootstrapの導入
+  - [x] Bootstrapを導入したヘッダー、フッター概念の追加。ヘッダーには、サービス名、ログイン・登録関連を配置
+  - [x] ログイン、登録関連のBootstrap化
+  - [x] home/indexのBootstrap化
+  - [x] ワークスペース管理画面のBootstrap化
+  - [x] Userのプロフィール画面のBootstrap化
+- [x] ログイン後のUIをmypage/indexに移行。routingは、/ でよい
