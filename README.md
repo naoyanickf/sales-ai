@@ -45,6 +45,7 @@ SalesAI Assistant（仮）
 - **製品資料**: PDF、Word、Excel、PowerPointのアップロード
 - **営業トーク**: 音声・動画ファイルの文字起こしと学習
 - **自動同期**: S3アップロード時にKnowledge Base自動更新
+- **先輩営業マン**: 製品ごとに社内エキスパートを登録し、音声/動画/PDFなどのナレッジを直接アップロード
 
 ### 3. メンバー招待
 - 管理者がメールアドレスを指定して参加者として招待
@@ -176,7 +177,7 @@ Conversation
 - document_type: 資料タイプ（営業資料/FAQ/価格表/提案書など）
 - file_name: ファイル名
 - file_type: ファイルタイプ（PDF/PPT/DOCX/CSV）
-- file_url: ファイル保存先URL
+- file: Active Storage で管理される原本
 - upload_user_id: アップロードユーザーID
 - created_at: 作成日時
 
@@ -186,9 +187,7 @@ Conversation
 - id: エキスパートID
 - product_id: 製品ID
 - name: 名前（例：山田太郎）
-- title: 肩書（例：トップセールス、〇〇エリア担当）
 - description: 説明（経歴、得意分野など）
-- avatar_url: アバター画像URL
 - is_active: 有効/無効
 - created_at: 作成日時
 - updated_at: 更新日時
@@ -199,10 +198,10 @@ Conversation
 - content_type: コンテンツタイプ（商談録音/動画/テキスト）
 - file_name: ファイル名
 - file_url: ファイル保存先URL
-- transcript: 文字起こしテキスト
-- metadata: メタデータ（JSON - 商談相手、日付、成約有無など）
 - upload_user_id: アップロードユーザーID
 - created_at: 作成日時
+
+> 製品詳細画面から SalesExpert を追加し、各エキスパートのカード内で Active Storage の direct upload を使ってナレッジを登録できます。音声/動画/PDF など 200MB まで対応し、アップロード中はプログレスバーが表示されます。
 
 ### 5. 対話関連
 

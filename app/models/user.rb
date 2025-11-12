@@ -20,6 +20,11 @@ class User < ApplicationRecord
            foreign_key: :upload_user_id,
            inverse_of: :uploader,
            dependent: :nullify
+  has_many :uploaded_expert_knowledges,
+           class_name: "ExpertKnowledge",
+           foreign_key: :upload_user_id,
+           inverse_of: :uploader,
+           dependent: :nullify
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

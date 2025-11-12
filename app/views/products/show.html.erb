@@ -1,5 +1,21 @@
 <% content_for :title, @product.name %>
 
+<%
+  has_document_errors = @product_document&.errors&.any?
+  has_sales_errors = @sales_expert&.errors&.any? || @sales_expert_with_error.present?
+
+  if has_document_errors
+    documents_tab_active = true
+    sales_experts_tab_active = false
+  elsif has_sales_errors
+    documents_tab_active = false
+    sales_experts_tab_active = true
+  else
+    documents_tab_active = true
+    sales_experts_tab_active = false
+  end
+%>
+
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
@@ -20,95 +36,296 @@
   </div>
 
   <div class="row g-4">
-    <div class="col-lg-6">
-      <div class="card shadow-sm h-100">
+    <div class="col-12">
+      <div class="card shadow-sm">
         <div class="card-body">
           <h2 class="h5 mb-3">概要</h2>
           <dl class="row mb-0">
-            <dt class="col-sm-4 text-muted">状態</dt>
-            <dd class="col-sm-8">
+            <dt class="col-sm-3 col-md-2 text-muted">状態</dt>
+            <dd class="col-sm-9 col-md-10">
               <span class="badge <%= @product.is_active? ? "bg-success" : "bg-secondary" %>">
                 <%= @product.status_badge %>
               </span>
             </dd>
-            <dt class="col-sm-4 text-muted">カテゴリ</dt>
-            <dd class="col-sm-8"><%= @product.category.presence || "-" %></dd>
-            <dt class="col-sm-4 text-muted">説明</dt>
-            <dd class="col-sm-8">
+            <dt class="col-sm-3 col-md-2 text-muted">カテゴリ</dt>
+            <dd class="col-sm-9 col-md-10"><%= @product.category.presence || "-" %></dd>
+            <dt class="col-sm-3 col-md-2 text-muted">説明</dt>
+            <dd class="col-sm-9 col-md-10">
               <%= simple_format(@product.description.presence || "説明が登録されていません。") %>
             </dd>
           </dl>
         </div>
       </div>
     </div>
-    <div class="col-lg-6">
-      <div class="card shadow-sm h-100">
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header border-bottom-0 pb-0">
+          <h2 class="h5 mb-0">詳細</h2>
+        </div>
         <div class="card-body">
-          <h2 class="h5 mb-3">資料</h2>
+          <ul class="nav nav-tabs mb-4" id="product-detail-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link <%= "active" if documents_tab_active %>"
+                      id="documents-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#documents-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="documents-pane"
+                      aria-selected="<%= documents_tab_active %>">
+                資料
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link <%= "active" if sales_experts_tab_active %>"
+                      id="sales-experts-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#sales-experts-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="sales-experts-pane"
+                      aria-selected="<%= sales_experts_tab_active %>">
+                先輩営業マン
+              </button>
+            </li>
+          </ul>
 
-          <% if @can_manage_products %>
-            <%= form_with model: [@product, @product_document], html: { multipart: true }, class: "mb-4" do |form| %>
-              <%= render "shared/form_errors", object: @product_document %>
-              <div class="mb-3">
-                <%= form.label :document_name, "資料名", class: "form-label" %>
-                <%= form.text_field :document_name, class: "form-control", required: true %>
-              </div>
-              <div class="mb-3">
-                <%= form.label :document_type, "種類", class: "form-label" %>
-                <%= form.text_field :document_type, class: "form-control" %>
-              </div>
-              <div class="mb-3">
-                <%= form.label :file, "ファイル", class: "form-label" %>
-                <%= form.file_field :file,
-                                    class: "form-control",
-                                    required: true,
-                                    direct_upload: true %>
-                <div class="form-text">PDF / Office / CSV / TXT など 300MB まで</div>
-                <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
-              </div>
-              <div class="text-end">
-                <%= form.submit "アップロード", class: "btn btn-primary" %>
-              </div>
-            <% end %>
-          <% end %>
+          <div class="tab-content" id="product-detail-tab-content">
+            <div class="tab-pane fade <%= "show active" if documents_tab_active %>"
+                 id="documents-pane"
+                 role="tabpanel"
+                 aria-labelledby="documents-tab">
+              <div class="d-flex flex-column gap-4">
+                <% if @can_manage_products %>
+                  <section>
+                    <h3 class="h6 mb-3">資料をアップロード</h3>
+                    <%= form_with model: [@product, @product_document], html: { multipart: true } do |form| %>
+                      <%= render "shared/form_errors", object: @product_document %>
+                      <div class="mb-3">
+                        <%= form.label :document_name, "資料名", class: "form-label" %>
+                        <%= form.text_field :document_name, class: "form-control", required: true %>
+                      </div>
+                      <div class="mb-3">
+                        <%= form.label :document_type, "種類", class: "form-label" %>
+                        <%= form.text_field :document_type, class: "form-control" %>
+                      </div>
+                      <div class="mb-3">
+                        <%= form.label :file, "ファイル", class: "form-label" %>
+                        <%= form.file_field :file,
+                                            class: "form-control",
+                                            required: true,
+                                            direct_upload: true %>
+                        <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
+                        <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
+                      </div>
+                      <div class="text-end">
+                        <%= form.submit "アップロード", class: "btn btn-primary" %>
+                      </div>
+                    <% end %>
+                  </section>
+                <% end %>
 
-          <% if @product_documents.any? %>
-            <div class="list-group">
-              <% @product_documents.each do |document| %>
-                <div class="list-group-item d-flex justify-content-between align-items-start">
-                  <div>
-                    <p class="fw-semibold mb-1"><%= document.document_name %></p>
-                    <p class="mb-0 text-muted small">
-                      <%= document.document_type.presence || "未分類" %>・
-                      <% if document.file.attached? %>
-                        <%= document.file.filename.to_s %>（<%= number_to_human_size(document.file.byte_size) %>）・
+                <section>
+                  <h3 class="h6 mb-3">登録済みの資料</h3>
+                  <% if @product_documents.any? %>
+                    <div class="list-group">
+                      <% @product_documents.each do |document| %>
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                          <div>
+                            <p class="fw-semibold mb-1"><%= document.document_name %></p>
+                            <p class="mb-0 text-muted small">
+                              <%= document.document_type.presence || "未分類" %>・
+                              <% if document.file.attached? %>
+                                <%= document.file.filename.to_s %>（<%= number_to_human_size(document.file.byte_size) %>）・
+                              <% end %>
+                              <%= l document.created_at, format: :short %>・
+                              <%= document.uploader.name %>
+                            </p>
+                          </div>
+                          <div class="d-flex flex-column align-items-end gap-2">
+                            <% if document.file.attached? %>
+                              <%= link_to "ダウンロード",
+                                          rails_blob_path(document.file, disposition: :attachment),
+                                          class: "btn btn-sm btn-outline-primary",
+                                          target: "_blank",
+                                          rel: "noopener" %>
+                            <% end %>
+                            <% if @can_manage_products %>
+                              <%= button_to "削除",
+                                            product_product_document_path(@product, document),
+                                            method: :delete,
+                                            form: { data: { turbo_confirm: "この資料を削除しますか？" } },
+                                            class: "btn btn-sm btn-outline-danger" %>
+                            <% end %>
+                          </div>
+                        </div>
                       <% end %>
-                      <%= l document.created_at, format: :short %>・
-                      <%= document.uploader.name %>
-                    </p>
-                  </div>
-                  <div class="d-flex flex-column align-items-end gap-2">
-                    <% if document.file.attached? %>
-                      <%= link_to "ダウンロード",
-                                  rails_blob_path(document.file, disposition: :attachment),
-                                  class: "btn btn-sm btn-outline-primary",
-                                  target: "_blank",
-                                  rel: "noopener" %>
-                    <% end %>
-                    <% if @can_manage_products %>
-                      <%= button_to "削除",
-                                    product_product_document_path(@product, document),
-                                    method: :delete,
-                                    form: { data: { turbo_confirm: "この資料を削除しますか？" } },
-                                    class: "btn btn-sm btn-outline-danger" %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
+                    </div>
+                  <% else %>
+                    <p class="text-muted mb-0">まだ資料が登録されていません。</p>
+                  <% end %>
+                </section>
+              </div>
             </div>
-          <% else %>
-            <p class="text-muted mb-0">まだ資料がありません。</p>
-          <% end %>
+
+            <div class="tab-pane fade <%= "show active" if sales_experts_tab_active %>"
+                 id="sales-experts-pane"
+                 role="tabpanel"
+                 aria-labelledby="sales-experts-tab">
+              <div class="d-flex flex-column gap-4">
+                <% if @can_manage_products %>
+                  <section>
+                    <h3 class="h6 mb-3">先輩営業マンを追加</h3>
+                    <%= form_with model: [@product, @sales_expert] do |form| %>
+                      <%= render "shared/form_errors", object: @sales_expert %>
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <%= form.label :name, "氏名", class: "form-label" %>
+                          <%= form.text_field :name, class: "form-control", required: true, maxlength: 80 %>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                          <div class="form-check form-switch w-100 mt-4">
+                            <%= form.check_box :is_active, class: "form-check-input", role: "switch" %>
+                            <%= form.label :is_active, "有効にする", class: "form-check-label" %>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <%= form.label :description, "説明", class: "form-label" %>
+                          <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "得意領域や実績など" %>
+                        </div>
+                      </div>
+                      <div class="text-end mt-3">
+                        <%= form.submit "先輩営業マンを追加", class: "btn btn-primary" %>
+                      </div>
+                    <% end %>
+                  </section>
+                <% end %>
+
+                <section>
+                  <h3 class="h6 mb-3">登録済みの先輩営業マン</h3>
+                  <% if @sales_experts.any? %>
+                    <div class="list-group">
+                      <% @sales_experts.each do |expert| %>
+                        <div class="list-group-item">
+                          <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                              <p class="fw-semibold mb-1 d-flex align-items-center gap-2">
+                                <span><%= expert.name %></span>
+                                <span class="badge <%= expert.is_active? ? "bg-success" : "bg-secondary" %>">
+                                  <%= expert.is_active? ? "公開中" : "非公開" %>
+                                </span>
+                              </p>
+                              <p class="text-muted small mb-2">
+                                登録日: <%= l expert.created_at, format: :short %>
+                              </p>
+                              <p class="mb-0"><%= expert.description.presence || "自己紹介文はまだありません。" %></p>
+                            </div>
+                            <% if @can_manage_products %>
+                              <div class="d-flex gap-2">
+                                <%= link_to "編集",
+                                            edit_product_sales_expert_path(@product, expert),
+                                            class: "btn btn-sm btn-outline-secondary" %>
+                                <%= button_to "削除",
+                                              product_sales_expert_path(@product, expert),
+                                              method: :delete,
+                                              form: { data: { turbo_confirm: "この先輩営業マンを削除しますか？" } },
+                                              class: "btn btn-sm btn-outline-danger" %>
+                              </div>
+                            <% end %>
+                          </div>
+
+                          <div class="mt-4">
+                            <h4 class="h6 mb-3 d-flex align-items-center gap-2">
+                              <i data-lucide="book-open-check" aria-hidden="true"></i>
+                              ナレッジ
+                              <span class="badge bg-secondary text-white"><%= expert.expert_knowledges.count %>件</span>
+                            </h4>
+
+                            <% if expert.expert_knowledges.any? %>
+                              <div class="list-group mb-3">
+                                <% expert.expert_knowledges.each do |knowledge| %>
+                                  <div class="list-group-item">
+                                    <div class="d-flex justify-content-between flex-wrap gap-3">
+                                      <div>
+                                        <p class="mb-1 fw-semibold"><%= knowledge.content_type %></p>
+                                        <p class="text-muted small mb-1">
+                                          <%= knowledge.file_name %>
+                                          <% if knowledge.file.attached? %>
+                                            （<%= number_to_human_size(knowledge.file.byte_size) %>）
+                                          <% end %>
+                                        </p>
+                                        <p class="text-muted small mb-0">
+                                          <%= knowledge.uploader.name %>・<%= l knowledge.created_at, format: :short %>
+                                        </p>
+                                      </div>
+                                      <div class="d-flex align-items-center gap-2">
+                                        <% if knowledge.file.attached? %>
+                                          <%= link_to "ダウンロード",
+                                                      rails_blob_path(knowledge.file, disposition: :attachment),
+                                                      class: "btn btn-sm btn-outline-primary",
+                                                      target: "_blank",
+                                                      rel: "noopener" %>
+                                        <% end %>
+                                        <% if @can_manage_products %>
+                                          <%= button_to "削除",
+                                                        product_sales_expert_expert_knowledge_path(@product, expert, knowledge),
+                                                        method: :delete,
+                                                        form: { data: { turbo_confirm: "このナレッジを削除しますか？" } },
+                                                        class: "btn btn-sm btn-outline-danger" %>
+                                        <% end %>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <% end %>
+                              </div>
+                            <% else %>
+                              <p class="text-muted">まだ登録されたナレッジはありません。</p>
+                            <% end %>
+
+                            <% if @can_manage_products %>
+                              <%= form_with model: [@product, expert, @sales_expert_with_error == expert ? @expert_knowledge : ExpertKnowledge.new],
+                                            html: { multipart: true },
+                                            class: "border rounded-3 p-3 bg-dark bg-opacity-25" do |form| %>
+                                <% if @sales_expert_with_error == expert %>
+                                  <%= render "shared/form_errors", object: @expert_knowledge %>
+                                <% end %>
+                                <div class="row g-3">
+                                  <div class="col-12 col-md-4">
+                                    <%= form.label :content_type, "コンテンツタイプ", class: "form-label" %>
+                                    <% content_options = [["商談録音", "商談録音"], ["動画", "動画"], ["テキスト", "テキスト"], ["その他", "その他"]] %>
+                                    <%= form.select :content_type,
+                                                    options_for_select(content_options, form.object.content_type.presence || "商談録音"),
+                                                    {},
+                                                    class: "form-select",
+                                                    required: true %>
+                                  </div>
+                                  <div class="col-12 col-md-8">
+                                    <%= form.label :file, "ファイル", class: "form-label" %>
+                                    <%= form.file_field :file,
+                                                        class: "form-control",
+                                                        required: true,
+                                                        direct_upload: true %>
+                                    <div class="form-text">音声/動画/PDF など 1000MB まで</div>
+                                    <div class="direct-upload-status list-group small mt-2 d-none"></div>
+                                  </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                  <%= form.submit "ナレッジを追加", class: "btn btn-primary" %>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <p class="text-muted mb-0">まだ先輩営業マンが登録されていません。</p>
+                  <% end %>
+                </section>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 class ProductsController < ApplicationController
+  include ProductShowContext
   before_action :authenticate_user!
   before_action :set_product, only: %i[show edit update destroy]
   before_action :require_workspace_admin!, except: %i[index show]
@@ -9,11 +10,10 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product_documents = @product.product_documents
-                                .with_attached_file
-                                .includes(:uploader)
-                                .order(created_at: :desc)
     @product_document = ProductDocument.new
+    @sales_expert = SalesExpert.new
+    @expert_knowledge = ExpertKnowledge.new
+    prepare_product_show_context(@product)
     @can_manage_products = current_workspace_membership&.admin?
   end
 
@@ -48,7 +48,7 @@ class ProductsController < ApplicationController
   private
 
   def set_product
-    @product = current_workspace.products.find(params[:id])
+    @product = current_workspace.products.find_by!(uuid: params[:id])
   end
 
   def product_params
