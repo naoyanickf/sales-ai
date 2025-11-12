@@ -4,16 +4,16 @@
   - [x] `skip_workspace_check?` などフィルタの条件を再確認し、既存ユーザーでも `workspaces#new` / `#create` にアクセスできるようにする（不要なリダイレクトがないかテスト）。
   - [x] UI上の導線を整備：マイページやサイドバーから「新しいワークスペースを作成」できるボタンを明示的に配置し、複数作成できることを文言でも案内する。
   - [x] ワークスペース削除/作成時のメッセージやテストケースを更新し、複数所持を前提とした文言・バリデーション（例: 招待・参加一覧での動作）を確認する。
-- [ ] Product/資料アップロード基盤を整備（CarrierWave + AWS S3 前提）
+- [ ] Product/資料アップロード基盤を整備（Active Storage direct upload + AWS S3 前提）
   - [x] 依存関係・設定
-    - [x] Gemfile に `carrierwave`, `fog-aws` を追加し、`bundle install`。既存の `image_processing` との競合を確認。（※CI/本番での `bundle install` は別途実行する）
-    - [x] `config/initializers/carrierwave.rb` を作成し、`AWS_ACCESS_KEY_ID` など `.env` 由来の資格情報で S3 を設定。development/test ではローカルファイル保存を許容。
+    - [x] Gemfile に `aws-sdk-s3` を追加し、Active Storage で直接 S3 へアップロードできるようにする。（※CI/本番での `bundle install` は別途実行する）
+    - [x] `config/storage.yml` / 環境設定で AWS 資格情報を参照し、development/test ではローカルストレージも選択できるようにする。
     - [x] `.env.example`（もしくは README）に必要な環境変数（バケット名・リージョン・アセットホスト）を追記。
   - [x] モデル・DB
     - [x] `products` テーブル（workspace_id, name, description, category, is_active, timestamps + index）を作成し、`Workspace has_many :products` を追加。
-    - [x] `product_documents` テーブル（product_id, document_name, document_type, file, upload_user_id, metadata, timestamps）を作成。`file` カラムは CarrierWave 用 `string`。
+    - [x] `product_documents` テーブル（product_id, document_name, document_type, upload_user_id, metadata, timestamps）を作成し、Active Storage の添付を利用。
     - [x] `Product`, `ProductDocument` モデルを追加し、バリデーション・関連付け（`belongs_to :workspace, through product`, `belongs_to :uploader, class_name: "User"`）を定義。
-    - [x] CarrierWave アップローダークラス（例: `ProductDocumentUploader`）を実装し、ファイルサイズ/拡張子制限と `storage_dir`（workspace_id/product_id 単位）を設計。
+    - [x] Active Storage の direct upload を利用し、サーバー側でのバリデーション（拡張子・容量）を実装。
   - [ ] コントローラ/ルーティング
     - [x] `resources :products`（workspaces 配下 or current_workspace スコープ）を追加し、`ProductsController` で CRUD + workspace スコープ制御を実装。
     - [x] `ProductDocumentsController`（`resources :product_documents, only: %i[create destroy]`）をネストし、ファイルアップロード/削除の権限制御（管理者のみアップロードなど）を入れる。
@@ -21,8 +21,8 @@
   - [ ] UI/UX
     - [x] 認証済みレイアウトに「製品」への導線（サイドバー or 上部ナビ）を追加。
     - [x] プロダクト一覧/詳細/編集フォームを作成し、ワークスペース単位でフィルタされた内容を表示。
-    - [x] 製品詳細ページに資料アップロードフォームと一覧（ダウンロードリンク、削除ボタン）を配置。CarrierWave の URL を表示し、S3 署名付き URL or CloudFront 経由を検討。
+    - [x] 製品詳細ページに資料アップロードフォームと一覧（ダウンロードリンク、削除ボタン）を配置。Active Storage の URL（署名付き）を表示する。
     - [ ] フラッシュ/バリデーションメッセージを i18n に追加。
   - [ ] テスト/運用
-    - [ ] model/controller/system テストでワークスペーススコープとアップロードフローをカバー。CarrierWave は test でローカルストレージを利用。
+    - [ ] model/controller/system テストでワークスペーススコープとアップロードフローをカバー。Active Storage は test でローカルストレージを利用。
     - [x] ドキュメント更新：README にプロダクト機能概要とアップロード手順（容量制限、対応拡張子）を追記。

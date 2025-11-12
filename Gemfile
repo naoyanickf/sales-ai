@@ -59,11 +59,10 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "image_processing", "~> 1.2"
 gem 'devise'
 gem 'rails-i18n'
 gem 'devise-i18n-views'
 gem "acts_as_paranoid"
 gem 'dotenv-rails'
-gem "carrierwave", "~> 3.0"
-gem "fog-aws", "~> 3.0"
+gem "aws-sdk-s3", "~> 1.145", require: false
+gem "image_processing", "~> 1.2"
