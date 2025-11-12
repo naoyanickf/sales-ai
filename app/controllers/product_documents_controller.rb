@@ -11,7 +11,7 @@ class ProductDocumentsController < ApplicationController
     if @product_document.save
       redirect_to product_path(@product), notice: "資料をアップロードしました。"
     else
-      @product_documents = @product.product_documents.order(created_at: :desc)
+      load_product_documents
       @can_manage_products = true
       render "products/show", status: :unprocessable_entity
     end
@@ -30,6 +30,13 @@ class ProductDocumentsController < ApplicationController
 
   def set_product_document
     @product_document = @product.product_documents.find(params[:id])
+  end
+
+  def load_product_documents
+    @product_documents = @product.product_documents
+                                 .with_attached_file
+                                 .includes(:uploader)
+                                 .order(created_at: :desc)
   end
 
   def product_document_params

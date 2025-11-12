@@ -1,11 +1,39 @@
 class ProductDocument < ApplicationRecord
+  ALLOWED_EXTENSIONS = %w[pdf ppt pptx doc docx xls xlsx csv txt md].freeze
+  MAX_FILE_SIZE = 300.megabytes
+
   belongs_to :product
   belongs_to :uploader, class_name: "User", foreign_key: :upload_user_id
 
-  mount_uploader :file, ProductDocumentUploader
+  has_one_attached :file, dependent: :purge_later
 
   validates :document_name, presence: true, length: { maximum: 160 }
-  validates :file, presence: true
+  validate :file_presence
+  validate :file_type_allowlist
+  validate :file_size_within_limit
 
   delegate :workspace, to: :product
+
+  private
+
+  def file_presence
+    errors.add(:file, "を選択してください") unless file.attached?
+  end
+
+  def file_type_allowlist
+    return unless file.attached?
+
+    extension = file.filename.extension&.downcase
+    return if extension.present? && ALLOWED_EXTENSIONS.include?(extension)
+
+    errors.add(:file, "は対応していない形式です")
+  end
+
+  def file_size_within_limit
+    return unless file.attached?
+
+    if file.byte_size > MAX_FILE_SIZE
+      errors.add(:file, "のサイズが大きすぎます（最大 #{MAX_FILE_SIZE}MB）")
+    end
+  end
 end

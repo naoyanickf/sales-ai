@@ -59,8 +59,12 @@
               </div>
               <div class="mb-3">
                 <%= form.label :file, "ファイル", class: "form-label" %>
-                <%= form.file_field :file, class: "form-control", required: true %>
-                <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
+                <%= form.file_field :file,
+                                    class: "form-control",
+                                    required: true,
+                                    direct_upload: true %>
+                <div class="form-text">PDF / Office / CSV / TXT など 300MB まで</div>
+                <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
               </div>
               <div class="text-end">
                 <%= form.submit "アップロード", class: "btn btn-primary" %>
@@ -76,12 +80,21 @@
                     <p class="fw-semibold mb-1"><%= document.document_name %></p>
                     <p class="mb-0 text-muted small">
                       <%= document.document_type.presence || "未分類" %>・
+                      <% if document.file.attached? %>
+                        <%= document.file.filename.to_s %>（<%= number_to_human_size(document.file.byte_size) %>）・
+                      <% end %>
                       <%= l document.created_at, format: :short %>・
                       <%= document.uploader.name %>
                     </p>
                   </div>
                   <div class="d-flex flex-column align-items-end gap-2">
-                    <%= link_to "ダウンロード", document.file.url, class: "btn btn-sm btn-outline-primary", target: "_blank", rel: "noopener" %>
+                    <% if document.file.attached? %>
+                      <%= link_to "ダウンロード",
+                                  rails_blob_path(document.file, disposition: :attachment),
+                                  class: "btn btn-sm btn-outline-primary",
+                                  target: "_blank",
+                                  rel: "noopener" %>
+                    <% end %>
                     <% if @can_manage_products %>
                       <%= button_to "削除",
                                     product_product_document_path(@product, document),

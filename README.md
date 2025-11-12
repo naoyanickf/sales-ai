@@ -91,7 +91,7 @@ SalesAI Assistant（仮）
    - `ASSET_HOST`（CloudFront 等の任意のアセットホスト。不要なら空で可）
 3. `bin/rails db:setup` を実行し、開発用 DB を作成
 
-CarrierWave は本番/任意の環境で `AWS_S3_BUCKET` が設定されている場合に S3 へアップロードします。開発/テスト環境で値を空にすると `storage/uploads` 以下にローカル保存されます。
+Active Storage の direct upload は `AWS_S3_BUCKET` が設定されている場合に Amazon S3 を利用し、未設定時は `storage/` 以下にローカル保存します。
 
 ### データモデル（簡略版）
 ```

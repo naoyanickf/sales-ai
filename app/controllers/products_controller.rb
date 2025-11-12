@@ -9,7 +9,10 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product_documents = @product.product_documents.order(created_at: :desc)
+    @product_documents = @product.product_documents
+                                .with_attached_file
+                                .includes(:uploader)
+                                .order(created_at: :desc)
     @product_document = ProductDocument.new
     @can_manage_products = current_workspace_membership&.admin?
   end
