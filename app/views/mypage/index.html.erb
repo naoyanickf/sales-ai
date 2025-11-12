@@ -6,48 +6,10 @@
           <p class="text-uppercase text-primary fw-semibold small mb-2">Workspace Hub</p>
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
-              <h1 class="display-6 fw-bold mb-2">最新のワークスペースにアクセス</h1>
-              <p class="text-body-secondary mb-0">参加中のワークスペースやアクティビティをここから素早く切り替えられます。</p>
+              <h1 class="display-6 fw-bold mb-2">マイページトップ</h1>              
             </div>
-            <%= link_to "新規作成", new_workspace_path, class: "btn btn-primary btn-lg" %>
           </div>
         </header>
-      </div>
-
-      <div class="col-12 col-xl-6">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <h2 class="fs-5 fw-semibold mb-3">クイックスタート</h2>
-            <p class="text-body-secondary small mb-4">よく使うアクションをまとめました。</p>
-            <div class="d-grid gap-3">
-              <%= link_to "プロフィールを更新", edit_profile_path, class: "btn btn-outline-secondary text-start" %>
-              <%= link_to "新しいメンバーを招待", new_workspace_path, class: "btn btn-outline-secondary text-start" %>
-              <%= link_to "サポートに連絡", "#", class: "btn btn-outline-secondary text-start disabled", aria: { disabled: true } %>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-xl-6">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <h2 class="fs-5 fw-semibold mb-3">ヒント</h2>
-            <ul class="list-unstyled mb-0 text-body-secondary small">
-              <li class="mb-3">
-                <span class="fw-semibold text-dark d-block mb-1">新しい商談ノートを共有</span>
-                成功した商談のノートをワークスペースに投稿すると、チーム全体でナレッジを活用できます。
-              </li>
-              <li class="mb-3">
-                <span class="fw-semibold text-dark d-block mb-1">プロフィールを最新に保つ</span>
-                自己紹介や得意領域を設定しておくと、AIがより適切な提案を行うようになります。
-              </li>
-              <li>
-                <span class="fw-semibold text-dark d-block mb-1">定期的にチャンネルを整理</span>
-                不要になったワークスペースをアーカイブして、重要な情報を見つけやすくしましょう。
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   </div>
