@@ -1,22 +1,29 @@
-<section class="workspace-new">
-  <h1>ワークスペースを作成</h1>
+<section class="py-5">
+  <div class="container">
+    <div class="mx-auto" style="max-width: 560px;">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="text-uppercase text-primary fw-semibold mb-2">Workspace</p>
+          <h1 class="fs-3 fw-semibold mb-3">ワークスペースを作成</h1>
+          <p class="text-body-secondary mb-4">会社名・チーム名などを入力してください。後から変更できます。</p>
 
-  <p>最初のワークスペースを作成してください。</p>
+          <%= form_with model: @workspace, url: workspaces_path do |form| %>
+            <%= render "shared/form_errors", object: @workspace %>
 
-  <%= form_with model: @workspace, url: workspaces_path do |form| %>
-    <% if @workspace.errors.any? %>
-      <ul class="form-errors">
-        <% @workspace.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    <% end %>
+            <div class="mb-4">
+              <%= form.label :name, "ワークスペース名", class: "form-label" %>
+              <%= form.text_field :name,
+                                  autofocus: true,
+                                  class: "form-control form-control-lg",
+                                  placeholder: "例: ABC株式会社、営業チーム" %>
+            </div>
 
-    <div class="field">
-      <%= form.label :name, "ワークスペース名" %>
-      <%= form.text_field :name, autofocus: true %>
+            <div class="d-grid">
+              <%= form.submit "作成する", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-
-    <%= form.submit "作成する" %>
-  <% end %>
+  </div>
 </section>
