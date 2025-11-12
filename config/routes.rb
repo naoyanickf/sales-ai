@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users
   get "dev/react"
-  resource :profile, only: %i[new create edit update destroy]
+  resource :profile, only: %i[new create edit update destroy] do
+    patch :email
+    patch :password
+  end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
     resources :invitations, only: :create, controller: :workspace_invitations
   end
