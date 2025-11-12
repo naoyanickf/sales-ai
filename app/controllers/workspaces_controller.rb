@@ -13,6 +13,7 @@ class WorkspacesController < ApplicationController
     ActiveRecord::Base.transaction do
       @workspace.save!
       @workspace.workspace_users.create!(user: current_user, role: :admin)
+      session[:current_workspace_id] = @workspace.id
     end
 
     redirect_to root_path, notice: "ワークスペースを作成しました。"
@@ -53,6 +54,7 @@ class WorkspacesController < ApplicationController
     @workspace_users = @workspace.workspace_users.includes(:user).order(:created_at)
     @pending_invitations = @workspace.workspace_invitations.pending.order(created_at: :desc)
     @new_invitation = WorkspaceInvitation.new
+    session[:current_workspace_id] = @workspace.id
   end
 
   def require_admin!

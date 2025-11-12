@@ -74,12 +74,22 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.5rem;
 }
 
 .sidebar-workspace-list__name {
   flex: 1 1 auto;
 }
 
+.sidebar-workspace-list__item.is-active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .pointer {
   cursor: pointer;
+}
+
+.dropdown-item-form {
+  margin: 0;
 }
