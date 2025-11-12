@@ -14,6 +14,11 @@
     documents_tab_active = true
     sales_experts_tab_active = false
   end
+
+  documents_allowed_formats = ProductDocument::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")
+  documents_max_size = number_to_human_size(ProductDocument::MAX_FILE_SIZE)
+  knowledge_allowed_formats = ExpertKnowledge::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")
+  knowledge_max_size = number_to_human_size(ExpertKnowledge::MAX_FILE_SIZE)
 %>
 
 <div class="container py-4">
@@ -116,7 +121,9 @@
                                             class: "form-control",
                                             required: true,
                                             direct_upload: true %>
-                        <div class="form-text">PDF / Office / CSV / TXT など 50MB まで</div>
+                        <div class="form-text">
+                          対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %>
+                        </div>
                         <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
                       </div>
                       <div class="text-end">
@@ -306,7 +313,9 @@
                                                         class: "form-control",
                                                         required: true,
                                                         direct_upload: true %>
-                                    <div class="form-text">音声/動画/PDF など 1000MB まで</div>
+                                    <div class="form-text">
+                                      対応形式: <%= knowledge_allowed_formats %> ／ 上限サイズ: <%= knowledge_max_size %>
+                                    </div>
                                     <div class="direct-upload-status list-group small mt-2 d-none"></div>
                                   </div>
                                 </div>
