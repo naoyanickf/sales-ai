@@ -1,41 +1,51 @@
-<section class="profile-settings">
-  <h1>プロフィール設定</h1>
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <p class="text-uppercase text-primary fw-semibold mb-2">Profile</p>
+            <h1 class="fs-4 fw-semibold mb-4">プロフィール設定</h1>
 
-  <div class="profile-section">
-    <h2>名前の変更</h2>
-    <%= form_with model: @user, url: profile_path, method: :patch do |form| %>
-      <% if @user.errors.any? %>
-        <ul class="form-errors">
-          <% @user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      <% end %>
+            <%= form_with model: @user, url: profile_path, method: :patch do |form| %>
+              <%= render "shared/form_errors", object: @user %>
 
-      <div class="field">
-        <%= form.label :name, "名前" %>
-        <%= form.text_field :name, autofocus: true %>
+              <div class="mb-3">
+                <%= form.label :name, "名前", class: "form-label" %>
+                <%= form.text_field :name, autofocus: true, class: "form-control" %>
+              </div>
+
+              <%= form.submit "更新する", class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        </div>
       </div>
 
-      <%= form.submit "更新する" %>
-    <% end %>
-  </div>
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-danger h-100">
+          <div class="card-body">
+            <h2 class="fs-5 fw-semibold text-danger mb-3">アカウント削除</h2>
+            <p class="text-body-secondary">
+              アカウントを削除すると復元できません。確認のために現在の名前（<strong><%= @user.name %></strong>）を入力してください。
+            </p>
 
-  <div class="profile-section danger-zone">
-    <h2>アカウント削除</h2>
-    <p>アカウントを削除すると復元できません。確認のために現在の名前（<strong><%= @user.name %></strong>）を入力してください。</p>
+            <%= form_with url: profile_path, method: :delete do |form| %>
+              <% if @deletion_error.present? %>
+                <div class="alert alert-danger" role="alert"><%= @deletion_error %></div>
+              <% end %>
 
-    <%= form_with url: profile_path, method: :delete do |form| %>
-      <% if @deletion_error.present? %>
-        <p class="form-errors"><%= @deletion_error %></p>
-      <% end %>
+              <div class="mb-3">
+                <%= form.label :confirm_name, "確認用の名前", class: "form-label" %>
+                <%= form.text_field :confirm_name, class: "form-control" %>
+              </div>
 
-      <div class="field">
-        <%= form.label :confirm_name, "確認用の名前" %>
-        <%= form.text_field :confirm_name %>
+              <%= form.submit "アカウントを削除する",
+                              class: "btn btn-outline-danger",
+                              data: { turbo_confirm: "本当に削除してよろしいですか？" } %>
+            <% end %>
+          </div>
+        </div>
       </div>
-
-      <%= form.submit "アカウントを削除する", data: { turbo_confirm: "本当に削除してよろしいですか？" } %>
-    <% end %>
+    </div>
   </div>
 </section>

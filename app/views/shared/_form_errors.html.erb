@@ -1,0 +1,10 @@
+<% if object&.errors&.any? %>
+  <div class="alert alert-danger" role="alert">
+    <p class="fw-semibold mb-2">入力内容を確認してください。</p>
+    <ul class="mb-0">
+      <% object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

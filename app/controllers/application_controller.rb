@@ -1,10 +1,20 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
+  layout :determine_layout
   before_action :ensure_profile_name!
   before_action :ensure_workspace!
+  before_action :prepare_sidebar_context, if: :user_signed_in?
+
+  helper_method :sidebar_memberships
 
   private
+
+  def determine_layout
+    return "application" if !user_signed_in? || devise_controller?
+
+    "authenticated"
+  end
 
   def ensure_profile_name!
     return if skip_profile_check?
@@ -32,5 +42,13 @@ class ApplicationController < ActionController::Base
     return true if controller_path == "workspaces" && %w[new create].include?(action_name)
 
     false
+  end
+
+  def prepare_sidebar_context
+    @sidebar_memberships = current_user.workspace_users.includes(:workspace).where(workspaces: { deleted_at: nil })
+  end
+
+  def sidebar_memberships
+    @sidebar_memberships || []
   end
 end

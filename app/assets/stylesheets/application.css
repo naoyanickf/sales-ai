@@ -8,3 +8,60 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.auth-shell {
+  min-height: 100vh;
+}
+
+.auth-sidebar {
+  flex: 0 0 100%;
+  min-width: 0;
+  min-height: 100%;
+}
+
+.auth-shell__body {
+  min-height: 100%;
+  min-width: 0;
+}
+
+.auth-shell__main {
+  padding: 2rem 1.5rem;
+}
+
+.auth-shell__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+  .auth-sidebar {
+    flex: 0 0 260px;
+    max-width: 260px;
+    min-height: 100vh;
+  }
+
+  .auth-shell__main {
+    padding: 3rem 4rem;
+  }
+}
+
+.sidebar-workspace-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+  margin: 0;
+}
+
+.sidebar-workspace-list__item {
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-workspace-list__name {
+  flex: 1 1 auto;
+}

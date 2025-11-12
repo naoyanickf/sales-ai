@@ -1,21 +1,26 @@
-<section class="profile-name-setup">
-  <h1>お名前を登録してください</h1>
-  <p>ユーザー名の登録が必要です。</p>
+<section class="py-5">
+  <div class="container">
+    <div class="mx-auto" style="max-width: 560px;">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="text-uppercase text-primary fw-semibold mb-2">Profile</p>
+          <h1 class="fs-3 fw-semibold mb-3">お名前を登録してください</h1>
+          <p class="text-body-secondary mb-4">他のメンバーに表示される名前です。後から変更できます。</p>
 
-  <%= form_with model: @user, url: profile_path, method: :post do |form| %>
-    <% if @user.errors.any? %>
-      <ul class="form-errors">
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    <% end %>
+          <%= form_with model: @user, url: profile_path, method: :post do |form| %>
+            <%= render "shared/form_errors", object: @user %>
 
-    <div class="field">
-      <%= form.label :name, "名前" %>
-      <%= form.text_field :name, autofocus: true %>
+            <div class="mb-4">
+              <%= form.label :name, "名前", class: "form-label" %>
+              <%= form.text_field :name, autofocus: true, class: "form-control form-control-lg" %>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "登録する", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-
-    <%= form.submit "登録する" %>
-  <% end %>
+  </div>
 </section>

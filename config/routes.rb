@@ -16,8 +16,14 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  root "home#index"
+  authenticated :user do
+    root "mypage#index", as: :authenticated_root
+  end
+
+  unauthenticated do
+    # Defines the root path route ("/")
+    root "home#index"
+  end
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
