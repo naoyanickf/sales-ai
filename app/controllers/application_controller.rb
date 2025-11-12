@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :ensure_workspace!
   before_action :prepare_sidebar_context, if: :user_signed_in?
 
-  helper_method :sidebar_memberships, :current_workspace
+  helper_method :sidebar_memberships, :current_workspace, :current_workspace_membership
 
   private
 
@@ -60,5 +60,21 @@ class ApplicationController < ActionController::Base
       scope = current_user.workspaces.where(workspaces: { deleted_at: nil })
       scope.find_by(id: selected_id) || scope.first
     end
+  end
+
+  def current_workspace_membership
+    return nil unless user_signed_in?
+    return nil if current_workspace.nil?
+
+    @current_workspace_membership ||= begin
+      sidebar_memberships.find { |membership| membership.workspace_id == current_workspace.id } ||
+        current_user.workspace_users.find_by(workspace_id: current_workspace.id)
+    end
+  end
+
+  def require_workspace_admin!
+    return if current_workspace_membership&.admin?
+
+    redirect_to authenticated_root_path, alert: "ワークスペースの管理者のみ操作できます。"
   end
 end

@@ -5,6 +5,9 @@ Rails.application.routes.draw do
     patch :email
     patch :password
   end
+  resources :products do
+    resources :product_documents, only: %i[create destroy]
+  end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
     resources :invitations, only: :create, controller: :workspace_invitations
   end

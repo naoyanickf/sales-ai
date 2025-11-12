@@ -1,3 +1,4 @@
+<% products_active = %w[products product_documents].include?(controller_name) %>
 <aside class="auth-sidebar bg-dark text-white p-4 d-flex flex-column">
   <div class="sidebar-top d-flex align-items-start gap-3 mb-3">
     <%= link_to authenticated_root_path, class: "d-inline-flex align-items-center justify-content-center rounded bg-white bg-opacity-10 text-white text-decoration-none", style: "width: 40px; height: 40px;" do %>
@@ -40,10 +41,19 @@
         <div class="dropdown-divider"></div>
         <%= link_to new_workspace_path, class: "dropdown-item d-flex align-items-center gap-2" do %>
           <i data-lucide="plus" aria-hidden="true"></i>
-          <span>新しいワークスペース</span>
+          <span>新しいワークスペースを作成</span>
         <% end %>
       </div>
     </div>
+  </div>
+
+  <div class="mt-4">
+    <p class="text-white-50 text-uppercase small fw-semibold mb-2">メニュー</p>
+    <%= link_to products_path,
+                class: "btn w-100 text-start mb-3 #{products_active ? 'btn-light text-dark' : 'btn-outline-light'}" do %>
+      <i data-lucide="package" class="me-2" aria-hidden="true"></i>
+      製品
+    <% end %>
   </div>
 
   <div class="mt-auto pt-4 border-top border-white border-opacity-25">

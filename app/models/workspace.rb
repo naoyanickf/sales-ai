@@ -4,6 +4,7 @@ class Workspace < ApplicationRecord
   has_many :workspace_users, dependent: :destroy
   has_many :users, through: :workspace_users
   has_many :workspace_invitations, dependent: :destroy
+  has_many :products, dependent: :destroy
 
   before_validation :set_uuid, on: :create
 
