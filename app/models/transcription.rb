@@ -4,5 +4,12 @@ class Transcription < ApplicationRecord
   has_many :knowledge_chunks, through: :expert_knowledge
 
   validates :language, presence: true
-end
 
+  after_create_commit :enqueue_text_refine
+
+  private
+
+  def enqueue_text_refine
+    TextRefineTranscriptionJob.perform_later(id)
+  end
+end
