@@ -8,3 +8,31 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.mypage-layout,
+.mypage-layout__wrapper {
+  min-height: 100vh;
+}
+
+.mypage-layout__sidebar {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.mypage-layout__body {
+  min-height: 100%;
+}
+
+@media (min-width: 992px) {
+  .mypage-layout__sidebar {
+    flex: 0 0 240px;
+    max-width: 240px;
+    min-height: 100vh;
+  }
+
+  .mypage-layout__body {
+    flex: 1 1 auto;
+    min-height: 100vh;
+    min-width: 0;
+  }
+}

@@ -10,6 +10,9 @@ This repository hosts a Ruby on Rails 8 application with a React front-end that 
 - **Database**: MySQL (see `config/database.yml`)
 - **Processes**: Foreman via `bin/dev` / `Procfile.dev`
 
+## UI Guidelines
+- **Icons**: Lucide is loaded globally via CDN (`https://unpkg.com/lucide@latest`). Use `<i data-lucide="icon-name"></i>` in views/components; icons are auto-initialized on each `turbo:load`.
+
 ## Documents
 - spec is written on `README.md`
 - todo is written on `TODO.md`
