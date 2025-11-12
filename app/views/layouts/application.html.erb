@@ -22,10 +22,37 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
-    <% flash.each do |type, message| %>
-      <p class="flash <%= type %>"><%= message %></p>
-    <% end %>
-    <%= yield %>
+  <body class="bg-light min-vh-100 d-flex flex-column">
+    <header class="border-bottom bg-white">
+      <div class="container d-flex flex-wrap align-items-center py-3 gap-3">
+        <%= link_to "Sales AI", root_path, class: "navbar-brand fs-4 fw-semibold text-decoration-none text-dark" %>
+        <div class="ms-auto d-flex gap-2">
+          <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-primary" %>
+          <%= link_to "無料登録", new_user_registration_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow-1 py-4">
+      <div class="container">
+        <% flash.each do |type, message| %>
+          <% bootstrap_class = case type.to_sym
+             when :notice then "alert-success"
+             when :alert then "alert-danger"
+             else "alert-secondary"
+             end %>
+          <div class="alert <%= bootstrap_class %> mb-4" role="alert">
+            <%= message %>
+          </div>
+        <% end %>
+        <%= yield %>
+      </div>
+    </main>
+
+    <footer class="bg-white border-top">
+      <div class="container py-3 text-center text-body-secondary small">
+        &copy; <%= Time.current.year %> Sales AI. All rights reserved.
+      </div>
+    </footer>
   </body>
 </html>
