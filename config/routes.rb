@@ -14,7 +14,11 @@ Rails.application.routes.draw do
     end
   end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
-    resources :invitations, only: :create, controller: :workspace_invitations
+    resources :invitations, only: %i[create destroy], controller: :workspace_invitations do
+      member do
+        post :resend
+      end
+    end
   end
   post "workspaces/switch", to: "workspace_switches#create", as: :switch_workspace
   get "invitations/:token/accept", to: "invitations#accept", as: :accept_invitation
