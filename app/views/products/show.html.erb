@@ -56,19 +56,21 @@
                 <%= @product.status_badge %>
               </span>
             </dd>
-            <dt class="col-sm-3 col-md-2 text-muted">Gemini連携</dt>
-            <dd class="col-sm-9 col-md-10">
-              <div class="d-flex flex-column gap-1">
-                <%= gemini_store_status_badge(@product) %>
-                <% if @product.gemini_data_store_error.present? %>
-                  <span class="small text-danger"><%= @product.gemini_data_store_error %></span>
-                <% elsif @product.gemini_data_store_id.present? %>
-                  <span class="small text-muted">
-                    <code><%= @product.gemini_data_store_id %></code>
-                  </span>
-                <% end %>
-              </div>
-            </dd>
+            <% if Rails.env.development? || params[:debug] == 'true' %>
+              <dt class="col-sm-3 col-md-2 text-muted">[DEBUG]Gemini連携</dt>
+              <dd class="col-sm-9 col-md-10">
+                <div class="d-flex flex-column gap-1">
+                  <%= gemini_store_status_badge(@product) %>
+                  <% if @product.gemini_data_store_error.present? %>
+                    <span class="small text-danger"><%= @product.gemini_data_store_error %></span>
+                  <% elsif @product.gemini_data_store_id.present? %>
+                    <span class="small text-muted">
+                      <code><%= @product.gemini_data_store_id %></code>
+                    </span>
+                  <% end %>
+                </div>
+              </dd>
+            <% end %>
             <dt class="col-sm-3 col-md-2 text-muted">カテゴリ</dt>
             <dd class="col-sm-9 col-md-10"><%= @product.category.presence || "-" %></dd>
             <dt class="col-sm-3 col-md-2 text-muted">説明</dt>

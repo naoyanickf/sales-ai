@@ -11,12 +11,12 @@ class Product < ApplicationRecord
 
   scope :active, -> { where(is_active: true) }
 
-  enum gemini_data_store_status: {
+  enum :gemini_data_store_status, {
     pending: "pending",
     provisioning: "provisioning",
     ready: "ready",
     failed: "failed"
-  }, _prefix: :gemini_store
+  }, prefix: :gemini_store
 
   before_validation :assign_uuid, on: :create
   after_commit :provision_gemini_data_store!, on: :create

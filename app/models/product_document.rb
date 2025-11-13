@@ -14,13 +14,13 @@ class ProductDocument < ApplicationRecord
 
   delegate :workspace, to: :product
 
-  enum gemini_sync_status: {
+  enum :gemini_sync_status, {
     pending: "pending",
     queued: "queued",
     processing: "processing",
     synced: "synced",
     failed: "failed"
-  }, _prefix: :gemini_sync
+  }, prefix: :gemini_sync
 
   after_commit :enqueue_gemini_sync, on: :create
 
