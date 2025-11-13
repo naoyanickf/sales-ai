@@ -66,3 +66,5 @@ gem "acts_as_paranoid"
 gem 'dotenv-rails'
 gem "aws-sdk-s3", "~> 1.145", require: false
 gem "image_processing", "~> 1.2"
+gem 'mime-types', '~> 3.5'
+gem 'pry'
