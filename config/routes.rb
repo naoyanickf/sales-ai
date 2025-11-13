@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    confirmations: "users/confirmations"
+  }
   get "dev/react"
   resource :profile, only: %i[new create edit update destroy] do
     patch :email
