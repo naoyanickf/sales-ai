@@ -1,5 +1,8 @@
 ja:
   hello: "こんにちは、世界"
+  time:
+    formats:
+      long: "%Y/%m/%d %H:%M"
   activerecord:
     models:
       user: "ユーザー"

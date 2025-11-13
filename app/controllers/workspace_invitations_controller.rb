@@ -2,6 +2,7 @@ class WorkspaceInvitationsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_workspace
   before_action :ensure_workspace_admin!
+  before_action :set_workspace_invitation, only: %i[destroy resend]
 
   def create
     @new_invitation = @workspace.workspace_invitations.build(invitation_params)
@@ -16,11 +17,26 @@ class WorkspaceInvitationsController < ApplicationController
     end
   end
 
+  def destroy
+    @invitation.destroy!
+    redirect_to workspace_path(@workspace), notice: "招待を削除しました。"
+  end
+
+  def resend
+    @invitation.regenerate_token!
+    WorkspaceInvitationMailer.with(invitation: @invitation).invite_email.deliver_later
+    redirect_to workspace_path(@workspace), notice: "招待メールを再送しました。"
+  end
+
   private
 
   def set_workspace
     @workspace = current_user.workspaces.find_by!(uuid: params[:workspace_uuid])
     @workspace_membership = @workspace.workspace_users.find_by!(user: current_user)
+  end
+
+  def set_workspace_invitation
+    @invitation = @workspace.workspace_invitations.pending.find(params[:id])
   end
 
   def ensure_workspace_admin!
