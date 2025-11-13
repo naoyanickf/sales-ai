@@ -10,6 +10,12 @@ class GeminiFileSearchClient
   DEFAULT_TIMEOUT = 20
   DEFAULT_OPEN_TIMEOUT = 5
 
+  class << self
+    def configured?
+      ENV["GOOGLE_AI_STUDIO_API_KEY"].present?
+    end
+  end
+
   class Error < StandardError
     attr_reader :status, :body
 

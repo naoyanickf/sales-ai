@@ -56,6 +56,19 @@
                 <%= @product.status_badge %>
               </span>
             </dd>
+            <dt class="col-sm-3 col-md-2 text-muted">Gemini連携</dt>
+            <dd class="col-sm-9 col-md-10">
+              <div class="d-flex flex-column gap-1">
+                <%= gemini_store_status_badge(@product) %>
+                <% if @product.gemini_data_store_error.present? %>
+                  <span class="small text-danger"><%= @product.gemini_data_store_error %></span>
+                <% elsif @product.gemini_data_store_id.present? %>
+                  <span class="small text-muted">
+                    <code><%= @product.gemini_data_store_id %></code>
+                  </span>
+                <% end %>
+              </div>
+            </dd>
             <dt class="col-sm-3 col-md-2 text-muted">カテゴリ</dt>
             <dd class="col-sm-9 col-md-10"><%= @product.category.presence || "-" %></dd>
             <dt class="col-sm-3 col-md-2 text-muted">説明</dt>
@@ -167,6 +180,12 @@
                               <%= l document.created_at, format: :short %>・
                               <%= document.uploader.name %>
                             </p>
+                            <div class="mt-2">
+                              <%= gemini_sync_status_badge(document) %>
+                              <% if document.gemini_sync_error.present? %>
+                                <p class="small text-danger mb-0 mt-1"><%= document.gemini_sync_error %></p>
+                              <% end %>
+                            </div>
                           </div>
                           <div class="d-flex flex-column align-items-end gap-2">
                             <% if document.file.attached? %>

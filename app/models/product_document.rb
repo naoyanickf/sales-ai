@@ -14,7 +14,27 @@ class ProductDocument < ApplicationRecord
 
   delegate :workspace, to: :product
 
+  enum gemini_sync_status: {
+    pending: "pending",
+    queued: "queued",
+    processing: "processing",
+    synced: "synced",
+    failed: "failed"
+  }, _prefix: :gemini_sync
+
+  after_commit :enqueue_gemini_sync, on: :create
+
   private
+
+  def enqueue_gemini_sync
+    return unless GeminiFileSearchClient.configured?
+
+    update_columns(
+      gemini_sync_status: self.class.gemini_sync_statuses[:queued],
+      gemini_sync_error: nil
+    )
+    Gemini::SyncProductDocumentJob.perform_later(id)
+  end
 
   def file_presence
     errors.add(:file, "を選択してください") unless file.attached?
