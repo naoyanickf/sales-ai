@@ -200,34 +200,82 @@ const teardownChatFormHotkeys = (form) => {
   delete textarea.chatFormHotkeyHandler;
 };
 
-const setupChatContextForms = () => {
-  document.querySelectorAll("form[data-chat-context-form]").forEach((form) => {
-    if (form.dataset.chatContextFormInitialized === "true") return;
-    form.dataset.chatContextFormInitialized = "true";
+const parseChatExperts = (container) => {
+  if (container.cachedExperts) return container.cachedExperts;
+  try {
+    container.cachedExperts = JSON.parse(container.dataset.chatExperts || "[]");
+  } catch (error) {
+    console.error("Failed to parse chat experts data", error);
+    container.cachedExperts = [];
+  }
+  return container.cachedExperts;
+};
 
-    const fields = form.querySelectorAll("[data-chat-context-field]");
-    fields.forEach((field) => {
-      if (field.chatContextChangeHandler) return;
-      const handler = () => {
-        form.requestSubmit();
-      };
-      field.chatContextChangeHandler = handler;
-      field.addEventListener("change", handler);
-    });
+const setupChatContextSelectors = () => {
+  document.querySelectorAll("[data-chat-context='true']").forEach((container) => {
+    if (container.dataset.chatContextInitialized === "true") return;
+    const productSelect = container.querySelector("[data-chat-context-product]");
+    const expertSelect = container.querySelector("[data-chat-context-expert]");
+    if (!productSelect || !expertSelect) return;
 
+    const experts = parseChatExperts(container);
+    const buildOption = (value, label) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      return option;
+    };
+
+    const updateExperts = () => {
+      const selectedProduct = productSelect.value;
+      const previousValue = expertSelect.value;
+      const matchingExperts = experts.filter(
+        (expert) => String(expert.product_id) === selectedProduct
+      );
+
+      expertSelect.innerHTML = "";
+      if (!selectedProduct) {
+        expertSelect.disabled = true;
+        expertSelect.appendChild(buildOption("", "製品を先に選択"));
+        expertSelect.value = "";
+        return;
+      }
+
+      if (matchingExperts.length === 0) {
+        expertSelect.disabled = true;
+        expertSelect.appendChild(buildOption("", "登録済みの相談相手がありません"));
+        expertSelect.value = "";
+        return;
+      }
+
+      expertSelect.disabled = false;
+      expertSelect.appendChild(buildOption("", "未選択"));
+      matchingExperts.forEach((expert) => {
+        expertSelect.appendChild(buildOption(String(expert.id), expert.name));
+      });
+
+      const stillValid = matchingExperts.some((expert) => String(expert.id) === previousValue);
+      expertSelect.value = stillValid ? previousValue : "";
+    };
+
+    productSelect.addEventListener("change", updateExperts);
+    container.dataset.chatContextInitialized = "true";
+    container.chatContextCleanup = () => {
+      productSelect.removeEventListener("change", updateExperts);
+      delete container.dataset.chatContextInitialized;
+    };
+
+    updateExperts();
   });
 };
 
-const teardownChatContextForms = () => {
-  document.querySelectorAll("form[data-chat-context-form]").forEach((form) => {
-    const fields = form.querySelectorAll("[data-chat-context-field]");
-    fields.forEach((field) => {
-      if (field.chatContextChangeHandler) {
-        field.removeEventListener("change", field.chatContextChangeHandler);
-        delete field.chatContextChangeHandler;
-      }
-    });
-    delete form.dataset.chatContextFormInitialized;
+const teardownChatContextSelectors = () => {
+  document.querySelectorAll("[data-chat-context='true']").forEach((container) => {
+    if (container.chatContextCleanup) {
+      container.chatContextCleanup();
+      delete container.chatContextCleanup;
+    }
+    delete container.cachedExperts;
   });
 };
 
@@ -255,7 +303,7 @@ const initChatForms = () => {
 const initChatUi = () => {
   initChatScrollContainers();
   initChatForms();
-  setupChatContextForms();
+  setupChatContextSelectors();
 };
 
 document.addEventListener("turbo:load", initChatUi);
@@ -269,5 +317,5 @@ document.addEventListener("turbo:before-cache", () => {
     teardownChatFormHotkeys(form);
     delete form.dataset.chatFormInitialized;
   });
-  teardownChatContextForms();
+  teardownChatContextSelectors();
 });

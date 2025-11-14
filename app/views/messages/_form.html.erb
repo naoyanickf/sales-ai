@@ -20,12 +20,11 @@
         <p class="small text-muted mb-2">
           製品と相談相手を設定すると、回答がその文脈に合わせて最適化されます。
         </p>
-        <%= turbo_frame_tag dom_id(chat, :context) do %>
-          <%= render "chats/context_form",
-                     chat: chat,
-                     products: products,
-                     sales_experts: sales_experts %>
-        <% end %>
+        <%= render "chats/context_form",
+                   chat: chat,
+                   products: products,
+                   sales_experts: sales_experts,
+                   available_sales_experts: available_sales_experts %>
       </div>
 
       <% if message.errors[:base].present? %>

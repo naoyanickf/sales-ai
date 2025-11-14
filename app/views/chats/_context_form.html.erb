@@ -1,31 +1,41 @@
-<%= form_with model: chat,
-              url: chat_path(chat),
-              method: :patch,
-              data: { turbo_frame: dom_id(chat, :context), chat_context_form: true },
-              html: { class: "chat-context-inline bg-light border rounded-3 p-3" } do |form| %>
-  <div class="row g-3 align-items-end">
-    <div class="col-12 col-lg-6">
-      <%= form.label :product_id, "製品 (必須)", class: "form-label small fw-semibold text-muted mb-1" %>
-      <%= form.collection_select :product_id,
-                                 products,
-                                 :id,
-                                 :name,
-                                 { include_blank: "選択してください" },
-                                 class: "form-select form-select-sm",
-                                 required: true,
-                                 data: { chat_context_field: true } %>
-    </div>
+<%= turbo_frame_tag dom_id(chat, :context) do %>
+  <% all_experts = available_sales_experts || SalesExpert.none %>
+  <% experts_payload = all_experts.map { |expert| { id: expert.id, name: expert.name, product_id: expert.product_id } } %>
+  <div class="chat-context-inline bg-light border rounded-3 p-3"
+       data-chat-context="true"
+       data-chat-experts="<%= experts_payload.to_json %>">
+    <%= fields_for :chat, chat do |chat_form| %>
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-lg-6">
+          <%= chat_form.label :product_id, "製品 (必須)", class: "form-label small fw-semibold text-muted mb-1" %>
+          <%= chat_form.collection_select :product_id,
+                                          products,
+                                          :id,
+                                          :name,
+                                          { include_blank: "選択してください" },
+                                          class: "form-select form-select-sm",
+                                          required: true,
+                                          data: { chatContextProduct: true } %>
+        </div>
 
-    <div class="col-12 col-lg-6">
-      <%= form.label :sales_expert_id, "相談相手", class: "form-label small fw-semibold text-muted mb-1" %>
-      <%= form.collection_select :sales_expert_id,
-                                 sales_experts,
-                                 :id,
-                                 :name,
-                                 { include_blank: sales_experts.any? ? "未選択" : "製品を先に選択" },
-                                 class: "form-select form-select-sm",
-                                 disabled: sales_experts.none?,
-                                 data: { chat_context_field: true } %>
-    </div>
+        <% blank_label =
+             if chat.product_id.present?
+               sales_experts.any? ? "未選択" : "登録済みの相談相手がありません"
+             else
+               "製品を先に選択"
+             end %>
+        <div class="col-12 col-lg-6">
+          <%= chat_form.label :sales_expert_id, "相談相手", class: "form-label small fw-semibold text-muted mb-1" %>
+          <%= chat_form.collection_select :sales_expert_id,
+                                          sales_experts,
+                                          :id,
+                                          :name,
+                                          { include_blank: blank_label },
+                                          class: "form-select form-select-sm",
+                                          disabled: chat.product_id.blank? || sales_experts.none?,
+                                          data: { chatContextExpert: true } %>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>

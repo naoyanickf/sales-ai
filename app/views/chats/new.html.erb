@@ -8,9 +8,6 @@
               <div>
                 <h2 class="h5 mb-0">AI営業サポート</h2>
               </div>
-              <%= link_to "新しいチャットを始める",
-                          authenticated_root_path,
-                          class: "btn btn-sm btn-outline-secondary" %>
             </div>
           </div>
           <div class="card-body d-flex flex-column">
@@ -31,7 +28,8 @@
                        chat: @chat,
                        message: @message,
                        products: @products,
-                       sales_experts: @sales_experts %>
+                       sales_experts: @sales_experts,
+                       available_sales_experts: @available_sales_experts %>
           </div>
         </div>
       </div>

@@ -96,6 +96,7 @@ class ChatsController < ApplicationController
     @message = Message.new
     @products = load_chat_products
     @sales_experts = load_sales_experts_for(@chat.product_id)
+    @available_sales_experts = load_workspace_sales_experts
   end
 
   def validate_initial_chat_form
