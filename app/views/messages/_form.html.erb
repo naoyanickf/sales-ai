@@ -16,18 +16,6 @@
         <% end %>
       </div>
 
-      <div class="mb-4">
-        <p class="small text-muted mb-2">
-          製品と相談相手を設定すると、回答がその文脈に合わせて最適化されます。
-        </p>
-        <%= turbo_frame_tag dom_id(chat, :context) do %>
-          <%= render "chats/context_form",
-                     chat: chat,
-                     products: products,
-                     sales_experts: sales_experts %>
-        <% end %>
-      </div>
-
       <% if message.errors[:base].present? %>
         <div class="alert alert-warning py-2 px-3 small">
           <%= message.errors[:base].first %>
@@ -42,6 +30,18 @@
         <% end %>
       </div>
     <% end %>
+
+    <div class="mb-4 mt-4">
+      <p class="small text-muted mb-2">
+        製品と相談相手を設定すると、回答がその文脈に合わせて最適化されます。
+      </p>
+      <%= turbo_frame_tag dom_id(chat, :context) do %>
+        <%= render "chats/context_form",
+                   chat: chat,
+                   products: products,
+                   sales_experts: sales_experts %>
+      <% end %>
+    </div>
   <% else %>
     <div class="alert alert-info mb-0">
       <div class="d-flex flex-column flex-md-row align-items-md-center gap-2">
