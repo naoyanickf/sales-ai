@@ -8,9 +8,12 @@ Rails.application.routes.draw do
     patch :password
   end
   resources :products do
-    resources :product_documents, only: %i[create destroy]
+    resources :product_documents, only: %i[create show destroy]
     resources :sales_experts, only: %i[create edit update destroy] do
       resources :expert_knowledges, only: %i[create destroy]
+    end
+    member do
+      get :preview
     end
   end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
