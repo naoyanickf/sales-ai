@@ -84,6 +84,29 @@ class GeminiFileSearchClient
     post("#{document_resource(store_name: store_name, document_id: document_id)}:query", body: body)
   end
 
+  def generate_content_with_store(query:, store_names:, model: "gemini-2.5-flash")
+    names = Array(store_names).map(&:to_s).reject(&:blank?)
+    raise ArgumentError, "query を指定してください" if query.blank?
+    raise ArgumentError, "store_names を指定してください" if names.blank?
+
+    body = {
+      contents: [
+        {
+          parts: [
+            { text: query }
+          ]
+        }
+      ],
+      tools: [
+        {
+          file_search: { file_search_store_names: names }
+        }
+      ]
+    }
+
+    post("models/#{model}:generateContent", body: body)
+  end
+
   # ---------------------------------------------------------------------------
   # Upload / Import
 
