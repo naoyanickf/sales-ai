@@ -1,6 +1,6 @@
 class ProductDocument < ApplicationRecord
   ALLOWED_EXTENSIONS = %w[pdf ppt pptx doc docx xls xlsx csv txt md].freeze
-  MAX_FILE_SIZE = 300.megabytes
+  MAX_FILE_SIZE = 30.megabytes
 
   belongs_to :product
   belongs_to :uploader, class_name: "User", foreign_key: :upload_user_id
