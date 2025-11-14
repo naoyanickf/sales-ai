@@ -69,4 +69,4 @@ gem "image_processing", "~> 1.2"
 gem 'mime-types', '~> 3.5'
 gem 'pry'
 gem "turbo-rails"
-gem "ruby-openai", "~> 7.0.1"
+gem "ruby-openai", "~> 8.3.0"
