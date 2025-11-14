@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     resources :sales_experts, only: %i[create edit update destroy] do
       resources :expert_knowledges, only: %i[create destroy]
     end
+    member do
+      get :preview
+    end
   end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
     resources :invitations, only: %i[create destroy], controller: :workspace_invitations do

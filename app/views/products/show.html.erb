@@ -26,7 +26,7 @@
 %>
 
 <div class="container py-4">
-  <div class="d-flex justify-content-between align-items-start mb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
     <div>
       <p class="text-uppercase text-muted small mb-1">製品</p>
       <h1 class="h3 mb-1"><%= @product.name %></h1>
@@ -34,14 +34,19 @@
         <p class="text-muted mb-0"><%= @product.category %></p>
       <% end %>
     </div>
-    <% if @can_manage_products %>
-      <div class="btn-group">
-        <%= link_to "編集", edit_product_path(@product), class: "btn btn-outline-secondary" %>
-        <%= button_to "削除", product_path(@product), method: :delete,
-                      data: { turbo_confirm: "この製品を削除しますか？" },
-                      class: "btn btn-outline-danger" %>
-      </div>
-    <% end %>
+    <div class="d-flex flex-column align-items-end gap-2">
+      <% if @product.gemini_store_available? && GeminiFileSearchClient.configured? %>
+        <%= link_to "Geminiプレビュー", preview_product_path(@product), class: "btn btn-primary" %>
+      <% end %>
+      <% if @can_manage_products %>
+        <div class="btn-group">
+          <%= link_to "編集", edit_product_path(@product), class: "btn btn-outline-secondary" %>
+          <%= button_to "削除", product_path(@product), method: :delete,
+                        data: { turbo_confirm: "この製品を削除しますか？" },
+                        class: "btn btn-outline-danger" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="row g-4">

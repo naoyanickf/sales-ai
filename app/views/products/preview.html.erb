@@ -1,0 +1,68 @@
+<% content_for :title, "Geminiプレビュー" %>
+
+<div class="container py-4">
+  <div class="mb-3">
+    <%= link_to "← 製品詳細に戻る", product_path(@product), class: "text-decoration-none" %>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">Gemini プレビュー</p>
+      <h1 class="h3 mb-2"><%= @product.name %></h1>
+      <p class="text-muted mb-0">資料に対して簡易的なクエリを実行し、Gemini の応答を確認します。</p>
+    </div>
+    <% if @can_manage_products %>
+      <div class="btn-group">
+        <%= link_to "編集", edit_product_path(@product), class: "btn btn-outline-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">クエリを送信</h2>
+      <%= form_with url: preview_product_path(@product), method: :get, local: true do %>
+        <div class="mb-3">
+          <label for="query-field" class="form-label">質問内容</label>
+          <%= text_area_tag :query,
+                            @query,
+                            id: "query-field",
+                            class: "form-control",
+                            rows: 4,
+                            placeholder: "製品資料について質問を入力してください",
+                            required: false %>
+        </div>
+        <%= submit_tag "Gemini に問い合わせる",
+                        class: "btn btn-primary",
+                        disabled: !@gemini_available %>
+      <% end %>
+      <% unless @gemini_available %>
+        <div class="alert alert-warning mt-3 mb-0">
+          Gemini File Search を利用できないため、プレビューを実行できません。
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @gemini_error.present? %>
+    <div class="alert alert-danger">Gemini の呼び出しに失敗しました: <%= @gemini_error %></div>
+  <% elsif @gemini_result_text.present? %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Gemini 応答</h2>
+        <pre class="mb-0"><%= @gemini_result_text %></pre>
+      </div>
+    </div>
+  <% elsif @query.present? && @gemini_available %>
+    <div class="alert alert-info">Gemini からテキスト応答を取得できませんでした。</div>
+  <% end %>
+
+  <% if @gemini_response.present? %>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 mb-3">Raw JSON</h2>
+        <pre class="small text-body-secondary mb-0"><%= JSON.pretty_generate(@gemini_response) %></pre>
+      </div>
+    </div>
+  <% end %>
+</div>
