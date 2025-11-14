@@ -26,4 +26,14 @@ module ChatContextLoader
       .where(products: { workspace_id: current_workspace.id }, sales_experts: { is_active: true })
       .order(:name)
   end
+
+  def load_recent_chats(limit: nil)
+    return Chat.none unless current_workspace
+
+    scope = current_workspace
+            .chats
+            .includes(:messages, :product, :sales_expert)
+            .order(updated_at: :desc)
+    limit ? scope.limit(limit) : scope
+  end
 end

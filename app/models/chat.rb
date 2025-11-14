@@ -14,6 +14,8 @@ class Chat < ApplicationRecord
   validate :product_belongs_to_workspace
   validate :sales_expert_belongs_to_product
 
+  FALLBACK_TITLE = "無題のチャット".freeze
+
   def system_prompt
     prompt = +"あなたは営業支援AIアシスタントです。"
     prompt << "ユーザーのワークスペース: #{workspace.name}。" if workspace&.name.present?
@@ -21,6 +23,15 @@ class Chat < ApplicationRecord
     prompt << "先輩営業マン: #{sales_expert.name}。" if sales_expert&.name.present?
     prompt << "丁寧かつ実践的な営業アドバイスを日本語で返答してください。"
     prompt
+  end
+
+  def display_title
+    return title if title.present?
+
+    first_message = messages.first
+    return first_message.content.truncate(30) if first_message&.content.present?
+
+    FALLBACK_TITLE
   end
 
   private

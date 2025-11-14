@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   post "workspaces/switch", to: "workspace_switches#create", as: :switch_workspace
   get "invitations/:token/accept", to: "invitations#accept", as: :accept_invitation
 
-  resources :chats, only: %i[new create show update] do
+  resources :chats, only: %i[index new create show update] do
     resources :messages, only: %i[create]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

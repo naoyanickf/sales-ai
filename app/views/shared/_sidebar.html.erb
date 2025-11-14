@@ -1,6 +1,6 @@
 <% products_active = %w[products product_documents].include?(controller_name) %>
 <% chat_active = %w[chats messages].include?(controller_name) %>
-<aside class="auth-sidebar bg-dark text-white p-4 d-flex flex-column">
+<aside class="auth-sidebar bg-dark text-white p-4 d-flex flex-column" id="sidebar">
   <div class="sidebar-top d-flex flex-column gap-2 mb-2">
     <%= link_to authenticated_root_path, class: "align-self-start d-inline-flex align-items-center justify-content-center rounded bg-white bg-opacity-10 text-white text-decoration-none", style: "width: 40px; height: 40px;" do %>
       <i data-lucide="sparkles" aria-hidden="true"></i>
@@ -57,12 +57,32 @@
         <i data-lucide="package" aria-hidden="true"></i>
         <span>製品</span>
       <% end %>
-      <%= link_to new_chat_path,
-                  class: "text-decoration-none d-flex align-items-center gap-2 py-2 px-1 rounded #{chat_active ? 'text-white fw-semibold' : 'text-white-50'}" do %>
-        <i data-lucide="messages-square" aria-hidden="true"></i>
-        <span>営業チャット</span>
-      <% end %>
     </nav>
+  </div>
+
+  <div class="mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <p class="text-white-50 text-uppercase small fw-semibold mb-0">最近のチャット</p>
+      <%= link_to "もっと見る",
+                  chats_path,
+                  class: "text-white-50 small text-decoration-none" %>
+    </div>
+    <% recent_chats = sidebar_recent_chats %>
+    <% if recent_chats.present? %>
+      <div class="d-flex flex-column gap-2">
+        <% recent_chats.each do |chat| %>
+          <%= link_to chat_path(chat),
+                      class: "text-decoration-none bg-white bg-opacity-10 rounded px-3 py-2 d-flex flex-column gap-1" do %>
+            <span class="text-white fw-semibold text-truncate"><%= chat.display_title %></span>
+            <small class="text-white-50 text-truncate">
+              <%= chat.product&.name || "製品未設定" %>・<%= l(chat.updated_at, format: :short) %>
+            </small>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-white-50 small mb-0">チャット履歴がまだありません。</p>
+    <% end %>
   </div>
 
   <div class="mt-auto pt-4 border-top border-white border-opacity-25">

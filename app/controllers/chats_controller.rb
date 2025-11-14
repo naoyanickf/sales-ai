@@ -4,6 +4,10 @@ class ChatsController < ApplicationController
   before_action :set_chat_from_session, only: %i[new]
   before_action :set_chat, only: %i[show update]
 
+  def index
+    @chats = load_recent_chats
+  end
+
   def new
     preload_context
   end
@@ -113,4 +117,5 @@ class ChatsController < ApplicationController
       record.errors.each { |error| @new_chat.errors.add(error.attribute, error.message) }
     end
   end
+
 end

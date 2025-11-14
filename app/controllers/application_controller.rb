@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :ensure_workspace!
   before_action :prepare_sidebar_context, if: :user_signed_in?
 
-  helper_method :sidebar_memberships, :current_workspace, :current_workspace_membership
+  helper_method :sidebar_memberships, :sidebar_recent_chats, :current_workspace, :current_workspace_membership
 
   private
 
@@ -56,10 +56,15 @@ class ApplicationController < ActionController::Base
 
   def prepare_sidebar_context
     @sidebar_memberships = current_user.workspace_users.includes(:workspace).where(workspaces: { deleted_at: nil })
+    @sidebar_recent_chats = load_recent_chats(limit: 10)
   end
 
   def sidebar_memberships
     @sidebar_memberships || []
+  end
+
+  def sidebar_recent_chats
+    @sidebar_recent_chats || []
   end
 
   def current_workspace
