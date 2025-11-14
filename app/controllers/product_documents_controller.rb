@@ -21,6 +21,10 @@ class ProductDocumentsController < ApplicationController
   def destroy
     @product_document.destroy!
     redirect_to product_path(@product), notice: "資料を削除しました。"
+  rescue ActiveRecord::RecordNotDestroyed => e
+    Rails.logger.error("[ProductDocuments] Failed to destroy ProductDocument##{@product_document.id}: #{e.class} #{e.message}")
+    alert_message = @product_document.errors.full_messages.to_sentence.presence || "資料の削除に失敗しました。"
+    redirect_to product_path(@product), alert: alert_message
   end
 
   private

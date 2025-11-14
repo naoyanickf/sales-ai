@@ -60,6 +60,17 @@ class Product < ApplicationRecord
     false
   end
 
+  def query_gemini_rag(query)
+    raise ArgumentError, "query を指定してください" if query.blank?
+    raise StandardError, "Gemini File Search が利用できません" unless GeminiFileSearchClient.configured?
+    raise StandardError, "Gemini データストアが未準備です" unless gemini_store_available?
+
+    GeminiFileSearchClient.new.generate_content_with_store(
+      query: query,
+      store_names: [gemini_data_store_id]
+    )
+  end
+
   private
 
   def assign_uuid

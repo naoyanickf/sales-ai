@@ -23,6 +23,7 @@ class ProductDocument < ApplicationRecord
   }, prefix: :gemini_sync
 
   after_commit :enqueue_gemini_sync, on: :create
+  before_destroy :remove_from_gemini_file_search
 
   private
 
@@ -56,5 +57,24 @@ class ProductDocument < ApplicationRecord
       max_mb = MAX_FILE_SIZE / 1.megabyte
       errors.add(:file, "のサイズが大きすぎます（最大 #{max_mb}MB）")
     end
+  end
+
+  def remove_from_gemini_file_search
+    return unless GeminiFileSearchClient.configured?
+
+    store_id = product&.gemini_data_store_id
+    document_id = gemini_document_id
+    return if store_id.blank? || document_id.blank?
+
+    GeminiFileSearchClient.new.delete_document(
+      store_name: store_id,
+      document_id: document_id,
+      force: true
+    )
+  rescue GeminiFileSearchClient::Error => e
+    return if e.status.to_i == 404
+
+    errors.add(:base, "Gemini File Search からの削除に失敗しました: #{e.message}")
+    throw :abort
   end
 end
