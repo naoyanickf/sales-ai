@@ -200,6 +200,37 @@ const teardownChatFormHotkeys = (form) => {
   delete textarea.chatFormHotkeyHandler;
 };
 
+const setupChatContextForms = () => {
+  document.querySelectorAll("form[data-chat-context-form]").forEach((form) => {
+    if (form.dataset.chatContextFormInitialized === "true") return;
+    form.dataset.chatContextFormInitialized = "true";
+
+    const fields = form.querySelectorAll("[data-chat-context-field]");
+    fields.forEach((field) => {
+      if (field.chatContextChangeHandler) return;
+      const handler = () => {
+        form.requestSubmit();
+      };
+      field.chatContextChangeHandler = handler;
+      field.addEventListener("change", handler);
+    });
+
+  });
+};
+
+const teardownChatContextForms = () => {
+  document.querySelectorAll("form[data-chat-context-form]").forEach((form) => {
+    const fields = form.querySelectorAll("[data-chat-context-field]");
+    fields.forEach((field) => {
+      if (field.chatContextChangeHandler) {
+        field.removeEventListener("change", field.chatContextChangeHandler);
+        delete field.chatContextChangeHandler;
+      }
+    });
+    delete form.dataset.chatContextFormInitialized;
+  });
+};
+
 const initChatForms = () => {
   document.querySelectorAll("form[data-chat-form]").forEach((form) => {
     if (form.dataset.chatFormInitialized === "true") return;
@@ -224,6 +255,7 @@ const initChatForms = () => {
 const initChatUi = () => {
   initChatScrollContainers();
   initChatForms();
+  setupChatContextForms();
 };
 
 document.addEventListener("turbo:load", initChatUi);
@@ -237,4 +269,5 @@ document.addEventListener("turbo:before-cache", () => {
     teardownChatFormHotkeys(form);
     delete form.dataset.chatFormInitialized;
   });
+  teardownChatContextForms();
 });

@@ -1,50 +1,16 @@
 <section class="py-4">
   <div class="container">
-    <div class="row g-4">
-      <div class="col-12 col-lg-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div>
-                <p class="text-uppercase text-primary fw-semibold small mb-1">Context</p>
-                <h2 class="h5 mb-0">チャット設定</h2>
-              </div>
-              <i data-lucide="sliders-horizontal" class="text-primary" aria-hidden="true"></i>
-            </div>
-
-            <%= turbo_frame_tag dom_id(@chat, :context) do %>
-              <%= render "context_form",
-                         chat: @chat,
-                         products: @products,
-                         sales_experts: @sales_experts %>
-            <% end %>
-
-            <hr class="my-4">
-            <%= button_to "新しいチャットを開始",
-                          chats_path,
-                          method: :post,
-                          class: "btn btn-outline-secondary w-100",
-                          form: { data: { turbo_confirm: "現在の会話履歴をリセットしますか？" } } %>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-lg-8">
+    <div class="row justify-content-center">
+      <div class="col-12 col-xl-10">
         <div class="card h-100 shadow-sm">
           <div class="card-header bg-white border-bottom-0">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
               <div>
-                <p class="text-uppercase text-muted small mb-1">Streaming Chat</p>
                 <h2 class="h5 mb-0">AI営業サポート</h2>
               </div>
-              <div class="text-end small text-muted">
-                <% if @chat.product.present? %>
-                  <div>製品: <strong><%= @chat.product.name %></strong></div>
-                <% end %>
-                <% if @chat.sales_expert.present? %>
-                  <div>担当AI: <strong><%= @chat.sales_expert.name %></strong></div>
-                <% end %>
-              </div>
+              <%= link_to "新しいチャットを始める",
+                          authenticated_root_path,
+                          class: "btn btn-sm btn-outline-secondary" %>
             </div>
           </div>
           <div class="card-body d-flex flex-column">
@@ -61,7 +27,11 @@
                 <%= render @chat.messages %>
               <% end %>
             </div>
-            <%= render "messages/form", chat: @chat, message: @message %>
+            <%= render "messages/form",
+                       chat: @chat,
+                       message: @message,
+                       products: @products,
+                       sales_experts: @sales_experts %>
           </div>
         </div>
       </div>

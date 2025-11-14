@@ -2,14 +2,89 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-12">
-        <header class="mb-2">
-          <p class="text-uppercase text-primary fw-semibold small mb-2">Workspace Hub</p>
+        <header class="mb-4">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
-              <h1 class="display-6 fw-bold mb-2">マイページトップ</h1>              
+              <p class="text-muted mb-0">ここから最初の質問を送信してチャットを開始してください。</p>
             </div>
           </div>
         </header>
+      </div>
+
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <p class="text-uppercase text-muted small mb-1">Start New Chat</p>
+                <h2 class="h5 mb-0">最初の質問を送信</h2>
+              </div>
+              <i data-lucide="messages-square" class="text-primary" aria-hidden="true"></i>
+            </div>
+
+            <% if @new_chat.errors.any? || (@initial_message && @initial_message.errors.any?) %>
+              <div class="alert alert-danger">
+                <ul class="mb-0 ps-3">
+                  <% @new_chat.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                  <% if @initial_message %>
+                    <% @initial_message.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <%= form_with model: @new_chat,
+                          url: chats_path,
+                          data: { turbo: true } do |form| %>
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <%= form.label :product_id, "製品 (必須)", class: "form-label fw-semibold small text-muted" %>
+                  <%= form.collection_select :product_id,
+                                             @products,
+                                             :id,
+                                             :name,
+                                             { include_blank: "選択してください" },
+                                             class: "form-select",
+                                             required: true %>
+                </div>
+                <div class="col-12 col-md-6">
+                  <%= form.label :sales_expert_id, "相談相手 (任意)", class: "form-label fw-semibold small text-muted" %>
+                  <% options = @available_sales_experts.map { |expert| ["#{expert.product.name} / #{expert.name}", expert.id] } %>
+                  <%= form.select :sales_expert_id,
+                                  options_for_select(options, @new_chat.sales_expert_id),
+                                  { include_blank: @available_sales_experts.any? ? "未選択" : "選択可能な相談相手がありません" },
+                                  class: "form-select",
+                                  disabled: @available_sales_experts.none? %>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <%= form.fields_for :message, @initial_message do |message_form| %>
+                  <%= message_form.label :content, "質問内容", class: "form-label fw-semibold" %>
+                  <%= message_form.text_area :content,
+                                              rows: 4,
+                                              class: "form-control",
+                                              placeholder: "営業の悩みを入力してください",
+                                              required: true %>
+                <% end %>
+                <p class="small text-muted mt-2 mb-0">
+                  フォームを送信すると新しいチャットが作成され、チャット画面に移動します。
+                </p>
+              </div>
+
+              <div class="mt-4 d-flex justify-content-end">
+                <%= form.button class: "btn btn-primary d-inline-flex align-items-center gap-2" do %>
+                  <i data-lucide="sparkles" aria-hidden="true"></i>
+                  <span>AIに相談する</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
