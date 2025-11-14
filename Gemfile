@@ -68,3 +68,5 @@ gem "aws-sdk-s3", "~> 1.145", require: false
 gem "image_processing", "~> 1.2"
 gem 'mime-types', '~> 3.5'
 gem 'pry'
+gem "turbo-rails"
+gem "ruby-openai", "~> 7.0.1"

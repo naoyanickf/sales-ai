@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Turbo::FramesHelper
+  include Turbo::StreamsHelper
   GEMINI_STORE_STATUS_LABELS = {
     "pending" => "未作成",
     "provisioning" => "作成中",

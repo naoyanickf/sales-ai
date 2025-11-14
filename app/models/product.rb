@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   belongs_to :workspace
   has_many :product_documents, dependent: :destroy
   has_many :sales_experts, dependent: :destroy
+  has_many :chats, dependent: :nullify
 
   validates :name, presence: true, length: { maximum: 120 }
   validates :category, length: { maximum: 80 }, allow_blank: true
