@@ -30,7 +30,10 @@ class ChatsController < ApplicationController
       return
     end
 
+    generated_title = Chats::TitleGenerator.new(content: @initial_message.content).call
+
     ActiveRecord::Base.transaction do
+      @new_chat.title = generated_title if generated_title.present?
       @new_chat.save!
       session[:current_chat_id] = @new_chat.id
       @new_chat.messages.create!(role: :user, content: @initial_message.content)
