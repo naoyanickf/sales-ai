@@ -177,12 +177,37 @@ const resetChatScrollObservers = () => {
   chatScrollObservers.clear();
 };
 
+const setupChatFormHotkeys = (form) => {
+  const textarea = form.querySelector("textarea");
+  if (!textarea || textarea.chatFormHotkeyHandler) return;
+
+  const handler = (event) => {
+    if (event.key === "Enter" && event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  };
+
+  textarea.chatFormHotkeyHandler = handler;
+  textarea.addEventListener("keydown", handler);
+};
+
+const teardownChatFormHotkeys = (form) => {
+  const textarea = form.querySelector("textarea");
+  if (!textarea || !textarea.chatFormHotkeyHandler) return;
+
+  textarea.removeEventListener("keydown", textarea.chatFormHotkeyHandler);
+  delete textarea.chatFormHotkeyHandler;
+};
+
 const initChatForms = () => {
   document.querySelectorAll("form[data-chat-form]").forEach((form) => {
     if (form.dataset.chatFormInitialized === "true") return;
     form.dataset.chatFormInitialized = "true";
 
     const submitButton = form.querySelector("[data-chat-form-target='submit']");
+    setupChatFormHotkeys(form);
+
     form.addEventListener("turbo:submit-start", () => {
       if (submitButton) submitButton.disabled = true;
     });
@@ -209,6 +234,7 @@ document.addEventListener("turbo:before-cache", () => {
   document.querySelectorAll("form[data-chat-form]").forEach((form) => {
     const submitButton = form.querySelector("[data-chat-form-target='submit']");
     if (submitButton) submitButton.disabled = false;
+    teardownChatFormHotkeys(form);
     delete form.dataset.chatFormInitialized;
   });
 });

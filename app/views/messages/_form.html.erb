@@ -7,8 +7,7 @@
       <%= form.text_area :content,
                          rows: 4,
                          class: "form-control",
-                         placeholder: "営業の悩みを入力してください (⌘ + Enterで送信)",
-                         data: { action: "keydown.meta+enter->this.form.requestSubmit()" } %>
+                         placeholder: "営業の悩みを入力してください (Shift + Enterで送信)" %>
       <% if message.errors[:content].present? %>
         <div class="text-danger small mt-1">
           <%= message.errors[:content].first %>
