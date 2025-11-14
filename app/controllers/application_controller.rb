@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ChatContextLoader
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   before_action :basic_auth
   allow_browser versions: :modern

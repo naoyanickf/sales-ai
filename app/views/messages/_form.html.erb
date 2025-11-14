@@ -1,25 +1,58 @@
 <%= turbo_frame_tag dom_id(chat, :message_form) do %>
-  <%= form_with(model: [chat, message],
-                url: chat_messages_path(chat),
-                data: { chat_form: true }) do |form| %>
-    <div class="mb-3">
-      <%= form.label :content, "質問内容", class: "form-label fw-semibold" %>
-      <%= form.text_area :content,
-                         rows: 4,
-                         class: "form-control",
-                         placeholder: "営業の悩みを入力してください (Shift + Enterで送信)" %>
-      <% if message.errors[:content].present? %>
-        <div class="text-danger small mt-1">
-          <%= message.errors[:content].first %>
+  <% if chat.messages.exists? %>
+    <%= form_with(model: [chat, message],
+                  url: chat_messages_path(chat),
+                  data: { chat_form: true }) do |form| %>
+      <div class="mb-3">
+        <%= form.label :content, "質問内容", class: "form-label fw-semibold" %>
+        <%= form.text_area :content,
+                           rows: 4,
+                           class: "form-control",
+                           placeholder: "営業の悩みを入力してください (Shift + Enterで送信)" %>
+        <% if message.errors[:content].present? %>
+          <div class="text-danger small mt-1">
+            <%= message.errors[:content].first %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mb-4">
+        <p class="small text-muted mb-2">
+          製品と相談相手を設定すると、回答がその文脈に合わせて最適化されます。
+        </p>
+        <%= turbo_frame_tag dom_id(chat, :context) do %>
+          <%= render "chats/context_form",
+                     chat: chat,
+                     products: products,
+                     sales_experts: sales_experts %>
+        <% end %>
+      </div>
+
+      <% if message.errors[:base].present? %>
+        <div class="alert alert-warning py-2 px-3 small">
+          <%= message.errors[:base].first %>
         </div>
       <% end %>
-    </div>
-    <div class="d-flex justify-content-end">
-      <%= form.button class: "btn btn-primary d-inline-flex align-items-center gap-2",
-                      data: { chat_form_target: "submit" } do %>
-        <i data-lucide="send" aria-hidden="true"></i>
-        <span>送信</span>
-      <% end %>
+
+      <div class="d-flex justify-content-end">
+        <%= form.button class: "btn btn-primary d-inline-flex align-items-center gap-2",
+                        data: { chat_form_target: "submit" } do %>
+          <i data-lucide="send" aria-hidden="true"></i>
+          <span>送信</span>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-info mb-0">
+      <div class="d-flex flex-column flex-md-row align-items-md-center gap-2">
+        <div>
+          <strong>まだ質問がありません。</strong>
+          <div class="small text-muted">マイページトップから最初の質問を送信するとチャットを開始できます。</div>
+        </div>
+        <%= link_to "マイページトップへ",
+                    authenticated_root_path,
+                    class: "btn btn-primary btn-sm ms-md-auto" %>
+      </div>
     </div>
   <% end %>
 <% end %>
