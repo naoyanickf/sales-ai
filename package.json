@@ -8,6 +8,7 @@
     "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx --loader:.jsx=jsx"
   },
   "dependencies": {
+    "@hotwired/turbo-rails": "^8.0.12",
     "@popperjs/core": "^2.11.8",
     "@rails/activestorage": "^8.1.100",
     "bootstrap": "5.3.3",

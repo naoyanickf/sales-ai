@@ -1,0 +1,55 @@
+<div class="mb-3">
+  <p class="small text-muted mb-2">
+    製品や先輩営業マンを選択すると、回答がその文脈に合わせて最適化されます。
+  </p>
+</div>
+
+<%= form_with model: chat,
+              url: chat_path(chat),
+              method: :patch,
+              data: { turbo_frame: dom_id(chat, :context) } do |form| %>
+  <div class="mb-3">
+    <%= form.label :product_id, "製品を選択", class: "form-label fw-semibold" %>
+    <%= form.collection_select :product_id,
+                               products,
+                               :id,
+                               :name,
+                               { include_blank: "未選択" },
+                               class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :sales_expert_id, "担当AI", class: "form-label fw-semibold" %>
+    <%= form.collection_select :sales_expert_id,
+                               sales_experts,
+                               :id,
+                               :name,
+                               { include_blank: sales_experts.any? ? "未選択" : "製品を先に選択" },
+                               class: "form-select",
+                               disabled: sales_experts.none? %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :title, "メモ (任意)", class: "form-label fw-semibold" %>
+    <%= form.text_field :title,
+                        class: "form-control",
+                        placeholder: "このチャットの目的やメモを入力" %>
+  </div>
+
+  <% if chat.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0 ps-3">
+        <% chat.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="d-grid">
+    <%= form.button class: "btn btn-primary" do %>
+      <i data-lucide="save" class="me-1" aria-hidden="true"></i>
+      <span>設定を保存</span>
+    <% end %>
+  </div>
+<% end %>

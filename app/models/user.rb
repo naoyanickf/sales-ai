@@ -25,6 +25,7 @@ class User < ApplicationRecord
            foreign_key: :upload_user_id,
            inverse_of: :uploader,
            dependent: :nullify
+  has_many :chats, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

@@ -1,0 +1,19 @@
+<% scroll = local_assigns.fetch(:scroll_to, false) %>
+<% alignment = message.user? ? "justify-content-end" : "justify-content-start" %>
+<% bubble_class = message.user? ? "bg-primary text-white" : "bg-light" %>
+<% text_class = message.user? ? "text-white" : "text-dark" %>
+
+<div id="<%= dom_id(message) %>_messages"
+     class="d-flex <%= alignment %> mb-2"
+     data-chat-scroll-anchor="<%= scroll %>">
+  <div class="rounded-4 px-3 py-2 <%= bubble_class %> shadow-sm" style="max-width: 85%;">
+    <% if message.user? %>
+      <p class="small text-white-50 mb-1">あなた</p>
+    <% else %>
+      <p class="small text-muted mb-1">SalesAI</p>
+    <% end %>
+    <div class="<%= text_class %> mb-0">
+      <%= simple_format(message.content, {}, sanitize: true) %>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "@hotwired/turbo-rails";
 
 import * as ActiveStorage from "@rails/activestorage";
 import React from "react";
@@ -146,4 +147,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const root = createRoot(mountPoint);
   root.render(<HelloWorld />);
+});
+
+const chatScrollObservers = new Map();
+
+const initChatScrollContainers = () => {
+  document.querySelectorAll("[data-chat-scroll-container]").forEach((container) => {
+    if (chatScrollObservers.has(container)) return;
+
+    const observer = new MutationObserver((mutations) => {
+      const shouldScroll = mutations.some((mutation) =>
+        Array.from(mutation.addedNodes).some(
+          (node) => node.nodeType === Node.ELEMENT_NODE && node.dataset.chatScrollAnchor === "true"
+        )
+      );
+      if (shouldScroll) {
+        container.scrollTop = container.scrollHeight;
+      }
+    });
+
+    observer.observe(container, { childList: true });
+    chatScrollObservers.set(container, observer);
+    container.scrollTop = container.scrollHeight;
+  });
+};
+
+const resetChatScrollObservers = () => {
+  chatScrollObservers.forEach((observer) => observer.disconnect());
+  chatScrollObservers.clear();
+};
+
+const initChatForms = () => {
+  document.querySelectorAll("form[data-chat-form]").forEach((form) => {
+    if (form.dataset.chatFormInitialized === "true") return;
+    form.dataset.chatFormInitialized = "true";
+
+    const submitButton = form.querySelector("[data-chat-form-target='submit']");
+    form.addEventListener("turbo:submit-start", () => {
+      if (submitButton) submitButton.disabled = true;
+    });
+    form.addEventListener("turbo:submit-end", (event) => {
+      if (submitButton) submitButton.disabled = false;
+      if (event.detail && event.detail.successful) {
+        const textarea = form.querySelector("textarea");
+        if (textarea) textarea.value = "";
+      }
+    });
+  });
+};
+
+const initChatUi = () => {
+  initChatScrollContainers();
+  initChatForms();
+};
+
+document.addEventListener("turbo:load", initChatUi);
+document.addEventListener("turbo:frame-load", initChatUi);
+document.addEventListener("turbo:render", initChatUi);
+document.addEventListener("turbo:before-cache", () => {
+  resetChatScrollObservers();
+  document.querySelectorAll("form[data-chat-form]").forEach((form) => {
+    const submitButton = form.querySelector("[data-chat-form-target='submit']");
+    if (submitButton) submitButton.disabled = false;
+    delete form.dataset.chatFormInitialized;
+  });
 });
