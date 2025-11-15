@@ -59,6 +59,18 @@ module ApplicationHelper
     linked = escaped.gsub(url_regex) do |url|
       %Q(<a href="#{url}" target="_blank" rel="noopener">#{url}</a>)
     end
+    # Also linkify root-relative paths like /transcriptions/3#seg-123
+    path_regex = %r{(^|[\s>])(/[^\s<]+)}
+    linked = linked.gsub(path_regex) do
+      prefix = Regexp.last_match(1)
+      path = Regexp.last_match(2)
+      # Avoid double-linking inside existing href attributes
+      if prefix.ends_with?("=")
+        "#{prefix}#{path}"
+      else
+        %Q(#{prefix}<a href="#{path}" target="_blank" rel="noopener">#{path}</a>)
+      end
+    end
     linked.html_safe
   end
 end

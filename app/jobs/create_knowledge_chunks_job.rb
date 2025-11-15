@@ -15,7 +15,7 @@ class CreateKnowledgeChunksJob < ApplicationJob
         expert_knowledge_id: ek.id,
         chunk_text: ch[:chunk_text],
         transcription_segment_ids: ch[:transcription_segment_ids],
-        metadata: { source: 'transcription' }
+        metadata: (ch[:metadata] || {}).merge(source: 'transcription')
       )
     end
   end

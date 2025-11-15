@@ -1,7 +1,7 @@
 class TranscriptionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_workspace_admin!
   before_action :set_transcription
+  before_action :require_workspace_admin!, only: :refine
 
   def show
     # @transcription is set; view will render details

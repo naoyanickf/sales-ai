@@ -101,9 +101,9 @@ module Chats
         next unless t
         seg_id = Array(chunk.transcription_segment_ids).first
         anchor = seg_id ? "#seg-#{seg_id}" : nil
-        url = Rails.application.routes.url_helpers.transcription_url(t, host: ENV['DOMAIN'] || 'localhost:3000')
-        link = [url, anchor].compact.join
-        "- chunk##{chunk.id}: #{link}"
+        path = Rails.application.routes.url_helpers.transcription_path(t)
+        link = [path, anchor].compact.join
+        "- 出典##{chunk.id}: #{link}"
       end.compact
 
       return if lines.blank?
