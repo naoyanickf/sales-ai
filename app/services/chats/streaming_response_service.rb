@@ -10,7 +10,8 @@ module Chats
     def call
       return handle_missing_api_key unless api_key_configured?
 
-      prompt_messages = Message.for_openai(chat.messages)
+      # prompt_messages = Message.for_openai(chat.messages)
+      prompt_messages = ChatPromptBuilder.build(chat: chat)
       placeholders = []
       placeholders = build_placeholders
       stream_response(prompt_messages, placeholders)
