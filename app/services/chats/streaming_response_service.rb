@@ -103,7 +103,13 @@ module Chats
         anchor = seg_id ? "#seg-#{seg_id}" : nil
         path = Rails.application.routes.url_helpers.transcription_path(t)
         link = [path, anchor].compact.join
-        "- 出典##{chunk.id}: #{link}"
+        # Build a short, safe summary label from chunk text
+        summary = chunk.chunk_text.to_s.split(/\n/).first.to_s.strip
+        summary = summary[0, 80]
+        summary << "…" if chunk.chunk_text.to_s.length > 80
+        summary = CGI.escapeHTML(summary)
+        label = %Q(<a href="#{link}" target="_blank" rel="noopener">#{summary}</a>)
+        "- 出典##{chunk.id}: #{label}"
       end.compact
 
       return if lines.blank?
