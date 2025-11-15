@@ -1,3 +1,5 @@
+require 'set'
+
 class KnowledgeChunker
   def initialize(transcription)
     @transcription = transcription

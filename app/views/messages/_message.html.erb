@@ -24,7 +24,7 @@
           </p>
         </div>
       <% else %>
-        <%= simple_format(linkify_urls(message.content), {}, sanitize: false) %>
+        <%= render_message_body(message) %>
       <% end %>
     </div>
   </div>

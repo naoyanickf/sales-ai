@@ -16,7 +16,8 @@ class ExpertRag
     bm25_scores = bm25_scores_for(tokens: tokens, corpus: corpus)
 
     prelim = chunks.each_with_index.map do |ch, idx|
-      { id: ch.id, text: ch.chunk_text, score: bm25_scores[idx] }
+      combined = bm25_scores[idx].to_f + 2.0 * overlap_similarity(query.to_s, ch.chunk_text.to_s)
+      { id: ch.id, text: ch.chunk_text, score: combined }
     end
     prelim.select! { |h| h[:score] > 0 }
     prelim.sort_by! { |h| -h[:score] }
@@ -110,6 +111,21 @@ class ExpertRag
     denom > 0 ? dot / denom : 0.0
   end
 
+  # Compute character n-gram overlap similarity between query and text
+  # Uses 2-gram and 3-gram Jaccard and returns value in [0, 1]
+  def self.overlap_similarity(query, text)
+    q = query.to_s
+    t = text.to_s
+    return 0.0 if q.strip.empty? || t.strip.empty?
+    q2 = char_ngrams(q, 2).to_set
+    t2 = char_ngrams(t, 2).to_set
+    q3 = char_ngrams(q, 3).to_set
+    t3 = char_ngrams(t, 3).to_set
+    sim2 = jaccard(q2, t2)
+    sim3 = jaccard(q3, t3)
+    (sim2 + sim3) / 2.0
+  end
+
   def self.contains_cjk?(s)
     # Hiragana, Katakana, Kanji ranges
     !!(s =~ /[\p{Hiragana}\p{Katakana}\p{Han}]/)
@@ -121,5 +137,12 @@ class ExpertRag
     grams = []
     0.upto(chars.length - n) { |i| grams << chars[i, n] }
     grams
+  end
+
+  def self.jaccard(a, b)
+    return 0.0 if a.empty? || b.empty?
+    inter = (a & b).length.to_f
+    union = (a | b).length.to_f
+    union > 0 ? inter / union : 0.0
   end
 end

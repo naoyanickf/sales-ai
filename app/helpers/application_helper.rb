@@ -73,4 +73,15 @@ module ApplicationHelper
     end
     linked.html_safe
   end
+
+  # Render message content safely while keeping assistant-generated links clickable.
+  def render_message_body(message)
+    content = message.content.to_s
+    if message.assistant? && content.include?("<a ")
+      safe = sanitize(content, tags: %w[a br p ul ol li code pre strong em], attributes: %w[href target rel])
+      simple_format(safe, {}, sanitize: false)
+    else
+      simple_format(linkify_urls(content), {}, sanitize: false)
+    end
+  end
 end
