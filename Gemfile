@@ -67,9 +67,6 @@ gem 'dotenv-rails'
 gem "aws-sdk-s3", "~> 1.145", require: false
 gem "image_processing", "~> 1.2"
 
-# ChatGPT (OpenAI) for JP text refinement
-gem 'ruby-openai', require: false
-
 # AWS/AI integrations (planned)
 gem 'aws-sdk-transcribeservice', '~> 1.0', require: false
 gem 'aws-sdk-bedrockagent', '~> 1.0', require: false
