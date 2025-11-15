@@ -10,9 +10,11 @@ module Chats
     def call
       return handle_missing_api_key unless api_key_configured?
 
-      prompt_messages = Message.for_openai(chat.messages)
       placeholders = []
       placeholders = build_placeholders
+      # Generate prompt after inserting placeholders so UI immediately shows "回答を生成中"
+      # prompt_messages = Message.for_openai(chat.messages)
+      prompt_messages = ChatPromptBuilder.build(chat: chat)
       stream_response(prompt_messages, placeholders)
     rescue StandardError => e
       Rails.logger.error("[ChatStreaming] #{e.class}: #{e.message}")
