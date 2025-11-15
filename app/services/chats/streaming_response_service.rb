@@ -16,6 +16,7 @@ module Chats
       # prompt_messages = Message.for_openai(chat.messages)
       prompt_messages = ChatPromptBuilder.build(chat: chat)
       stream_response(prompt_messages, placeholders)
+      append_expert_sources_footer
     rescue StandardError => e
       Rails.logger.error("[ChatStreaming] #{e.class}: #{e.message}")
       handle_stream_error(placeholders, e)
@@ -78,6 +79,34 @@ module Chats
       placeholders.each do |message|
         message.update(content: "回答の生成中にエラーが発生しました: #{error.message}")
       end
+    end
+
+    def append_expert_sources_footer
+      return unless chat.sales_expert.present?
+      query = chat.messages.order(created_at: :desc, id: :desc).find(&:user?)&.content.to_s
+      return if query.blank?
+
+      hits = ExpertRag.fetch(sales_expert: chat.sales_expert, query: query, limit: 3)
+      return if hits.blank?
+
+      lines = hits.map do |h|
+        chunk = KnowledgeChunk.find_by(id: h[:id])
+        next unless chunk
+        t = chunk.expert_knowledge&.transcription
+        next unless t
+        seg_id = Array(chunk.transcription_segment_ids).first
+        anchor = seg_id ? "#seg-#{seg_id}" : nil
+        url = Rails.application.routes.url_helpers.transcription_url(t, host: ENV['DOMAIN'] || 'localhost:3000')
+        link = [url, anchor].compact.join
+        "- chunk##{chunk.id}: #{link}"
+      end.compact
+
+      return if lines.blank?
+
+      content = "参考: 先輩RAG出典\n" + lines.join("\n")
+      chat.messages.create!(role: :assistant, content: content)
+    rescue => e
+      Rails.logger.warn("[ChatStreaming] append_expert_sources_footer failed: #{e.class} #{e.message}")
     end
   end
 end

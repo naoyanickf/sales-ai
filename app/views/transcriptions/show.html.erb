@@ -42,7 +42,7 @@
       <% if @transcription.segments.exists? %>
         <div class="list-group">
           <% @transcription.segments.order(:sequence_number).each do |seg| %>
-            <div class="list-group-item">
+            <div class="list-group-item" id="seg-<%= seg.id %>">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
                   <div class="small text-muted">
