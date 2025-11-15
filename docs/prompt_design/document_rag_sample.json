@@ -1,0 +1,788 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "WAMnet Japanは、企業間ファイル転送・ファイル共有サービスであるGigaCC ASPの料金プランを提供しています。これらのプランには、基本料金と様々なオプションサービスが含まれています。\n\n**GigaCC ASP Standardプラン**\n\nこのプランは、ID数と容量に応じて月額料金が設定されています。\n*   **10 ID / 1 GB:** 初期費用 ¥50,000、月額基本料金 ¥12,000/月\n*   **100 ID / 100 GB:** 初期費用 ¥50,000、月額基本料金 ¥131,000/月 (想定月額料金)\n*   **1,000 ID / 1,000 GB:** 初期費用 ¥50,000、月額基本料金 ¥280,000/月\n\n追加IDは50IDごとに¥10,000/月で利用可能です。最低契約期間は3ヶ月（自動更新）です。\n\n**アップグレードプラン**\n\nStandardプランには以下のアップグレードオプションがあります。\n*   **Advancedプラン:** 初期費用 ¥5,000、月額基本料金 ¥25,000/月。次ページのオプションから3つ選択して利用できます。\n*   **Premiumプラン:** 初期費用 ¥5,000、月額基本料金 ¥42,000/月。次ページの全てのオプションを利用できます。\n\n**SHARERNの料金プラン**\n\nSHARERNには、ユーザー数と容量に応じた月額プランがあります。\n*   **100ユーザー / 3 TB:** ¥85,000/月\n*   **150ユーザー / 5 TB:** ¥120,000/月\n*   **300ユーザー / 10 TB:** ¥170,000/月\n\n掲載プラン以外のご相談も可能です。初期費用は¥50,000、最低契約期間は12ヶ月（自動更新）、ID追加は50IDごとに¥10,000/月です。\n\n**OKURNの料金プラン**\n\nOKURNもID数と容量に応じた月額プランを提供しています。\n*   **10 ID / 5 GB:** ¥24,500/月\n*   **50 ID / 25 GB:** ¥48,800/月\n*   **100 ID / 50 GB:** ¥69,800/月\n*   **200 ID / 100 GB:** ¥96,800/月\n\n初期費用として¥50,000が別途かかります。提供内容には、自動削除、認証パスワード必須化、送信各種設定（ファイル数、受取期限、ダウンロード回数、受取確認通知、返信機能の設定変更）が含まれます。設定値の変更には別途作業費が発生する場合があります。最低契約期間は3ヶ月（自動更新）です。\n\n**オプション料金**\n\n様々なオプションサービスが提供されており、それぞれ月額費用がかかります。以下はその一部です。\n*   **プレビュー電子透かし機能:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。Standardプランでは¥30,000/月。\n*   **グローバルゲートウェイ:** ¥7,840/月 (卸値)、想定月額費用 ¥9,800/月。Standardプランでは¥9,800/月。初期費用¥5,000。\n*   **独自ドメイン:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。Standardプランでは¥30,000/月。初期費用¥50,000。\n*   **全件バックアップ:** 基本料 ¥8,000/月 + 容量×¥800 (卸値)、想定月額費用 基本料 ¥10,000/月 + 容量×¥1,000。Standardプランでは基本料¥10,000 + 容量×¥1,000。初期費用は¥0。\n*   **WebAPI機能:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。Standardプランでは¥30,000/月。\n*   **コマンドラインツール:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。別途初期費用兼導入支援費用として¥250,000がかかります。\n*   **SSO認証先の複数設定:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。SSO認証連携を行う場合、独自URL・画面カスタマイズオプションが必要です。\n*   **ダウンロード依頼通知:** ¥16,000/月 (卸値)、想定月額費用 ¥20,000/月。\n*   **複数ライトグループ:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月。\n\nStandardプラン向けのオプションには以下のものがあります。\n*   **独自URL・画面カスタマイズ:** 想定月額費用 ¥10,000/月。Standardプラン月額費用 (卸値) ¥8,000/月。初期費用¥5,000。\n*   **一斉振り分け送信:** 想定月額費用 ¥10,000/月。Standardプラン月額費用 (卸値) ¥8,000/月。\n*   **ZIP強制暗号化:** 想定月額費用 ¥10,000/月。Standardプラン月額費用 (卸値) ¥8,000/月。初期費用¥5,000。\n*   **宛先制限:** 想定月額費用 ¥10,000/月。Standardプラン月額費用 (卸値) ¥8,000/月。初期費用¥5,000。\n*   **送信・共有各種設定:** 送信or共有 ¥10,000/月、両方 ¥15,000/月 (想定月額費用)。Standardプラン月額費用 (卸値) 送信or共有 ¥8,000/月、両方 ¥12,000/月。\n*   **承認機能:** 送信or共有 ¥20,000/月、両方 ¥30,000/月 (想定月額費用)。Standardプラン月額費用 (卸値) 送信or共有 ¥16,000/月、両方 ¥24,000/月。初期費用¥5,000。\n*   **自動削除:** 送信or共有 ¥20,000/月、両方 ¥30,000/月 (想定月額費用)。Standardプラン月額費用 (卸値) 送信or共有 ¥16,000/月、両方 ¥24,000/月。\n*   **認証パスワード必須化:** 想定月額費用 ¥10,000/月。Standardプラン月額費用 (卸値) ¥8,000/月。\n*   **履歴ログの自動出力:** 想定月額費用 ¥20,000/月。Standardプラン月額費用 (卸値) ¥16,000/月。\n*   **メールひな形の変更:** 想定月額費用 ¥20,000/月。\n\nAdvancedプランでは、上記のオプションから3つ選択して利用可能で、Premiumプランでは全てのオプションが利用可能です。\n\n**価格に関する備考**\n*   掲載価格は消費税別です。\n*   SSL証明書やDNSサーバーの設定変更など、お客様にて実施いただく場合もあります。"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "groundingMetadata": {
+        "groundingChunks": [
+          {
+            "retrievedContext": {
+              "title": "全部入り提案資料_202510版.pdf",
+              "text": "ASPサービス料金表(Standardプラン)\n\n\n\"ID数\n\",\"容量\n\",\"初期費用\n\",\"月額基本料金\n\"\r\n\"10ID\n\",\"1GB\n\",\"¥50,000\n\",\"¥12,000/月\n\"\r\n\"1,000ID\n\",\"1,000GB\n\",\"¥50,000\n\",\"¥280,000/月\n\"\n\n\"アップグレードプラン\n\",\"初期費用\n\",\"月額基本料金\n\"\r\n\"Advancedプラン(*1)\n\",\"¥5,000\n\",\"¥25,000/月\n\"\r\n\"Premiumプラン(*2)\n\",\"¥5,000\n\",\"¥42,000/月\n\"\n\n備考:・掲載価格は税別価格です。\n\n(*1) 「Advancedプラン」は、次ページのオプション①~ より\n 3種選択してご利用いただけます。\n\n(*2) 「Premiumプラン」は、次ページのオプション①~ を\n 全てご利用いただけます。\n\nCopyright © 2025 WAMNET JAPAN K.K. All rights reserved.\n\n・最低契約期間は3ヶ月(自動更新)です。\n\n・IDの追加は50ID単位で10,000円/月にてご利用いただけます。\n\n・プランは記載のもの以外にもご用意があります。\n\n77\n\n\n--- PAGE 78 ---\n\n料金表 ②\n\nオプション料金表\n\n WAMnet Japan\n\n\n\"オプション名\n\",\"対象機能\n\",\"概要\n\",\"Standard\n 月額費用\n\",\"Advanced\n /Premium\n\"\r\n\"①独自URL・画面カスタマイズ\n (※SSO/SAML認証連携)\n\",\"送信\n 共有\n\",\"独自URL設定により、ログイン画面のカスタマイズ可能。\n (https://asp.gigacc.com/○○○) ※○○○を独自で設定可能\n\",\"¥10,000/月\n\",\r\n\"②一斉振り分け送信\n\",\"送信\n 共有\n\",\"宛先毎に異なるファイルを一括で送信することが可能。\n (宛先名/ファイル名を入力したCSV+実ファイルをマッチング)\n\",\"¥10,000/月\n\",\r\n\"③ZIP強制暗号化\n\",\"送信\n\",\"送信時のファイルを強制的にZIP暗号化する運用が可能。\n\",\"¥10,000/月\n\",\r\n\"④宛先制限\n\",\"送信\n\",\"送信する宛先をホワイトリスト/ブラックリスト/ブラック除外リストにより制限可能\n\",\"¥10,000/月\n\",\r\n\"⑤送信・共有各種設定\n\n\n⑥承認機能\n\",\"送信\n 共有\n\n\n送信\n 共有\n\",\"送信:①受取期限/②ダウンロード回数/3受取確認通知/4返信機能の設定変更可能\n 共有:①アクセスURL機能/② ディレクトリ管理機能/ 招待機能の設定変更可能。\n\n\n承認者の許可を得たファイルのみアップロード可能。(承認ワークフローにより柔軟な設定が可能)\n\",\"送信or共有:¥10,000/月\n 両方:¥15,000/月\n\n\n送信or共有:¥20,000/月\n 両方:¥30,000/月\n\",\"Advancedは\n 左記から3つの\n オプションを\n 利用可能\n\"\r\n\"⑦自動削除\n\n\n⑧ 認証パスワード必須化\n\",\"送信\n 共有\n\n\n送信\n\",\"送信:指定日数経過後に受取期限到来ファイルを送受信箱の履歴含めて自動的に削除可能\n 共有:指定日数経過後のファイル・フォルダの自動削除が可能。(ディレクトリ単位)\n\n\nファイル送信時にパスワードを必須化する運用が可能。\n\",\"送信or共有:¥20,000/月\n 両方:¥30,000/月\n\n\n¥10,000/月\n\",\"Premiumは\n 左記全ての\n オプションを\n 利用可能\n\"\r\n\"⑨履歴ログの自動出力\n\",\"送信\n 共有\n\",\"指定サイクルで、定期的に履歴ログを特定ディレクトリに自動出力可能。(CSV形式)\n\",\"¥20,000/月\n\",\r\n\"10 メールひな形の変更\n\",\"送信\n 共有\n\",\"各種通知メールの定型文を変更することが可能。\n\",\"非対応\n\",\r\n\"①SCIM連携\n\",\"送信\n 共有\n\",\"SCIM(System for Cross-domain Identity Management)の仕様に基づくプロビジョニングにより、\n Microsoft Entra ID (旧: Azure AD) から GigaCCへのアカウント同期(登録・更新・無効化・削\n 除)が可能。\n\",\"非対応\n\",\r\n\" プレビュー電子透かし機能\n\",\"共有\n\",\"プレビュー画面に特定の電子透かし文字を表示させることで、不正な情報持出を抑止。\n\",\"¥30,000/月\n\",\n\n。\n\n。\n\n。\n\n。\n\nCopyright © 2025 WAMNET JAPAN K.K. All rights reserved.\n\n78\n\n\n--- PAGE 79 ---\n\n料金表 ③\n\n有償オプション料金表\n\n WAMnet Japan\n\n\n\"オプション名\n\",\"対象機能\n\",\"概要\n\",\"月額料金\n\"\r\n\"グローバルゲートウェイ\n\",\"送信\n 共有\n\",\"全世界との通信安定化をはかることが可能\n\",\"¥9,800/月\n\"\r\n\"独自ドメイン\n\n\n全件パックアップ\n\",\"送信\n\n\n共有\n\n\n送信\n\n\n共有\n\",\"お客様のドメイン名で運用が可能。(*1)\n (例:https://xxx.xyz-corp.co.jpなど)\n ※AWSのSSL証明書(DV証明書):弊社手配\n その他SSL証明書(OV、EV証明書): お客様手配\n GigaCCにアップロードされたファイルを別領域で保存し、管理者が任意のタイミングで対象ファイ\n ルを取得することが可能。\n\",\"¥30,000/月\n\n\n基本料¥10,000\n\n\n+容量×¥1,000\n\"\r\n\"WebAPI機能\n\",\"共有\n\",\"お客様の業務システムや Web サービスから直接 GigaCCへのファイルのアップロードやダウン\n",
+              "fileSearchStore": "fileSearchStores/abc-gigacc-0tfa0xgr6jl8"
+            }
+          },
+          {
+            "retrievedContext": {
+              "title": "全部入り提案資料_202510版.pdf",
+              "text": "48 ---\n\nGigaCC SHARERN OKURNの比較\n\n相手からデータを「受け取る」方法\n\nGigaCC\n\n返信用URL、\n\n収集用URLの\n\nどちらも活用可能\n\nSHARERN\n\n収集用URLから\n ファイルを受領\n\nURLを知っている人は\n\nいつでもアップロードOK\n\n受領後のファイルを\n\n複数人ですぐに確認可能\n\n WAMnet Japan\n\nOKURN\n\n返信用URLから\n ファイルを受領\n\n送信者にのみ\n\nファイルが返送される\n\nURLの有効期限あり\n\nシーンに合わせた\n 使い分けが可能◎\n\nファイル受領後の連携が\n スムーズ\n\n自分だけにファイルを返送\n してほしいときにおすすめ\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n48\n\n\n--- PAGE 49 ---\n\n料金表 1\n\n WAMnet Japan\n\nGigaCC ASPサービス料金表(Standardプラン)\n\n\n\"容量(GB)\n\",\"ID数\n\",\"初期費用(卸値)\n\",\"月額料金(卸値)\n\",\"想定初期費用\n\",\"想定月額料金\n\"\r\n\"1GB\n\",\"10ID\n\",\"¥40,000\n\",\"¥9,600/月\n\",\"¥50,000\n\",\"¥12,000/月\n\"\r\n\"100GB\n\",\"100ID\n\",\"¥40,000\n\",\"¥104,800/月\n\",\"¥50,000\n\",\"¥131,000/月\n\"\r\n\"1,000GB\n\",\"1,000ID\n\",\"¥40,000\n\",\"¥224,000/月\n\",\"¥50,000\n\",\"¥280,000/月\n\"\n\n\"アップグレードプラン\n\",\"初期費用(卸値)\n\",\"月額料金(卸値)\n\",\"想定初期費用\n\",\"想定月額料金\n\"\r\n\"Advancedプラン(*1)\n\",\"¥4,000\n\",\"¥20,000/月\n\",\"¥5,000\n\",\"¥25,000/月\n\"\r\n\"Premiumプラン(*2)\n\",\"¥4,000\n\",\"¥33,600/月\n\",\"¥5,000\n\",\"¥42,000/月\n\"\n\n備考:・掲載価格は税抜価格です。\n\n(*1) 「Advancedプラン」は、次ページのオプション①~⑪より\n 3つ選択してご利用いただけます。\n\n(*2) 「Premiumプラン」は、次ページのオプション①~ を\n 全てご利用いただけます。\n\nCopyright © 2025 WAMNET JAPAN K.K. All rights reserved.\n\n・契約期間は12ヶ月から選択いただけます。\n\n・基本的には自動更新でのご契約となります。\n\nIDの追加は50ID単位で10,000円/月にてご利用いただけます。\n\n・プランは記載のもの以外にもご用意があります。\n\n49\n\n\n--- PAGE 50 ---\n\n料金表 ②\n\nオプション料金表\n\n WAMnet Japan\n\n\n\"オプション名\n\",\"対象機能\n\",\"概要\n\",\"Standard\n 月額費用(卸値)\n\",\"Standard\n 想定月額費用\n\",\"Advanced\n\n\n/Premium\n\"\r\n\"①独自URL・画面カスタマイズ\n (※SSO/SAML認証連携)\n\",\"送信\n 共有\n\",\"独自URL設定により、ログイン画面のカスタマイズ可能。\n (https://asp.gigacc.com/○○○) ※○○○を独自で設定可能。\n\",\"¥8,000/月\n\",\"¥10,000/月\n\",\r\n\"②一斉振り分け送信\n\",\"送信\n 共有\n\",\"宛先毎に異なるファイルを一括で送信することが可能。\n (宛先名/ファイル名を入力したCSV+実ファイルをマッチング)\n\",\"¥8,000/月\n\",\"¥10,000/月\n\",\r\n\"③ ZIP強制暗号化\n\",\"送信\n\",\"送信時のファイルを強制的にZIP暗号化する運用が可能。\n\",\"¥8,000/月\n\",\"¥10,000/月\n\",\r\n\"④宛先制限\n\",\"送信\n\",\"送信する宛先をホワイトリスト/ブラックリスト/ブラック除外リストにより制限可能。\n\",\"¥8,000/月\n\",\"¥10,000/月\n\",\r\n\"⑤送信・共有各種設定\n\",\"送信\n 共有\n\",\"送信:①受取期限/②ダウンロード回数/3受取確認通知/④返信機能の設定変更可能。\n 共有:①アクセスURL機能/② ディレクトリ管理機能/3招待機能の設定変更可能。\n\",\"送信or共有:¥8,000/月\n 両方:¥12,000/月\n\",\"送信or共有:¥10,000/月\n 両方:¥15,000/月\n\",\"Advancedは\n\"\r\n\"⑥承認機能\n\n\n⑦自動削除\n\",\"送信\n 共有\n\n\n送信\n 共有\n\",\"承認者の許可を得たファイルのみアップロード可能。(承認ワークフローにより柔軟な設定が可\n 能)\n\n\n送信:指定日数経過後に受取期限到来ファイルを送受信箱の履歴含めて自動的に削除可能\n 共有:指定日数経過後のファイル・フォルダの自動削除が可能。(ディレクトリ単位)\n\",\"送信or共有:¥16,000/月\n 両方:¥24,000/月\n\n\n送信or共有:¥16,000/月\n\n\n両方:¥24,000/月\n\",\"送信or共有:¥20,000/月\n 両方:¥30,000/月\n\n\n送信or共有:¥20,000/月\n 両方:¥30,000/月\n\",\"左記から3つの\n\n\nオプションを\n 利用可能\n\n\nPremiumは\n 左記全ての\n\"\r\n\"⑧認証パスワード必須化\n\",\"送信\n\",\"ファイル送信時にパスワードを必須化する運用が可能。\n\",\"¥8,000/月\n\",\"¥10,000/月\n\",\"オプションを\n 利用可能\n\"\r\n\"⑨履歴ログの自動出力\n\",\"送信\n 共有\n\",\"指定サイクルで、定期的に履歴ログを特定ディレクトリに自動出力可能。(CSV形式)\n\",\"¥16,000/月\n\",\"¥20,000/月\n\",\r\n\"10 メールひな形の変更\n\n\n①SCIM連携\n\",\"送信\n 共有\n\n\n送信\n 共有\n\",\"各種通知メールの定型文を変更することが可能。\n\n\nSCIM(System for Cross-domain Identity Management) の仕様に基づくプロビジョニングによ\n り、\n Microsoft Entra ID (旧: Azure AD) から GigaCC",
+              "fileSearchStore": "fileSearchStores/abc-gigacc-0tfa0xgr6jl8"
+            }
+          },
+          {
+            "retrievedContext": {
+              "title": "全部入り提案資料_202510版.pdf",
+              "text": "へのアカウント同期 (登録・更新・無効\n 化・削除)が可能。\n\",\"非対応\n\n\n非対応\n\",\"非対応\n\n\n非対応\n\",\r\n\" プレビュー電子透かし機能\n\",\"共有\n\",\"プレビュー画面に特定の電子透かし文字を表示させることで、不正な情報持出を抑止。\n\",\"¥24,000/月\n\",\"¥30,000/月\n\",\n\n。\n\nCopyright © 2025 WAMNET JAPAN K.K. All rights reserved.\n\n50\n\n\n--- PAGE 51 ---\n\n料金表 ③\n\n WAMnet Japan\n\n\n\"オプション名\n\",\"対象機能\n\",\"概要\n\",\"月額費用(卸値)\n\",\"想定月額費用\n\"\r\n\"グローバルゲートウェイ\n\",\"送信\n 共有\n\",\"全世界との通信安定化をはかることが可能。\n\",\"¥7,840/月\n\",\"¥9,800/月\n\"\r\n\"独自ドメイン\n\n\n全件バックアップ\n\",\"送信\n 共有\n\n\n送信\n 共有\n\",\"お客様のドメイン名で運用が可能。(*1)(例:https://xxx.xyz-corp.co.jpなど)\n ※AWSのSSL証明書(DV証明書):弊社手配\n その他SSL証明書(OV、EV証明書): お客様手配\n GigaCCにアップロードされたファイルを別領域で保存し、管理者が任意のタイミン\n グで対象ファイルを取得することが可能。\n\",\"¥24,000/月\n\n\n基本料¥8,000\n +容量×¥800\n\",\"¥30,000/月\n\n\n基本料¥10,000\n +容量×¥1,000\n\"\r\n\"WebAPI機能\n\",\"共有\n\",\"お客様の業務システムや Web サービスから直接 GigaCCへのファイルのアップロー\n ドやダウンロードなどの操作が可能。\n\",\"¥24,000/月\n\",\"¥30,000/月\n\"\r\n\"コマンドラインツール\n\",\"共有\n\",\"ブラウザ画面を利用せず、コマンドラインからファイル/フォルダのアップロード/\n ダウンロードの自動化が可能。\n\",\"¥24,000/月(*2)\n\",\"¥30,000/月(*2)\n\"\r\n\"SSO認証先の複数設定\n\",\"送信\n 共有\n\",\"複数のSSO認証を設定することが可能。\n ※SSO認証連携を行う場合は、独自URL・画面カスタマイズオプションが必要にな\n ります\n\",\"¥24,000/月\n\",\"¥30,000/月\n\"\r\n\"ダウンロード依頼通知\n\",\"共有\n\",\"アップロードされたファイルが未ダウンロード状態の場合に、ダウンロードを促す\n メールを送信することが可能。\n\",\"¥16,000/月\n\",\"¥20,000/月\n\"\r\n\"複数ライトグループ\n\",\"共有\n\",\"ユーザーによる複数ライトグループへの所属が可能。\n\",\"¥24,000/月\n\",\"¥30,000/月\n\"\n\nオプション料金表\n\n(*1) GigaCCのドメインを活用したサブドメイン運用も可能です。(例:https://xxx.gigacc.com/など) SSL証明書とは別に初期費用として¥50,000を申し受けいたします。\n (*2) 「コマンドラインツール」は、別途初期費用兼導入支援費用として¥250,000を申し受けいたします。\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n51\n\n\n--- PAGE 52 ---\n\n料金プラン\n\n3 TB\n\n5 TB\n\n10 TB\n\n100ユーザー\n\n150ユーザー\n\n300ユーザー\n\n¥85,000/月\n\n¥120,000/月\n\n¥170,000/月\n\n掲載プラン以外のご相談も承ります\n\n初期費用:50,000円 | 最低契約期間:12か月 (自動更新) | ID追加:50ID/¥10,000/月\n 掲載価格は消費税別価格となります。\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nSHARERN\n\n目次 52\n\n\n--- PAGE 53 ---\n\n[Image 29]\n\n提供機能/オプション\n\nユーザ・管理者機能\n\n• 自動削除設定\n\n・アカウント期限設定\n\n・ 履歴ログ管理\n\n• 管理者権限設定\n\n・ディレクトリ権限設定\n\n• SSO認証連携\n\n• 独自URL・画面カスタマイズ\n\n・ パスワードルール設定\n\n・ パスワード強制変更設定\n\n• 二段階認証\n\n• 上長承認設定\n\n・ 履歴ログ自動出力\n\n・ディレクトリ別容量制限\n\n・ アクセスURL\n\n・ モバイル端末自動同期設定\n\n・チェックイン、チェックアウト\n\n・ バージョン管理\n\n・ディレクトリ管理\n\n・ 収集ディレクトリ\n\nセキュリティ機能\n\n・ ウイルスチェック\n\n・ID/パスワード認証\n\n• IPアドレス制限\n\n• 通信暗号化(SSL/TLS)\n\n・ 不正アクセス自動ロック\n\nオプション機能\n\n・ 独自ドメイン\n\n・ グローバルゲートウェイ\n\n• 証跡管理\n\n・ メールひな形カスタマイズ\n\n・ コマンドラインツール\n\n• WebAPI機能\n\n• ID連携(SCIM)\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nSHARERN\n\n目次\n\n53\n\n\n--- PAGE 54 ---\n\n料金プラン\n\n1\n\n2\n\n3\n\n4\n\nID数\n\n10 ID\n\n50 ID\n\n100 ID\n\n200 ID\n\n容量\n\n5 GB\n\n25GB\n\n50GB\n\n100GB\n\n月額\n\n¥24,500\n\n¥48,800\n\n¥69,800\n\n¥96,800\n\n備考\n\n・掲載価格は税抜価格です\n\n 初期費用¥50,000を別途申し受けいたします\n\n・提供内容に、自動削除、認証PW必須化、送信各種設定(*1)",
+              "fileSearchStore": "fileSearchStores/abc-gigacc-0tfa0xgr6jl8"
+            }
+          },
+          {
+            "retrievedContext": {
+              "title": "全部入り提案資料_202510版.pdf",
+              "text": "コマンドラインツール\n\n• WebAPI機能\n\n• ID連携(SCIM)\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nSHARERN\n\n目次\n\n53\n\n\n--- PAGE 54 ---\n\n料金プラン\n\n1\n\n2\n\n3\n\n4\n\nID数\n\n10 ID\n\n50 ID\n\n100 ID\n\n200 ID\n\n容量\n\n5 GB\n\n25GB\n\n50GB\n\n100GB\n\n月額\n\n¥24,500\n\n¥48,800\n\n¥69,800\n\n¥96,800\n\n備考\n\n・掲載価格は税抜価格です\n\n 初期費用¥50,000を別途申し受けいたします\n\n・提供内容に、自動削除、認証PW必須化、送信各種設定(*1) を含みます\n\n・提供内容の設定値を変更する場合には、別途作業費が発生します\n\n・最低契約期間は3ヶ月(自動更新)になります\n\n*1:ファイル数/受取期限/DL回数/受取確認通知/返信機能の設定変更ができます\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nOKURN\n\n目次 54\n\n\n--- PAGE 55 ---\n\nオプション料金表\n\n\n,,,\"Standard\n\"\r\n\"オプションサービス名\n\",\"概要\n\",\"初期費用\n\",\"月額費用\n\"\r\n\"独自URL・画面カスタマイズ\n\",\"利用者サイトのログイン画面・利用者画面のバナー部分をオリジナル素材に差\n 換えて運用することができます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"ZIP強制暗号化\n\",\"ファイル送信時の選択ファイルを強制的にZIP暗号化します。\n 暗号化/複合化のパスワードは桁数、文字列等の指定ができ、利用者による入\n 力またはシステムから自動的発行させることができます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"宛先制限\n\",\"ファイル送信時の宛先をドメイン、メールアドレス単位にブラックリスト/プ\n ラック除外リスト/ホワイトリストに登録することができます。\n ホワイトリストは共通電話帳と同期させることもできます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"承認機能\n\n\n独自ドメイン\n\",\"指定した上長の承認がないと送信することできない仕組みを構築します。\n\n\nお客様のドメイン名で運用することが可能です。\n (例:https://xxx.xyz-corp.co.jpなど)\n ※SSL証明書の取得、DNSサーバーの設定変更等はお客様にて実施いただきま\n す。\n\",\"¥5,000\n\n\n¥50,000\n\",\"¥20,000\n\n\n¥30,000\n\"\r\n\"全件バックアップ\n\",\"GigaCC OKURN上のトランザクションファイルをストア領域と異なる保管領\n 域でアーカイプします。\n\",\"¥0\n\",\"基本料¥10,000\n +GB単価\n ¥1,000×容量\n\"\r\n\"グローバルゲートウェイ\n\",\"グローバルゲートウェイにより、日本との通信において不安定な回線を経由す\n ることを回避し、全世界との通信安定化をはかることが可能です。\n\",\"¥5,000\n\",\"¥9,800\n\"\n\nOKURN\n\n目次\n\n55\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n\n--- PAGE 56 ---\n\n[Image 30]\n\nご紹介資料\n\n\n--- PAGE 57 ---\n\n[Image 31]\n\n[Image 32]\n\nBOXIL\n\nGood Service\n\nSummer 2024\n\n日本ワムネットが提供する「GigaCC ASP」は、\n\nスマートキャンプ株式会社が主催する\n\n「BOXIL SaaS AWARD Summer 2024」 のオンラ\n\nインストレージ部門で 「Good Service」 に選出\n されました。\n\nセキュアで温かいコンテンツコラボレーションハブとして、企業をつなぐ\n\n企業間ファイル転送・ファイル共有サービス\n\nGigaCC ASPのご紹介\n\n日本ワムネット株式会社 ソリューション営業部\n\nVer.4.3\n\nWAmnet\n Japan\n\nGiga CC ASPは、公益社団法人日本文書情報マネジメント協会\n (略称:JIIMA) が電子帳簿保存法の要件を満たしたサービスを\n 認証する、「電子取引ソフト法的要件認証」を取得しています。\n ソフト\n\nJATE\n\nΦ\n\n当社が提供する GigaCC ASPは、ISO/IEC\n\nASPIC\n\n27017:2015に基づくISMSクラウドセキュリティ\n\nIoT-Aトクラウド\n\nGiga CC ASPは、一般社団法人AS PIC SaaS AI・IoTクラ\n ウド産業協会(略称: AS PIC)が実施する、「第14回\n\n010101\n JJÍMA\n 101010\n\nアワード\n\nASPIC IoT AI・クラウドアワード2020」にて、支援業務系\n\nSMS\n\nJATE-50088-C\n\nISMS-AC 認証を取得しています\n ISMS\n\n2020\n\nASP SaaS部門において 【ベスト海外展開賞】を受賞いたし\n ました\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n\n--- PAGE 58 ---\n\n[Image 33]\n\n特長\n\n WAMnet Japan\n\nGigaCCの3つの特長\n\n1\n\n・細かな設定で、企業毎のセキュリティ要件への対応が可能\n\nセキュリティと\n",
+              "fileSearchStore": "fileSearchStores/abc-gigacc-0tfa0xgr6jl8"
+            }
+          },
+          {
+            "retrievedContext": {
+              "title": "全部入り提案資料_202510版.pdf",
+              "text": "J:COM\n\nJSPORTS\n\nJTB-CWT\n BUSINESS TRAVEL SOLUTIONS\n\nSHOP\n CHANNEL\n\nSTAR\n\n住友商事株式会社\n\nDNP\n 大日本印刷\n\n筑邦銀行\n\nT-GAIA\n\nチャンネル\n\n1\n\nGRADUATE SCHOOL OF\n FRONTIER SCIENCES\n\nどうしん\n\n公益社団法人\n 日本薬剤師会\n Japan Pharmaceitinal\n\n最新ドラマ・音楽・映画\n\n心に届く旅\n 阪急交通社\n Direct to your heart\n\nнитап\n ヒューマンリソシア\n\nFBS\n 福岡放送\n\nフジテレビ\n ONE TWO NEXT\n\nBell\n System24\n\nマガジンハウス\n\nMIZUHO\n\nみずほ銀行\n\nPENGUIN\n HOKKAIDO\n\nWARNER MUSIC\n JAPAN\n\nCopyright © 2025 WAMNET JAPAN K.K. All rights reserved.\n\n※その他多くのお客様のご利用実績がございます。\n\n目次 112\n\n\n--- PAGE 113 ---\n\n料金プラン\n\n1\n\n2\n\n3\n\n4\n\nID数\n\n10 ID\n\n50 ID\n\n100 ID\n\n200 ID\n\n容量\n\n5 GB\n\n25GB\n\n50GB\n\n100GB\n\n月額\n\n¥24,500\n\n¥48,800\n\n¥69,800\n\n¥96,800\n\n備考\n\n・掲載価格は税抜価格です\n\n 初期費用¥50,000を別途申し受けいたします\n\n・提供内容に、自動削除、認証PW必須化、送信各種設定(*1) を含みます\n\n・提供内容の設定値を変更する場合には、別途作業費が発生します\n\n・最低契約期間は3ヶ月(自動更新)になります\n\n*1:ファイル数/受取期限/DL回数/受取確認通知/返信機能の設定変更ができます\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nOKURN\n\n目次 113\n\n\n--- PAGE 114 ---\n\nオプション料金表\n\n\n,,,\"Standard\n\"\r\n\"オプションサービス名\n\",\"概要\n\",\"初期費用\n\",\"月額費用\n\"\r\n\"独自URL・画面カスタマイズ\n\",\"利用者サイトのログイン画面・利用者画面のバナー部分をオリジナル素材に差\n 換えて運用することができます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"ZIP強制暗号化\n\",\"ファイル送信時の選択ファイルを強制的にZIP暗号化します。\n 暗号化/複合化のパスワードは桁数、文字列等の指定ができ、利用者による入\n 力またはシステムから自動的発行させることができます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"宛先制限\n\",\"ファイル送信時の宛先をドメイン、メールアドレス単位にブラックリスト/プ\n ラック除外リスト/ホワイトリストに登録することができます。\n ホワイトリストは共通電話帳と同期させることもできます。\n\",\"¥5,000\n\",\"¥10,000\n\"\r\n\"承認機能\n\",\"指定した上長の承認がないと送信することできない仕組みを構築します。\n\",\"¥5,000\n\",\"¥20,000\n\"\r\n\"独自ドメイン\n\",\"お客様のドメイン名で運用することが可能です。\n (例:https://xxx.xyz-corp.co.jpなど)\n ※SSL証明書の取得、DNSサーバーの設定変更等はお客様にて実施いただきま\n す。\n\",\"¥50,000\n\",\"¥30,000\n\"\r\n\"全件バックアップ\n\",\"GigaCC OKURN上のトランザクションファイルをストア領域と異なる保管領\n 域でアーカイプします。\n\",\"¥0\n\",\"基本料¥10,000\n +GB単価\n ¥1,000×容量\n\"\r\n\"グローバルゲートウェイ\n\",\"グローバルゲートウェイにより、日本との通信において不安定な回線を経由す\n ることを回避し、全世界との通信安定化をはかることが可能です。\n\",\"¥5,000\n\",\"¥9,800\n\"\n\nOKURN\n\n目次 114\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n\n--- PAGE 115 ---\n\n他社サービス比較表\n\n\n\"OKURN\n\",\"製品A\n\",\"製品B\n\",\"製品C\n\",\"製品D\n\"\r\n\"なし\n\n\n送信通数制限\n\",\"あり\n\",\"あり\n\",\"なし\n\",\"なし\n\"\r\n\"ドラック&ドロップによる\n IE以外はフォルダ単位のアップ\n アップロード\n ロードに対応\n\",,\"Ο\n\",,\r\n\"ファイルダウンロード時の\n パスワード設定\n\",,,\"Ο\n\",\r\n\"ファイルの受取回数設定\n\n\n初期値5回/上限値なし\n\",,,\"3回\n\",\r\n\"認証パスワード必須化\n\",\"Ο\n 手動入力/手動通知\n\",,,\r\n\"予約送信\n\",,,,\r\n\"送信先アドレスの自動登録\n\",,,,\r\n\"パスワードルール\n 強制変更設定\n ダッシュボード\n (利用状況確認)\n\",,,,\r\n\"アカウントのCSV一括作成\n 全世界との通信の安定化\n\",,\"Ο\n\",,\r\n\"プライバシーマーク\n (JIS Q 15001)\n ISMS\n (JIS Q 27001)\n\",,,,\r\n\"ISMSクラウドセキュリティ認証\n (JIS Q 27017)\n\",,,,\n\n・掲載情報は、現機能と異なる場合があります\n\n・「一」は、公開情報から可/不可が不明であることを示します\n\n・その他の機能につきましては弊社営業にご確認ください\n\nOKURN\n\n目次\n\n115\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n\n--- PAGE 116 ---\n\n[Image 69]\n\nサービス導入までの流れ\n\n貴社\n\n日本\n ワムネット\n\nサービスお申込み\n\n・お電話\n\n・メール\n\n・webフォーム\n\n申込書の\n\nご記入・返信\n\nお申込み内容\n 確認のご連絡\n\n申込書の\n 作成・送信\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n5営業日\n\nご利用アカウント\n の通知\n\nご利用開始\n\nOKURN\n\n目次 116\n\n\n--- PAGE 117 ---\n\n[Image 70]\n\nグローバルゲートウェイオプションについて\n\n日本~中国をはじめとした全世界との地域間通信の安定化を実現\n\n海外とのファイル送信時のストレス\n\nデータの送受信が\n できない･･･\n\n時間がかかりすぎる･･･\n\n昨日は使えたのに、\n 今日は使えない･･･\n\nグローバルゲートウェイで解決\n\nグローバルゲートウェイ利用効果\n\nファイル送受信経路を最適化し、海外とのファイル転送時のストレスを改善\n × 通信経路を最適化しない場合\n\nご契約者\n\n取引先\n\n国内\n\n海外\n\nLocal ISP\n\nNetwork A Network B Network C\n ○ 通信経路を最適化する場合\n\nNetwork D\n\nLocal ISP\n\nGW server\n\nNetwork\n\n※ご利用になられる都市やエリアによって、効果に差が出ることがあります。\n\nGW server\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\nOKURN\n\nグローバル対応\n\n管理者画面\n 日本語/英語に対応\n\n利用者画面・通知メール\n 日本語/英語/中国語に対応\n\nご利用事例\n\n大手食品メーカー様\n 中国の工場との書類受け渡し\n をメール添付から脱却したい。\n\n脱PPAP対策に加え、中国語\n マニュアルも決め手となり、\n 導入を決定。\n\n大手空調機メーカー様\n 自社、中国の支社、中国現地\n 会社の3社間で安定したデー\n タのやり取りがしたい。\n\nセキュリティの安心と快適に\n 利用できるサービスという点\n で、導入を決定。\n\n※有償オプション\n\n目次\n\n117\n\n\n--- PAGE 118 ---\n\n推奨利用環境\n\n\n,\"OSバージョン\n\",\"Windows 10/11 (※2)\n\"\r\n\"Windows\n\n\nクライアント端末\n\",\"ブラウザ\n\",\"Microsoft Edge (Chromium版) (※1)、Firefox (※1)、Google Chrome (※1)\n\"\r\n\"※ご利用環境により\n 一部制限事項が\n あります\n\",\"OSバージョン\n\",\"macOS 13/14/15\n\"\r\n\"Mac\n\",,\r\n,\"ブラウザ\n\",\"Safari(※1)、Firefox (※1)\n\n\nGoogle Chrome (※1)\n\"\n\n、\n\n(※1) 最新バージョンのサポートとなります。\n\n(※2) デスクトップ画面からの操作のみのサポートとなります。\n\nOKURN\n\n目次 118\n\nCopyright 2025 WAMNET JAPAN K.K. All rights reserved.\n\n\n--- PAGE 119 ---\n\n確実性利便性を追求したファイル転送サービス\n\nDIRECT! EXTREME 紹介資料\n\n202565\n\n日本ワムネット株式会社\n\n©2025 日本ワムネット株式会社\n\nConfidential\n\n\n--- PAGE 120 ---\n\n©2025 日本ワムネット株式会社\n\nサービス概要\n\n主な特長\n\n活用事例\n\n料金プラン\n\nConfidential\n\n\n--- PAGE 121",
+              "fileSearchStore": "fileSearchStores/abc-gigacc-0tfa0xgr6jl8"
+            }
+          }
+        ],
+        "groundingSupports": [
+          {
+            "segment": {
+              "startIndex": 252,
+              "endIndex": 284,
+              "text": "**GigaCC ASP Standardプラン**"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 376,
+              "endIndex": 453,
+              "text": "*   **10 ID / 1 GB:** 初期費用 ¥50,000、月額基本料金 ¥12,000/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 454,
+              "endIndex": 556,
+              "text": "*   **100 ID / 100 GB:** 初期費用 ¥50,000、月額基本料金 ¥131,000/月 (想定月額料金)"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 557,
+              "endIndex": 642,
+              "text": "*   **1,000 ID / 1,000 GB:** 初期費用 ¥50,000、月額基本料金 ¥280,000/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 704,
+              "endIndex": 759,
+              "text": "最低契約期間は3ヶ月（自動更新）です。"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 761,
+              "endIndex": 795,
+              "text": "**アップグレードプラン**"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 884,
+              "endIndex": 965,
+              "text": "*   **Advancedプラン:** 初期費用 ¥5,000、月額基本料金 ¥25,000/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 968,
+              "endIndex": 1041,
+              "text": "次ページのオプションから3つ選択して利用できます。"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1042,
+              "endIndex": 1122,
+              "text": "*   **Premiumプラン:** 初期費用 ¥5,000、月額基本料金 ¥42,000/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1125,
+              "endIndex": 1188,
+              "text": "次ページの全てのオプションを利用できます。"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1190,
+              "endIndex": 1219,
+              "text": "**SHARERNの料金プラン**"
+            },
+            "groundingChunkIndices": [
+              2,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1307,
+              "endIndex": 1351,
+              "text": "*   **100ユーザー / 3 TB:** ¥85,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1352,
+              "endIndex": 1397,
+              "text": "*   **150ユーザー / 5 TB:** ¥120,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1398,
+              "endIndex": 1444,
+              "text": "*   **300ユーザー / 10 TB:** ¥170,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1497,
+              "endIndex": 1618,
+              "text": "初期費用は¥50,000、最低契約期間は12ヶ月（自動更新）、ID追加は50IDごとに¥10,000/月です。"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1620,
+              "endIndex": 1647,
+              "text": "**OKURNの料金プラン**"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1726,
+              "endIndex": 1760,
+              "text": "*   **10 ID / 5 GB:** ¥24,500/月"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1761,
+              "endIndex": 1796,
+              "text": "*   **50 ID / 25 GB:** ¥48,800/月"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1797,
+              "endIndex": 1833,
+              "text": "*   **100 ID / 50 GB:** ¥69,800/月"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1834,
+              "endIndex": 1871,
+              "text": "*   **200 ID / 100 GB:** ¥96,800/月"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2229,
+              "endIndex": 2284,
+              "text": "最低契約期間は3ヶ月（自動更新）です。"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2286,
+              "endIndex": 2311,
+              "text": "**オプション料金**"
+            },
+            "groundingChunkIndices": [
+              2,
+              0,
+              1,
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2452,
+              "endIndex": 2553,
+              "text": "*   **プレビュー電子透かし機能:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2556,
+              "endIndex": 2591,
+              "text": "Standardプランでは¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2595,
+              "endIndex": 2691,
+              "text": "*   **グローバルゲートウェイ:** ¥7,840/月 (卸値)、想定月額費用 ¥9,800/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2694,
+              "endIndex": 2728,
+              "text": "Standardプランでは¥9,800/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2731,
+              "endIndex": 2750,
+              "text": "初期費用¥5,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2754,
+              "endIndex": 2837,
+              "text": "*   **独自ドメイン:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2840,
+              "endIndex": 2875,
+              "text": "Standardプランでは¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              0,
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2878,
+              "endIndex": 2898,
+              "text": "初期費用¥50,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2902,
+              "endIndex": 3044,
+              "text": "*   **全件バックアップ:** 基本料 ¥8,000/月 + 容量×¥800 (卸値)、想定月額費用 基本料 ¥10,000/月 + 容量×¥1,000"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3047,
+              "endIndex": 3105,
+              "text": "Standardプランでは基本料¥10,000 + 容量×¥1,000"
+            },
+            "groundingChunkIndices": [
+              0,
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3108,
+              "endIndex": 3126,
+              "text": "初期費用は¥0"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3130,
+              "endIndex": 3207,
+              "text": "*   **WebAPI機能:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3210,
+              "endIndex": 3245,
+              "text": "Standardプランでは¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3249,
+              "endIndex": 3344,
+              "text": "*   **コマンドラインツール:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3347,
+              "endIndex": 3425,
+              "text": "別途初期費用兼導入支援費用として¥250,000がかかります。"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3426,
+              "endIndex": 3518,
+              "text": "*   **SSO認証先の複数設定:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3521,
+              "endIndex": 3623,
+              "text": "SSO認証連携を行う場合、独自URL・画面カスタマイズオプションが必要です。"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3624,
+              "endIndex": 3719,
+              "text": "*   **ダウンロード依頼通知:** ¥16,000/月 (卸値)、想定月額費用 ¥20,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3723,
+              "endIndex": 3815,
+              "text": "*   **複数ライトグループ:** ¥24,000/月 (卸値)、想定月額費用 ¥30,000/月"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3901,
+              "endIndex": 3978,
+              "text": "*   **独自URL・画面カスタマイズ:** 想定月額費用 ¥10,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3981,
+              "endIndex": 4031,
+              "text": "Standardプラン月額費用 (卸値) ¥8,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4034,
+              "endIndex": 4053,
+              "text": "初期費用¥5,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4057,
+              "endIndex": 4122,
+              "text": "*   **一斉振り分け送信:** 想定月額費用 ¥10,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4125,
+              "endIndex": 4175,
+              "text": "Standardプラン月額費用 (卸値) ¥8,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4179,
+              "endIndex": 4238,
+              "text": "*   **ZIP強制暗号化:** 想定月額費用 ¥10,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4241,
+              "endIndex": 4291,
+              "text": "Standardプラン月額費用 (卸値) ¥8,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4294,
+              "endIndex": 4313,
+              "text": "初期費用¥5,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4317,
+              "endIndex": 4370,
+              "text": "*   **宛先制限:** 想定月額費用 ¥10,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4373,
+              "endIndex": 4423,
+              "text": "Standardプラン月額費用 (卸値) ¥8,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4426,
+              "endIndex": 4445,
+              "text": "初期費用¥5,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4449,
+              "endIndex": 4556,
+              "text": "*   **送信・共有各種設定:** 送信or共有 ¥10,000/月、両方 ¥15,000/月 (想定月額費用)"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4559,
+              "endIndex": 4646,
+              "text": "Standardプラン月額費用 (卸値) 送信or共有 ¥8,000/月、両方 ¥12,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4650,
+              "endIndex": 4742,
+              "text": "*   **承認機能:** 送信or共有 ¥20,000/月、両方 ¥30,000/月 (想定月額費用)"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4745,
+              "endIndex": 4833,
+              "text": "Standardプラン月額費用 (卸値) 送信or共有 ¥16,000/月、両方 ¥24,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4836,
+              "endIndex": 4855,
+              "text": "初期費用¥5,000"
+            },
+            "groundingChunkIndices": [
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4859,
+              "endIndex": 4951,
+              "text": "*   **自動削除:** 送信or共有 ¥20,000/月、両方 ¥30,000/月 (想定月額費用)"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4954,
+              "endIndex": 5042,
+              "text": "Standardプラン月額費用 (卸値) 送信or共有 ¥16,000/月、両方 ¥24,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5046,
+              "endIndex": 5117,
+              "text": "*   **認証パスワード必須化:** 想定月額費用 ¥10,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5120,
+              "endIndex": 5170,
+              "text": "Standardプラン月額費用 (卸値) ¥8,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5174,
+              "endIndex": 5242,
+              "text": "*   **履歴ログの自動出力:** 想定月額費用 ¥20,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5245,
+              "endIndex": 5296,
+              "text": "Standardプラン月額費用 (卸値) ¥16,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5300,
+              "endIndex": 5368,
+              "text": "*   **メールひな形の変更:** 想定月額費用 ¥20,000/月"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5373,
+              "endIndex": 5533,
+              "text": "Advancedプランでは、上記のオプションから3つ選択して利用可能で、Premiumプランでは全てのオプションが利用可能です。"
+            },
+            "groundingChunkIndices": [
+              0,
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5535,
+              "endIndex": 5604,
+              "text": "**価格に関する備考**\n*   掲載価格は消費税別です。"
+            },
+            "groundingChunkIndices": [
+              2,
+              0,
+              1,
+              4,
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5605,
+              "endIndex": 5720,
+              "text": "*   SSL証明書やDNSサーバーの設定変更など、お客様にて実施いただく場合もあります。"
+            },
+            "groundingChunkIndices": [
+              2,
+              0,
+              4,
+              3
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 5,
+    "candidatesTokenCount": 1778,
+    "totalTokenCount": 2174,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 5
+      }
+    ],
+    "toolUsePromptTokenCount": 62,
+    "toolUsePromptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 62
+      }
+    ],
+    "thoughtsTokenCount": 329
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "uKEXaeeoOJqv2roPyKLY2AY"
+}
