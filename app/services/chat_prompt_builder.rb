@@ -283,22 +283,16 @@ class ChatPromptBuilder
       @logger = logger
     end
 
-    def fetch(_query)
-      return { text: nil, sources: [], name: sales_expert_name } if sales_expert.blank?
+    def fetch(query)
+      return { text: nil, sources: [], name: sales_expert_name } if sales_expert.blank? || query.to_s.strip.empty?
 
-      # Use the most recent completed transcription text as context
-      knowledge = sales_expert.expert_knowledges.includes(:transcription).find do |k|
-        k.transcription_status == 'completed' && k.transcription.present?
-      end
+      hits = ExpertRag.fetch(sales_expert: sales_expert, query: query, limit: EXPERT_BULLET_LIMIT)
+      return { text: nil, sources: [], name: sales_expert_name } if hits.empty?
 
-      return { text: nil, sources: [], name: sales_expert_name } if knowledge.nil?
-
-      text = compress_text(knowledge.transcription.full_text.to_s)
-      {
-        text: text,
-        sources: ["knowledge##{knowledge.id}"],
-        name: sales_expert_name
-      }
+      joined = hits.map { |h| h[:text].to_s.squish }.reject(&:blank?)
+      text = compress_text(joined.join("\n\n"))
+      sources = hits.map { |h| "chunk##{h[:id]}" }
+      { text: text, sources: sources, name: sales_expert_name }
     rescue StandardError => e
       logger.warn("[ChatPromptBuilder] Expert context fetch failed for SalesExpert##{sales_expert&.id}: #{e.class} #{e.message}")
       { text: nil, sources: [], name: sales_expert_name }

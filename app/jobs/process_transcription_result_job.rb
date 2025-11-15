@@ -37,6 +37,20 @@ class ProcessTranscriptionResultJob < ApplicationJob
         )
       end
 
+      # Infer human-friendly speaker names (先輩営業/顧客)
+      begin
+        mapping = SpeakerIdentifier.new.identify(t)
+        if mapping.present?
+          t.segments.find_each do |seg|
+            if mapping[seg.speaker_label]
+              seg.update_column(:speaker_name, mapping[seg.speaker_label])
+            end
+          end
+        end
+      rescue => e
+        Rails.logger.warn("Speaker identification skipped: #{e.class} #{e.message}")
+      end
+
       job.expert_knowledge.update!(transcription_status: 'completed', transcription_completed_at: Time.current)
 
       CreateKnowledgeChunksJob.perform_later(t.id)
@@ -60,12 +74,60 @@ class ProcessTranscriptionResultJob < ApplicationJob
   end
 
   def parse_transcribe_json(json)
-    # Minimal parse: use full transcript, leave segments empty for now
-    results = json['results'] || {}
+    # Parse AWS Transcribe JSON into full_text and speaker segments
+    results = json.to_h['results'] || {}
     full_text = results.dig('transcripts', 0, 'transcript')
     language = json['language_code'] || 'ja-JP'
     speaker_count = results.dig('speaker_labels', 'speakers')
     duration_seconds = nil
+
+    items = Array(results['items'])
+    words = []
+    items.each do |it|
+      type = it['type']
+      alt = Array(it['alternatives']).first || {}
+      content = alt['content']
+      if type == 'pronunciation'
+        words << {
+          start_time: it['start_time']&.to_f,
+          end_time: it['end_time']&.to_f,
+          content: content,
+          confidence: alt['confidence']&.to_f
+        }
+      else
+        words << { punctuation: content }
+      end
+    end
+
+    segments = []
+    label_segments = Array(results.dig('speaker_labels', 'segments'))
+    if label_segments.any? && words.any?
+      label_segments.each_with_index do |seg, idx|
+        s = seg['start_time'].to_f
+        e = seg['end_time'].to_f
+        label = seg['speaker_label'] || "spk_#{idx}"
+
+        # collect words within time range
+        content_words = words.select { |w| w[:start_time].to_f >= s && w[:end_time].to_f <= e && w[:content] }
+        text = content_words.map { |w| w[:content] }.join(' ')
+        # add simple punctuation if next is punctuation
+        puncts = words.select { |w| w[:start_time].nil? && w[:punctuation] }
+        text << puncts.map { |p| p[:punctuation] }.join if text.present?
+
+        confs = content_words.map { |w| w[:confidence] }.compact
+        avg_conf = confs.any? ? (confs.sum / confs.size) : nil
+
+        segments << {
+          speaker_label: label,
+          speaker_name: nil,
+          text: text,
+          start_time: s,
+          end_time: e,
+          confidence: avg_conf,
+          sequence_number: idx
+        }
+      end
+    end
 
     {
       full_text: full_text,
@@ -73,7 +135,7 @@ class ProcessTranscriptionResultJob < ApplicationJob
       speaker_count: speaker_count,
       duration_seconds: duration_seconds,
       language: language,
-      segments: []
+      segments: segments
     }
   end
 end
