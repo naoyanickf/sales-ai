@@ -45,6 +45,13 @@ class WorkspaceInvitation < ApplicationRecord
     false
   end
 
+  def regenerate_token!
+    self.token = nil
+    assign_token
+    self.expires_at = nil
+    save!(validate: false)
+  end
+
   private
 
   def normalize_email

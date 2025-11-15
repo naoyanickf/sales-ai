@@ -1,0 +1,8 @@
+<%= turbo_stream.replace dom_id(@chat, :message_form) do %>
+  <%= render "messages/form",
+             chat: @chat,
+             message: Message.new,
+             products: @products,
+             sales_experts: @sales_experts,
+             available_sales_experts: @available_sales_experts %>
+<% end %>

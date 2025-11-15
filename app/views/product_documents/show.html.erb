@@ -1,0 +1,54 @@
+<% content_for :title, "資料プレビュー" %>
+
+<div class="container py-4">
+  <div class="mb-3">
+    <%= link_to "← 製品詳細に戻る", product_path(@product), class: "text-decoration-none" %>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+        <div>
+          <p class="text-uppercase text-muted small mb-1">資料プレビュー</p>
+          <h1 class="h4 mb-1"><%= @product_document.document_name %></h1>
+          <p class="text-muted mb-0">
+            <%= @product_document.document_type.presence || "未分類" %>
+            ／ <%= @product_document.file.filename.to_s %>
+            ／ <%= number_to_human_size(@product_document.file.byte_size) %>
+          </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to "ダウンロード",
+                      rails_blob_path(@product_document.file, disposition: :attachment),
+                      class: "btn btn-outline-primary",
+                      target: "_blank",
+                      rel: "noopener" %>
+          <% if current_workspace_membership&.admin? %>
+            <%= button_to "削除",
+                          product_product_document_path(@product, @product_document),
+                          method: :delete,
+                          form: { data: { turbo_confirm: "この資料を削除しますか？" } },
+                          class: "btn btn-outline-danger" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="ratio ratio-4x3 bg-light border rounded overflow-hidden">
+        <iframe src="<%= @inline_url %>"
+                title="Document preview"
+                class="w-100 h-100 border-0"
+                loading="lazy"
+                allowfullscreen></iframe>
+      </div>
+      <% if @viewer_mode == :office %>
+        <p class="small text-muted mt-2 mb-0">
+          Office Online ビューアを利用してプレビューしています。閲覧できない場合はダウンロードしてください。
+        </p>
+      <% else %>
+        <p class="small text-muted mt-2 mb-0">
+          内部ビューアで表示できない形式の場合、ダウンロードリンクをご利用ください。
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>

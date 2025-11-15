@@ -90,6 +90,8 @@ SalesAI Assistant（仮）
    - `AWS_REGION`
    - `AWS_S3_BUCKET`
    - `ASSET_HOST`（CloudFront 等の任意のアセットホスト。不要なら空で可）
+   - `OPENAI_API_KEY`（ChatGPT ストリーミング回答用）
+   - `GOOGLE_AI_STUDIO_API_KEY`, `GEMINI_PROJECT_ID`, `GEMINI_LOCATION`（Gemini File Search を利用する場合）
 3. `bin/rails db:setup` を実行し、開発用 DB を作成
 
 Active Storage の direct upload は `AWS_S3_BUCKET` が設定されている場合に Amazon S3 を利用し、未設定時は `storage/` 以下にローカル保存します。

@@ -1,0 +1,90 @@
+<div class="container py-5">
+  <div class="mx-auto" style="max-width: 720px;">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h1 class="fs-3 fw-semibold mb-3">アカウント設定</h1>
+        <p class="text-body-secondary mb-4">
+          登録情報とパスワードを更新できます。情報を変更した後は保存ボタンを押してください。
+        </p>
+
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <%= form_with model: resource,
+                      scope: resource_name,
+                      url: registration_path(resource_name),
+                      html: { method: :put } do |form| %>
+          <div class="mb-3">
+            <%= form.label :email, "メールアドレス", class: "form-label" %>
+            <%= form.email_field :email,
+                                 autofocus: true,
+                                 autocomplete: "email",
+                                 class: "form-control" %>
+            <div class="form-text">ログイン時と通知の送信に使用します。</div>
+          </div>
+
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div class="alert alert-info small mb-4">
+              <p class="mb-0">
+                確認待ちのメールアドレス: <strong><%= resource.unconfirmed_email %></strong>。
+                認証メールをご確認ください。
+              </p>
+            </div>
+          <% end %>
+
+          <hr class="my-4">
+
+          <h2 class="fs-5 fw-semibold mb-3">パスワード変更</h2>
+
+          <div class="mb-3">
+            <%= form.label :password, "新しいパスワード", class: "form-label" %>
+            <% if @minimum_password_length %>
+              <div class="form-text mb-2">
+                <%= @minimum_password_length %>文字以上で入力してください。変更しない場合は空欄のままで問題ありません。
+              </div>
+            <% else %>
+              <div class="form-text mb-2">変更しない場合は空欄のままにしてください。</div>
+            <% end %>
+            <%= form.password_field :password,
+                                    autocomplete: "new-password",
+                                    class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :password_confirmation, "新しいパスワード（確認）", class: "form-label" %>
+            <%= form.password_field :password_confirmation,
+                                    autocomplete: "new-password",
+                                    class: "form-control" %>
+          </div>
+
+          <div class="mb-4">
+            <%= form.label :current_password, "現在のパスワード", class: "form-label" %>
+            <%= form.password_field :current_password,
+                                    autocomplete: "current-password",
+                                    class: "form-control" %>
+            <div class="form-text">変更を確定するために現在のパスワードが必要です。</div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2 justify-content-between">
+            <%= link_to "キャンセル", authenticated_root_path, class: "btn btn-outline-secondary" %>
+            <%= form.submit "変更を保存", class: "btn btn-primary px-4" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card border-danger-subtle">
+      <div class="card-body">
+        <h2 class="fs-5 fw-semibold text-danger mb-2">アカウントの削除</h2>
+        <p class="text-body-secondary small mb-3">
+          アカウントを削除すると、全てのワークスペースとの参加情報が削除されます。元に戻すことはできません。
+        </p>
+
+        <%= button_to "アカウントを削除する",
+                      registration_path(resource_name),
+                      method: :delete,
+                      class: "btn btn-outline-danger",
+                      data: { turbo_confirm: "本当にアカウントを削除しますか？" } %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_14_060319) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,6 +40,21 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
     t.index ["blob_id"], name: "index_active_storage_variant_records_on_blob_id"
   end
 
+  create_table "chats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "product_id"
+    t.bigint "sales_expert_id"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "workspace_id", null: false
+    t.index ["product_id"], name: "index_chats_on_product_id"
+    t.index ["sales_expert_id"], name: "index_chats_on_sales_expert_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
+    t.index ["workspace_id", "user_id", "created_at"], name: "index_chats_on_workspace_id_and_user_id_and_created_at"
+    t.index ["workspace_id"], name: "index_chats_on_workspace_id"
+  end
+
   create_table "expert_knowledges", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "content_type", null: false
     t.datetime "created_at", null: false
@@ -65,14 +80,31 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
     t.index ["expert_knowledge_id"], name: "index_knowledge_chunks_on_expert_knowledge_id"
   end
 
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "response_number", default: 0, null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id", "created_at"], name: "index_messages_on_chat_id_and_created_at"
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
   create_table "product_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "document_name", null: false
     t.string "document_type"
+    t.string "gemini_document_id"
+    t.string "gemini_operation_name"
+    t.text "gemini_sync_error"
+    t.string "gemini_sync_status", default: "pending", null: false
+    t.datetime "gemini_synced_at"
     t.json "metadata"
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "upload_user_id", null: false
+    t.index ["gemini_document_id"], name: "index_product_documents_on_gemini_document_id", unique: true
     t.index ["product_id"], name: "index_product_documents_on_product_id"
     t.index ["upload_user_id"], name: "index_product_documents_on_upload_user_id"
   end
@@ -82,12 +114,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.text "description"
+    t.text "gemini_data_store_error"
+    t.string "gemini_data_store_id"
+    t.string "gemini_data_store_status", default: "pending", null: false
     t.boolean "is_active", default: true, null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.string "uuid", null: false
     t.bigint "workspace_id", null: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
+    t.index ["gemini_data_store_id"], name: "index_products_on_gemini_data_store_id", unique: true
     t.index ["uuid"], name: "index_products_on_uuid", unique: true
     t.index ["workspace_id", "name"], name: "index_products_on_workspace_id_and_name"
     t.index ["workspace_id"], name: "index_products_on_workspace_id"
@@ -101,6 +137,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_sales_experts_on_product_id"
+  end
+
+  create_table "solid_cable_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.binary "channel", limit: 1024, null: false
+    t.bigint "channel_hash", null: false
+    t.datetime "created_at", null: false
+    t.binary "payload", size: :long, null: false
+    t.index ["channel"], name: "index_solid_cable_messages_on_channel"
+    t.index ["channel_hash"], name: "index_solid_cable_messages_on_channel_hash"
+    t.index ["created_at"], name: "index_solid_cable_messages_on_created_at"
   end
 
   create_table "solid_queue_blocked_executions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -325,9 +371,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_12_110400) do
     t.index ["uuid"], name: "index_workspaces_on_uuid", unique: true
   end
 
+  add_foreign_key "chats", "products"
+  add_foreign_key "chats", "sales_experts"
+  add_foreign_key "chats", "users"
+  add_foreign_key "chats", "workspaces"
   add_foreign_key "expert_knowledges", "sales_experts"
   add_foreign_key "expert_knowledges", "users", column: "upload_user_id"
   add_foreign_key "knowledge_chunks", "expert_knowledges"
+  add_foreign_key "messages", "chats"
   add_foreign_key "product_documents", "products"
   add_foreign_key "product_documents", "users", column: "upload_user_id"
   add_foreign_key "products", "workspaces"

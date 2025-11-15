@@ -1,9 +1,5 @@
-if ENV['OPENAI_API_KEY']
-  begin
-    require 'openai'
-    OPENAI_CLIENT = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
-  rescue LoadError
-    Rails.logger.warn('[openai] ruby-openai gem not available; skipping client initialization')
-  end
+# Configure global OpenAI client settings from env.
+OpenAI.configure do |config|
+  config.access_token = ENV.fetch("OPENAI_API_KEY", nil)
+  config.log_errors = true
 end
-

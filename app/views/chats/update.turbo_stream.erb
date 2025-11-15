@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(@chat, :context) do %>
+  <%= render "context_form",
+             chat: @chat,
+             products: @products,
+             sales_experts: @sales_experts,
+             available_sales_experts: @available_sales_experts %>
+<% end %>

@@ -1,0 +1,13 @@
+# Generate content using the FileSearchStore
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent" \
+    -H "x-goog-api-key: $GEMINI_API_KEY" \
+    -H 'Content-Type: application/json' \
+    -X POST \
+    -d '{
+            "contents": [{
+                "parts":[{"text": "What does the research say about ..."}]          
+            }],
+            "tools": [{
+                "file_search": { "file_search_store_names":["'$STORE_NAME'"] }
+            }]
+        }' 2> /dev/null > response.json

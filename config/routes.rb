@@ -1,24 +1,37 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    confirmations: "users/confirmations"
+  }
   get "dev/react"
   resource :profile, only: %i[new create edit update destroy] do
     patch :email
     patch :password
   end
   resources :products do
-    resources :product_documents, only: %i[create destroy]
+    resources :product_documents, only: %i[create show destroy]
     resources :sales_experts, only: %i[create edit update destroy] do
       resources :expert_knowledges, only: %i[create destroy]
     end
+    member do
+      get :preview
+    end
   end
   resources :workspaces, only: %i[new create show update destroy], param: :uuid do
-    resources :invitations, only: :create, controller: :workspace_invitations
+    resources :invitations, only: %i[create destroy], controller: :workspace_invitations do
+      member do
+        post :resend
+      end
+    end
   end
   resources :transcriptions, only: [] do
     post :refine, on: :member
   end
   post "workspaces/switch", to: "workspace_switches#create", as: :switch_workspace
   get "invitations/:token/accept", to: "invitations#accept", as: :accept_invitation
+
+  resources :chats, only: %i[index new create show update] do
+    resources :messages, only: %i[create]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
