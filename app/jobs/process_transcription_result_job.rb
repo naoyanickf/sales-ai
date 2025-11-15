@@ -76,7 +76,7 @@ class ProcessTranscriptionResultJob < ApplicationJob
   def parse_transcribe_json(json)
     # Parse AWS Transcribe JSON into full_text and speaker segments
     results = json.to_h['results'] || {}
-    full_text = results.dig('transcripts', 0, 'transcript')
+    full_text = clean_segment_text(results.dig('transcripts', 0, 'transcript'))
     language = json['language_code'] || 'ja-JP'
     speaker_count = results.dig('speaker_labels', 'speakers')
     duration_seconds = nil
@@ -110,9 +110,8 @@ class ProcessTranscriptionResultJob < ApplicationJob
         # collect words within time range
         content_words = words.select { |w| w[:start_time].to_f >= s && w[:end_time].to_f <= e && w[:content] }
         text = content_words.map { |w| w[:content] }.join(' ')
-        # add simple punctuation if next is punctuation
-        puncts = words.select { |w| w[:start_time].nil? && w[:punctuation] }
-        text << puncts.map { |p| p[:punctuation] }.join if text.present?
+        text = clean_segment_text(text)
+        next if text.blank?
 
         confs = content_words.map { |w| w[:confidence] }.compact
         avg_conf = confs.any? ? (confs.sum / confs.size) : nil
@@ -137,5 +136,18 @@ class ProcessTranscriptionResultJob < ApplicationJob
       language: language,
       segments: segments
     }
+  end
+
+  # Remove noise like long sequences of question marks or filler artifacts.
+  def clean_segment_text(text)
+    t = text.to_s.dup
+    t.gsub!(/細かい[\?？]{3,}/, '')
+    # Drop if consists of only question marks and spaces
+    return '' if t.strip =~ /\A[\?？\s]+\z/
+    # Remove long runs of question marks
+    t.gsub!(/[\?？]{3,}/, '')
+    # Normalize spaces
+    t.gsub!(/[ \t\f\v]+/, ' ')
+    t.strip
   end
 end

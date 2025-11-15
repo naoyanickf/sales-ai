@@ -23,6 +23,8 @@ class ExpertRag
 
     reranked = re_rank_with_embeddings(query: query, hits: prelim.first(rerank_top_k))
     top = (reranked.presence || prelim).first(limit)
+
+    Rails.logger.info("[ExpertRag] hits=#{top.size} chunks=#{chunks.size} tokens=#{tokens.size} query='#{query.to_s.truncate(40)}'")
     top
   end
 
@@ -31,8 +33,15 @@ class ExpertRag
   end
 
   def self.tokenize(text)
-    # Simple tokenization fallback for JA; split by punctuation/space
-    text.to_s.gsub(/[\p{Punct}\s]+/u, ' ').split.uniq.first(20)
+    s = text.to_s.strip
+    return [] if s.empty?
+    # If the string contains CJK, prefer character n-grams to handle no-space texts
+    if contains_cjk?(s)
+      grams = char_ngrams(s, 3)
+      return grams.uniq.first(100)
+    end
+    # Otherwise split by space/punct
+    s.gsub(/[\p{Punct}\s]+/u, ' ').split.uniq.first(20)
   end
 
   # BM25 implementation over in-memory corpus
@@ -99,5 +108,18 @@ class ExpertRag
     end
     denom = Math.sqrt(n1) * Math.sqrt(n2)
     denom > 0 ? dot / denom : 0.0
+  end
+
+  def self.contains_cjk?(s)
+    # Hiragana, Katakana, Kanji ranges
+    !!(s =~ /[\p{Hiragana}\p{Katakana}\p{Han}]/)
+  end
+
+  def self.char_ngrams(s, n)
+    chars = s.gsub(/[\s\p{Punct}]+/u, '')
+    return [chars] if chars.length <= n
+    grams = []
+    0.upto(chars.length - n) { |i| grams << chars[i, n] }
+    grams
   end
 end

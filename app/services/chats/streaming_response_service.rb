@@ -83,7 +83,12 @@ module Chats
 
     def append_expert_sources_footer
       return unless chat.sales_expert.present?
-      query = chat.messages.order(created_at: :desc, id: :desc).find(&:user?)&.content.to_s
+      latest_user = chat.messages
+        .where(role: Message.roles[:user])
+        .order(created_at: :desc, id: :desc)
+        .limit(1)
+        .first
+      query = latest_user&.content.to_s
       return if query.blank?
 
       hits = ExpertRag.fetch(sales_expert: chat.sales_expert, query: query, limit: 3)

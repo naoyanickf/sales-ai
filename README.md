@@ -96,6 +96,24 @@ SalesAI Assistant（仮）
 
 Active Storage の direct upload は `AWS_S3_BUCKET` が設定されている場合に Amazon S3 を利用し、未設定時は `storage/` 以下にローカル保存します。
 
+### 開発でよく使うコマンド（早見表）
+
+- サーバ起動: `bin/rails server`（別ターミナルでジョブも起動）
+- バックグラウンドジョブ: `bin/rails solid_queue:start`
+- Solid Cable（使用時）: `bin/rails solid_cable`
+- DB セットアップ: `bin/rails db:setup`
+- 依存インストール: `bundle install` / `yarn install`
+
+診断系（RAG/外部連携の確認）:
+- AWS/S3/Transcribe 診断: `bin/rails diag:aws`
+- OpenAI 診断: `bin/rails diag:openai`
+- 書き起こしレコード確認（時刻±N分）:
+  - 例: `bin/rails diag:transcriptions["2025-11-15 15:59",10]`
+
+運用確認のヒント:
+- 書き起こし詳細を見る: `/transcriptions/:id`（製品詳細 > 先輩ナレッジ > 「書き起こしを見る」から遷移）
+- チャットのRAG出典は、回答直後の別メッセージに「参考: 先輩RAG出典」としてURLリンクで表示されます。
+
 ### データモデル（簡略版）
 ```
 Workspace

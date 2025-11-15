@@ -48,4 +48,17 @@ module ApplicationHelper
           end
     tag.span(label, class: "badge #{css}")
   end
+
+  # Convert plain URLs in text into clickable links.
+  # - Escapes HTML first to avoid XSS
+  # - Opens links in new tab with rel="noopener"
+  def linkify_urls(text)
+    return "" if text.blank?
+    escaped = ERB::Util.html_escape(text.to_s)
+    url_regex = %r{(https?://[^\s<]+)}
+    linked = escaped.gsub(url_regex) do |url|
+      %Q(<a href="#{url}" target="_blank" rel="noopener">#{url}</a>)
+    end
+    linked.html_safe
+  end
 end
