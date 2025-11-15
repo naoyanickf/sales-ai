@@ -77,8 +77,8 @@
         <% recent_chats.each do |chat| %>
           <%= link_to chat_path(chat),
                       class: "text-decoration-none bg-white bg-opacity-10 rounded px-3 py-2 d-flex flex-column gap-1" do %>
-            <% truncated_title = chat.display_title.truncate(12) %>
-            <span class="text-white text-truncate"><%= truncated_title %></span>
+            <% truncated_title = chat.display_title.truncate(15) %>
+            <span class="text-white text-truncate small"><%= truncated_title %></span>
             <small class="text-white-50 text-truncate">
               <%= chat.product&.name || "製品未設定" %>・<%= l(chat.updated_at, format: :short) %>
             </small>
