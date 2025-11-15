@@ -24,7 +24,7 @@
           </p>
         </div>
       <% else %>
-        <%= simple_format(message.content, {}, sanitize: true) %>
+        <%= render_message_body(message) %>
       <% end %>
     </div>
   </div>

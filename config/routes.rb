@@ -23,6 +23,9 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :transcriptions, only: [:show] do
+    post :refine, on: :member
+  end
   post "workspaces/switch", to: "workspace_switches#create", as: :switch_workspace
   get "invitations/:token/accept", to: "invitations#accept", as: :accept_invitation
 
