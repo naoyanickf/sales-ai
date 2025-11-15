@@ -349,10 +349,9 @@
                                                         form: { data: { turbo_confirm: "このナレッジを削除しますか？" } },
                                                         class: "btn btn-sm btn-outline-danger" %>
                                           <% if knowledge.transcription.present? %>
-                                            <%= button_to "日本語校正を実行",
-                                                          refine_transcription_path(knowledge.transcription),
-                                                          method: :post,
-                                                          class: "btn btn-sm btn-outline-secondary" %>
+                                            <%= link_to "書き起こしを見る",
+                                                        transcription_path(knowledge.transcription),
+                                                        class: "btn btn-sm btn-outline-primary" %>
                                           <% end %>
                                         <% end %>
                                       </div>

@@ -1,0 +1,68 @@
+<% product = @transcription.expert_knowledge.sales_expert.product %>
+<% content_for :title, "書き起こし詳細" %>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h5 mb-0">書き起こし詳細</h1>
+    <div class="btn-group">
+      <%= link_to "製品に戻る", product_path(product), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6">概要</h2>
+      <dl class="row mb-0 small text-muted">
+        <dt class="col-sm-3 col-md-2">言語</dt>
+        <dd class="col-sm-9 col-md-10"><%= @transcription.language %></dd>
+        <dt class="col-sm-3 col-md-2">作成日時</dt>
+        <dd class="col-sm-9 col-md-10"><%= l @transcription.created_at, format: :short %></dd>
+        <dt class="col-sm-3 col-md-2">テキスト長</dt>
+        <dd class="col-sm-9 col-md-10"><%= @transcription.full_text.to_s.length %> 文字</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6 mb-3">本文</h2>
+      <% if @transcription.full_text.present? %>
+        <div class="bg-light border rounded-3 p-3" style="white-space: pre-wrap;">
+          <%= @transcription.full_text %>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0">本文がありません。</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h6 mb-3">セグメント</h2>
+      <% if @transcription.segments.exists? %>
+        <div class="list-group">
+          <% @transcription.segments.order(:sequence_number).each do |seg| %>
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="small text-muted">
+                    <%= seg.speaker_name.presence || seg.speaker_label.presence || '話者不明' %>
+                    (<%= seg.start_time.to_f.round(1) %>s – <%= seg.end_time.to_f.round(1) if seg.end_time %>)
+                  </div>
+                  <div style="white-space: pre-wrap;">
+                    <%= seg.text %>
+                  </div>
+                </div>
+                <% if seg.confidence %>
+                  <span class="badge bg-secondary align-self-start">conf: <%= (seg.confidence * 100).round(0) %>%</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0">セグメントはありません。</p>
+      <% end %>
+    </div>
+  </div>
+</div>

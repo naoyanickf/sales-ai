@@ -3,6 +3,10 @@ class TranscriptionsController < ApplicationController
   before_action :require_workspace_admin!
   before_action :set_transcription
 
+  def show
+    # @transcription is set; view will render details
+  end
+
   def refine
     TextRefineTranscriptionJob.perform_later(@transcription.id)
     redirect_back fallback_location: product_path(@transcription.expert_knowledge.sales_expert.product),
@@ -19,4 +23,3 @@ class TranscriptionsController < ApplicationController
     end
   end
 end
-

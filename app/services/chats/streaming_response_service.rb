@@ -43,6 +43,7 @@ module Chats
     end
 
     def stream_response(prompt_messages, placeholders)
+      Rails.logger.info("[ChatStreaming] Calling OpenAI chat: chat_id=#{chat.id} model=#{DEFAULT_MODEL}")
       client.chat(
         parameters: {
           model: DEFAULT_MODEL,

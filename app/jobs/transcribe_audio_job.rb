@@ -29,7 +29,10 @@ class TranscribeAudioJob < ApplicationJob
       job.update!(external_job_id: external_id)
       CheckTranscriptionStatusJob.set(wait: 30.seconds).perform_later(job.id)
     rescue NameError
-      Rails.logger.warn("Aws SDK not available; leaving job in processing state")
+      # When aws-sdk-transcribe isn't available, mark as failed to avoid endless "processing"
+      job.update!(status: 'failed', error_message: 'AWS SDK not available')
+      expert.update!(transcription_status: 'failed')
+      Rails.logger.warn("Aws SDK not available; marking transcription as failed")
     rescue => e
       job.update!(status: 'failed', error_message: e.message)
       expert.update!(transcription_status: 'failed')

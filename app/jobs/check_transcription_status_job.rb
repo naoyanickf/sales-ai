@@ -21,7 +21,10 @@ class CheckTranscriptionStatusJob < ApplicationJob
         job.expert_knowledge.update!(transcription_status: 'failed')
       end
     rescue NameError
-      Rails.logger.warn("Aws SDK not available; status check skipped")
+      # Without the AWS SDK, we cannot poll status: fail the job to avoid stuck UI
+      job.update!(status: 'failed', error_message: 'AWS SDK not available')
+      job.expert_knowledge.update!(transcription_status: 'failed')
+      Rails.logger.warn("Aws SDK not available; marking transcription as failed")
     end
   end
 end
