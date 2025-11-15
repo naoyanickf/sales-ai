@@ -288,11 +288,14 @@
                                     <div class="d-flex justify-content-between flex-wrap gap-3">
                                       <div>
                                         <p class="mb-1 fw-semibold"><%= knowledge.content_type %></p>
-                                        <p class="text-muted small mb-1">
-                                          <%= knowledge.file_name %>
-                                          <% if knowledge.file.attached? %>
-                                            （<%= number_to_human_size(knowledge.file.byte_size) %>）
-                                          <% end %>
+                                        <p class="text-muted small mb-1 d-flex align-items-center gap-2 flex-wrap">
+                                          <span>
+                                            <%= knowledge.file_name %>
+                                            <% if knowledge.file.attached? %>
+                                              （<%= number_to_human_size(knowledge.file.byte_size) %>）
+                                            <% end %>
+                                          </span>
+                                          <%= transcription_status_badge(knowledge) %>
                                         </p>
                                         <p class="text-muted small mb-0">
                                           <%= knowledge.uploader.name %>・<%= l knowledge.created_at, format: :short %>
