@@ -58,7 +58,7 @@ class MessagesController < ApplicationController
   private
 
   def set_chat
-    @chat = current_workspace.chats.find(params[:chat_id])
+    @chat = current_workspace.chats.find_by!(uuid: params[:chat_id])
   end
 
   def load_chat_form_options

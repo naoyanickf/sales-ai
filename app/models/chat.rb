@@ -6,9 +6,11 @@ class Chat < ApplicationRecord
 
   has_many :messages, -> { order(:created_at, :id) }, dependent: :destroy
 
+  before_validation :assign_uuid, on: :create
   before_validation :assign_product_from_sales_expert
   before_validation :assign_workspace_from_product
 
+  validates :uuid, presence: true, uniqueness: true
   validates :workspace, presence: true
   validates :user, presence: true
   validate :product_belongs_to_workspace
@@ -34,7 +36,15 @@ class Chat < ApplicationRecord
     FALLBACK_TITLE
   end
 
+  def to_param
+    uuid
+  end
+
   private
+
+  def assign_uuid
+    self.uuid ||= SecureRandom.uuid_v7
+  end
 
   def assign_product_from_sales_expert
     return if sales_expert.nil?
