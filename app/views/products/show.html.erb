@@ -15,6 +15,16 @@
   else
     documents_tab_active = true
     sales_experts_tab_active = false
+
+    requested_tab = params[:tab].presence
+    case requested_tab
+    when "sales_experts"
+      documents_tab_active = false
+      sales_experts_tab_active = true
+    when "documents"
+      documents_tab_active = true
+      sales_experts_tab_active = false
+    end
   end
 
   documents_allowed_formats = ProductDocument::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")

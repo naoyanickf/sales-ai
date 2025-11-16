@@ -10,7 +10,8 @@ class SalesExpertsController < ApplicationController
     @sales_expert = @product.sales_experts.new(sales_expert_params)
 
     if @sales_expert.save
-      redirect_to product_path(@product), notice: "先輩営業マンを追加しました。"
+      redirect_to product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                  notice: "先輩営業マンを追加しました。"
     else
       prepare_product_show_context(@product)
       @can_manage_products = true
