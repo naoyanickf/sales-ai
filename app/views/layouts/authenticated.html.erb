@@ -24,17 +24,8 @@
       <%= render "shared/sidebar" %>
       <div class="auth-shell__body flex-grow-1 bg-light d-flex flex-column">
         <main class="auth-shell__main flex-grow-1">
-          <div class="auth-shell__flash container-fluid">
-            <% flash.each do |type, message| %>
-              <% bootstrap_class = case type.to_sym
-                 when :notice then "alert-success"
-                 when :alert then "alert-danger"
-                 else "alert-secondary"
-                 end %>
-              <div class="alert <%= bootstrap_class %> mb-4" role="alert">
-                <%= message %>
-              </div>
-            <% end %>
+          <div class="auth-shell__flash">
+            <%= render "shared/flash_messages", wrapper_class: "container-fluid" %>
           </div>
           <div class="auth-shell__content">
             <%= yield %>
