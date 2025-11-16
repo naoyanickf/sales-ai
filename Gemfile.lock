@@ -376,7 +376,7 @@ GEM
       rubocop (>= 1.72)
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
-    ruby-openai (7.0.1)
+    ruby-openai (8.3.0)
       event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
@@ -482,7 +482,7 @@ DEPENDENCIES
   rails (~> 8.1.1)
   rails-i18n
   rubocop-rails-omakase
-  ruby-openai (~> 7.0.1)
+  ruby-openai (~> 8.3.0)
   selenium-webdriver
   solid_cable
   solid_cache
