@@ -48,6 +48,13 @@
       }
       document.addEventListener("turbo:load", renderLucideIcons);
       document.addEventListener("turbo:frame-load", renderLucideIcons);
+      document.addEventListener("turbo:before-stream-render", function(event) {
+        const originalRender = event.detail.render;
+        event.detail.render = function() {
+          originalRender.apply(this, arguments);
+          requestAnimationFrame(renderLucideIcons);
+        };
+      });
     <% end %>
   </body>
 </html>
