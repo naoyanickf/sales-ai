@@ -1,7 +1,7 @@
 <section class="py-4">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12">
+    <div class="row g-4">
+      <div class="col-12 col-xl-9">
         <div class="card h-100 shadow-sm">
           <div class="card-header bg-white border-bottom-0">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -29,7 +29,111 @@
                        message: @message,
                        products: @products,
                        sales_experts: @sales_experts,
-                       available_sales_experts: @available_sales_experts %>
+                       available_sales_experts: @available_sales_experts,
+                       allow_product_switch: @allow_chat_product_switch %>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-white border-bottom-0">
+            <h3 class="h6 mb-0">製品情報</h3>
+          </div>
+          <div class="card-body">
+            <% if @chat_product.present? %>
+              <p class="text-muted small mb-1">現在の製品</p>
+              <h4 class="h5 mb-1"><%= @chat_product.name %></h4>
+              <p class="text-muted small mb-3">
+                <%= @chat_product.category.presence || "カテゴリ未設定" %>／
+                <%= @chat_product.is_active? ? "公開中" : "非公開" %>
+              </p>
+              <p class="small text-muted mb-3">
+                <%= truncate(@chat_product.description.presence || "説明が登録されていません。", length: 180) %>
+              </p>
+              <%= link_to "製品詳細を見る",
+                          product_path(@chat_product),
+                          class: "btn btn-outline-primary btn-sm w-100 mb-4" %>
+
+              <hr class="my-4">
+              <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h4 class="h6 mb-0">関連資料</h4>
+                  <%= link_to "すべて見る",
+                              product_path(@chat_product, anchor: "documents-pane"),
+                              class: "btn btn-link btn-sm text-decoration-none px-0" %>
+                </div>
+                <% if @chat_product_documents.any? %>
+                  <div class="list-group list-group-flush">
+                    <% @chat_product_documents.each do |document| %>
+                      <div class="list-group-item px-0">
+                        <p class="fw-semibold mb-1"><%= document.document_name %></p>
+                        <p class="text-muted small mb-2">
+                          <%= document.document_type.presence || "未分類" %>／
+                          <% if document.file.attached? %>
+                            <%= number_to_human_size(document.file.byte_size) %>・<%= l document.created_at, format: :short %>
+                          <% else %>
+                            添付ファイルなし
+                          <% end %>
+                        </p>
+                        <% if document.file.attached? %>
+                          <div class="d-flex gap-2">
+                            <%= link_to "画面で見る",
+                                        product_product_document_path(@chat_product, document),
+                                        class: "btn btn-sm btn-primary",
+                                        target: "_blank",
+                                        rel: "noopener" %>
+                            <%= link_to "ダウンロード",
+                                        rails_blob_path(document.file, disposition: :attachment),
+                                        class: "btn btn-sm btn-outline-primary",
+                                        target: "_blank",
+                                        rel: "noopener" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="text-muted small mb-0">関連する資料はまだ登録されていません。</p>
+                <% end %>
+              </div>
+
+              <hr class="my-4">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h4 class="h6 mb-0">先輩営業マン</h4>
+                  <%= link_to "一覧を見る",
+                              product_path(@chat_product, anchor: "sales-experts-pane"),
+                              class: "btn btn-link btn-sm text-decoration-none px-0" %>
+                </div>
+                <% if @chat_product_sales_experts.any? %>
+                  <div class="list-group list-group-flush">
+                    <% @chat_product_sales_experts.each do |expert| %>
+                      <div class="list-group-item px-0">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                          <p class="fw-semibold mb-0"><%= expert.name %></p>
+                          <span class="badge <%= expert.is_active? ? "bg-success" : "bg-secondary" %>">
+                            <%= expert.is_active? ? "公開中" : "非公開" %>
+                          </span>
+                          <% if @chat.sales_expert_id == expert.id %>
+                            <span class="badge bg-primary text-white">このチャットで選択中</span>
+                          <% end %>
+                        </div>
+                        <p class="text-muted small mb-2">
+                          <%= expert.description.presence || "自己紹介は登録されていません。" %>
+                        </p>
+                        <p class="text-muted small mb-0">
+                          ナレッジ <%= expert.expert_knowledges.size %>件・<%= l expert.created_at, format: :short %> 登録
+                        </p>
+                      </div>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="text-muted small mb-0">紐づく先輩営業マンはまだ登録されていません。</p>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-muted mb-0">このチャットに紐づく製品が設定されていません。</p>
+            <% end %>
           </div>
         </div>
       </div>
