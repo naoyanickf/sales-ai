@@ -79,7 +79,7 @@ class ChatsController < ApplicationController
   end
 
   def set_chat
-    @chat = current_workspace.chats.find(params[:id])
+    @chat = current_workspace.chats.find_by!(uuid: params[:id])
   end
 
   def chat_params

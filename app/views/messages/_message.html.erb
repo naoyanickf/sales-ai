@@ -13,7 +13,7 @@
     <% else %>
       <p class="small text-muted mb-1">SalesAI</p>
     <% end %>
-    <div class="<%= text_class %> mb-0">
+    <div class="<%= text_class %> mb-0 chat-bubble-content">
       <% if typing %>
         <div class="d-flex align-items-center gap-2">
           <div class="spinner-grow spinner-grow-sm text-secondary"
@@ -24,7 +24,7 @@
           </p>
         </div>
       <% else %>
-        <%= render_message_body(message) %>
+        <%= render_markdown(message.content) %>
       <% end %>
     </div>
   </div>

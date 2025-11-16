@@ -21,7 +21,8 @@
   flex-direction: column;
   position: sticky;
   top: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: visible;
 }
 
 .auth-shell__body {
@@ -92,4 +93,25 @@
 
 .dropdown-item-form {
   margin: 0;
+}
+
+.workspace-switcher-dropdown {
+  position: static;
+}
+
+.workspace-switcher-dropdown .workspace-switcher-menu {
+  width: auto;
+  min-width: clamp(260px, 45vw, 360px);
+  max-width: calc(100vw - 32px);
+}
+
+@media (min-width: 992px) {
+  .workspace-switcher-dropdown {
+    position: static;
+  }
+
+  .workspace-switcher-dropdown .workspace-switcher-menu {
+    min-width: 320px;
+    max-width: 380px;
+  }
 }

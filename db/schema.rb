@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_14_060319) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_15_000000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -47,10 +47,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_14_060319) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.string "uuid", null: false
     t.bigint "workspace_id", null: false
     t.index ["product_id"], name: "index_chats_on_product_id"
     t.index ["sales_expert_id"], name: "index_chats_on_sales_expert_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+    t.index ["uuid"], name: "index_chats_on_uuid", unique: true
     t.index ["workspace_id", "user_id", "created_at"], name: "index_chats_on_workspace_id_and_user_id_and_created_at"
     t.index ["workspace_id"], name: "index_chats_on_workspace_id"
   end
