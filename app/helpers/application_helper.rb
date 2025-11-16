@@ -48,4 +48,40 @@ module ApplicationHelper
           end
     tag.span(label, class: "badge #{css}")
   end
+
+  # Convert plain URLs in text into clickable links.
+  # - Escapes HTML first to avoid XSS
+  # - Opens links in new tab with rel="noopener"
+  def linkify_urls(text)
+    return "" if text.blank?
+    escaped = ERB::Util.html_escape(text.to_s)
+    url_regex = %r{(https?://[^\s<]+)}
+    linked = escaped.gsub(url_regex) do |url|
+      %Q(<a href="#{url}" target="_blank" rel="noopener">#{url}</a>)
+    end
+    # Also linkify root-relative paths like /transcriptions/3#seg-123
+    path_regex = %r{(^|[\s>])(/[^\s<]+)}
+    linked = linked.gsub(path_regex) do
+      prefix = Regexp.last_match(1)
+      path = Regexp.last_match(2)
+      # Avoid double-linking inside existing href attributes
+      if prefix.ends_with?("=")
+        "#{prefix}#{path}"
+      else
+        %Q(#{prefix}<a href="#{path}" target="_blank" rel="noopener">#{path}</a>)
+      end
+    end
+    linked.html_safe
+  end
+
+  # Render message content safely while keeping assistant-generated links clickable.
+  def render_message_body(message)
+    content = message.content.to_s
+    if message.assistant? && content.include?("<a ")
+      safe = sanitize(content, tags: %w[a br p ul ol li code pre strong em], attributes: %w[href target rel])
+      simple_format(safe, {}, sanitize: false)
+    else
+      simple_format(linkify_urls(content), {}, sanitize: false)
+    end
+  end
 end

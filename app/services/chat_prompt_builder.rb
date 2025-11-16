@@ -6,8 +6,12 @@ class ChatPromptBuilder
   PRODUCT_TEXT_LIMIT = 3_000
   PRODUCT_BULLET_LIMIT = 5
   PRODUCT_BULLET_TRUNCATE = 280
+  EXPERT_TEXT_LIMIT = 2_000
+  EXPERT_BULLET_LIMIT = 5
+  EXPERT_BULLET_TRUNCATE = 240
   HISTORY_PLACEHOLDER = "（まだ会話履歴はありません）".freeze
   PRODUCT_PLACEHOLDER = "製品RAGからの情報はありません。".freeze
+  EXPERT_PLACEHOLDER = "参照可能な先輩営業のトークデータがありません。".freeze
 
   def self.build(chat:, messages: nil, query: nil, logger: Rails.logger)
     new(chat: chat, messages: messages, query: query, logger: logger).build
@@ -25,12 +29,13 @@ class ChatPromptBuilder
 
     intent = classify_intent
     product_context = needs_product_context?(intent) ? fetch_product_context : { text: nil, sources: [] }
+    expert_context = needs_expert_context?(intent) ? fetch_expert_context : { text: nil, sources: [], name: sales_expert_name }
 
-    log_prompt_metrics(intent: intent, product_context: product_context)
+    log_prompt_metrics(intent: intent, product_context: product_context, expert_context: expert_context)
 
     [
       { role: "system", content: base_system_prompt },
-      { role: "system", content: context_message(product_context[:text]) },
+      { role: "system", content: context_message(product_context[:text], expert_context: expert_context) },
       { role: "user", content: query }
     ]
   rescue StandardError => e
@@ -81,8 +86,16 @@ class ChatPromptBuilder
     intent == INTENT_PRODUCT && chat&.product.present?
   end
 
+  def needs_expert_context?(_intent)
+    chat&.sales_expert.present?
+  end
+
   def fetch_product_context
     ProductContextFetcher.new(chat.product, logger: logger).fetch(query)
+  end
+
+  def fetch_expert_context
+    ExpertContextFetcher.new(chat.sales_expert, logger: logger).fetch(query)
   end
 
   def detect_latest_user_query
@@ -147,11 +160,16 @@ class ChatPromptBuilder
     PROMPT
   end
 
-  def context_message(product_text)
+  def context_message(product_text, expert_context: {})
     product_section = product_text.presence || PRODUCT_PLACEHOLDER
+    expert_name = expert_context[:name].presence || "先輩営業未指定"
+    expert_section = expert_context[:text].presence || EXPERT_PLACEHOLDER
     <<~CONTEXT.strip
       ## Product Knowledge
       #{product_section}
+
+      ## Expert Advice (#{expert_name})
+      #{expert_section}
 
       ## 会話履歴
       #{formatted_history}
@@ -166,12 +184,19 @@ class ChatPromptBuilder
     CONTEXT
   end
 
-  def log_prompt_metrics(intent:, product_context:)
+  def sales_expert_name
+    chat&.sales_expert&.name.to_s
+  end
+
+  def log_prompt_metrics(intent:, product_context:, expert_context:)
     metrics = {
       intent: intent,
       needs_product: needs_product_context?(intent),
+      needs_expert: needs_expert_context?(intent),
       rag_sources: Array(product_context[:sources]).presence || [],
-      prompt_has_product_context: product_context[:text].present?
+      expert_sources: Array(expert_context[:sources]).presence || [],
+      prompt_has_product_context: product_context[:text].present?,
+      prompt_has_expert_context: expert_context[:text].present?
     }
     logger.info("[ChatPromptBuilder] #{metrics.to_json}")
   rescue StandardError => e
@@ -249,6 +274,52 @@ class ChatPromptBuilder
             "candidate#{c_index}_chunk#{index}"
         end
       end.compact.uniq
+    end
+  end
+
+  class ExpertContextFetcher
+    def initialize(sales_expert, logger:)
+      @sales_expert = sales_expert
+      @logger = logger
+    end
+
+    def fetch(query)
+      return { text: nil, sources: [], name: sales_expert_name } if sales_expert.blank? || query.to_s.strip.empty?
+
+      hits = ExpertRag.fetch(sales_expert: sales_expert, query: query, limit: EXPERT_BULLET_LIMIT)
+      return { text: nil, sources: [], name: sales_expert_name } if hits.empty?
+
+      joined = hits.map { |h| h[:text].to_s.squish }.reject(&:blank?)
+      text = compress_text(joined.join("\n\n"))
+      sources = hits.map { |h| "chunk##{h[:id]}" }
+      { text: text, sources: sources, name: sales_expert_name }
+    rescue StandardError => e
+      logger.warn("[ChatPromptBuilder] Expert context fetch failed for SalesExpert##{sales_expert&.id}: #{e.class} #{e.message}")
+      { text: nil, sources: [], name: sales_expert_name }
+    end
+
+    private
+
+    attr_reader :sales_expert, :logger
+
+    def sales_expert_name
+      sales_expert&.name.to_s
+    end
+
+    def compress_text(text)
+      normalized = text.to_s.strip
+      return if normalized.blank?
+
+      paragraphs = normalized.split(/\n{2,}/).map(&:squish).reject(&:blank?)
+      bullets = paragraphs.first(EXPERT_BULLET_LIMIT).map do |section|
+        "- #{truncate(section, EXPERT_BULLET_TRUNCATE)}"
+      end
+      bullets.join("\n")[0, EXPERT_TEXT_LIMIT]
+    end
+
+    def truncate(text, limit)
+      return text if text.length <= limit
+      "#{text[0, limit]}…"
     end
   end
 end
