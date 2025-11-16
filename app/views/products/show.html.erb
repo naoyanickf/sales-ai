@@ -142,14 +142,7 @@
                           <h3 class="h6 mb-3">資料をアップロード</h3>
                           <%= form_with model: [@product, @product_document], html: { multipart: true } do |form| %>
                             <%= render "shared/form_errors", object: @product_document %>
-                            <div class="mb-3">
-                              <%= form.label :document_name, "資料名", class: "form-label" %>
-                              <%= form.text_field :document_name, class: "form-control", required: true %>
-                            </div>
-                            <div class="mb-3">
-                              <%= form.label :document_type, "種類", class: "form-label" %>
-                              <%= form.text_field :document_type, class: "form-control" %>
-                            </div>
+                            
                             <div class="mb-3">
                               <%= form.label :file, "ファイル", class: "form-label" %>
                               <%= form.file_field :file,
@@ -157,9 +150,13 @@
                                                   required: true,
                                                   direct_upload: true %>
                               <div class="form-text">
-                                対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %>
+                                対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %> ／ 資料名はアップロードしたファイル名がそのまま利用されます。
                               </div>
                               <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
+                            </div>
+                            <div class="mb-3">
+                              <%= form.label :document_type, "説明（任意）", class: "form-label" %>
+                              <%= form.text_field :document_type, class: "form-control" %>
                             </div>
                             <div class="text-end">
                               <%= form.submit "アップロード", class: "btn btn-primary" %>
@@ -178,12 +175,16 @@
                       <% @product_documents.each do |document| %>
                         <div class="list-group-item d-flex justify-content-between align-items-start">
                           <div>
-                            <p class="fw-semibold mb-1"><%= document.document_name %></p>
+                            <p class="fw-semibold mb-1">
+                              <%= document.document_name %>
+                            </p>
                             <p class="mb-0 text-muted small">
-                              <%= document.document_type.presence || "未分類" %>・
+                              <%= document.document_type.presence%>
+                            </p>
+                            <p class="mb-0 text-muted small">
                               <% if document.file.attached? %>
-                                <%= document.file.filename.to_s %>（<%= number_to_human_size(document.file.byte_size) %>）・
-                              <% end %>
+                                <%= number_to_human_size(document.file.byte_size) %>・
+                              <% end %>                                                          
                               <%= l document.created_at, format: :short %>・
                               <%= document.uploader.name %>
                             </p>

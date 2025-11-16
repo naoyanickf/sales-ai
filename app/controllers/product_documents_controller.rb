@@ -55,7 +55,7 @@ class ProductDocumentsController < ApplicationController
   end
 
   def product_document_params
-    params.require(:product_document).permit(:document_name, :document_type, :file)
+    params.require(:product_document).permit(:document_type, :file)
   end
 
   def build_viewer_url(file)
