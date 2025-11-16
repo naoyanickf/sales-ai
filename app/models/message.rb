@@ -10,7 +10,9 @@ class Message < ApplicationRecord
   after_create_commit -> { broadcast_created }
   after_update_commit -> { broadcast_updated }
 
-  validates :content, presence: true, if: :user?
+  validates :content,
+            presence: { message: "質問内容を入力してください" },
+            if: :user?
 
   def self.for_openai(messages)
     chat = extract_chat(messages)
