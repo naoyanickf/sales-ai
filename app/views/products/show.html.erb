@@ -304,6 +304,11 @@
                                 登録日: <%= l expert.created_at, format: :short %>
                               </p>
                               <p class="mb-0"><%= expert.description.presence || "自己紹介文はまだありません。" %></p>
+                              <div class="d-flex flex-wrap gap-2 mt-3">
+                                <%= link_to "ナレッジ検索プレビュー",
+                                            preview_product_sales_expert_path(@product, expert),
+                                            class: "btn btn-sm btn-outline-primary" %>
+                              </div>
                             </div>
                             <% if @can_manage_products %>
                               <div class="d-flex gap-2">

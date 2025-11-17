@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   resources :products do
     resources :product_documents, only: %i[create show destroy]
     resources :sales_experts, only: %i[create edit update destroy] do
+      member do
+        get :preview
+      end
       resources :expert_knowledges, only: %i[create destroy]
     end
     member do
