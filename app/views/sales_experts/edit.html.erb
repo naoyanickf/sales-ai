@@ -8,7 +8,9 @@
           <p class="text-uppercase text-muted small mb-1">先輩営業マン</p>
           <h1 class="h4 mb-0"><%= @sales_expert.name %> の情報を編集</h1>
         </div>
-        <%= link_to "製品詳細へ戻る", product_path(@product), class: "btn btn-outline-light" %>
+        <%= link_to "製品詳細へ戻る",
+                    product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                    class: "btn btn-outline-light" %>
       </div>
 
       <%= render "form", product: @product, sales_expert: @sales_expert %>

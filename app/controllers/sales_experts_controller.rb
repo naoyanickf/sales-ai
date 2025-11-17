@@ -23,7 +23,8 @@ class SalesExpertsController < ApplicationController
 
   def update
     if @sales_expert.update(sales_expert_params)
-      redirect_to product_path(@product), notice: "先輩営業マンを更新しました。"
+      redirect_to product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                  notice: "先輩営業マンを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -31,7 +32,8 @@ class SalesExpertsController < ApplicationController
 
   def destroy
     @sales_expert.destroy!
-    redirect_to product_path(@product), notice: "先輩営業マンを削除しました。"
+    redirect_to product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                notice: "先輩営業マンを削除しました。"
   end
 
   private

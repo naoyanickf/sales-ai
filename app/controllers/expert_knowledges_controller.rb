@@ -12,7 +12,8 @@ class ExpertKnowledgesController < ApplicationController
     @expert_knowledge.uploader = current_user
 
     if @expert_knowledge.save
-      redirect_to product_path(@product), notice: "ナレッジをアップロードしました。"
+      redirect_to product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                  notice: "ナレッジをアップロードしました。"
     else
       @sales_expert_with_error = @sales_expert
       prepare_product_show_context(@product)
@@ -23,7 +24,8 @@ class ExpertKnowledgesController < ApplicationController
 
   def destroy
     @expert_knowledge.destroy!
-    redirect_to product_path(@product), notice: "ナレッジを削除しました。"
+    redirect_to product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"),
+                notice: "ナレッジを削除しました。"
   end
 
   private
