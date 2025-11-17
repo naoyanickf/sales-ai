@@ -1,5 +1,5 @@
 class ExpertKnowledge < ApplicationRecord
-  ALLOWED_EXTENSIONS = %w[pdf ppt pptx doc docx xls xlsx csv txt md mp3 wav m4a mp4 mov].freeze
+  ALLOWED_EXTENSIONS = %w[mp3 wav m4a mp4 mov].freeze
   # READMEに合わせてアップロード最大サイズは200MB
   MAX_FILE_SIZE = 200.megabytes
 
