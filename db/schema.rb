@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_15_000000) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_15_111000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -55,6 +55,23 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_000000) do
     t.index ["uuid"], name: "index_chats_on_uuid", unique: true
     t.index ["workspace_id", "user_id", "created_at"], name: "index_chats_on_workspace_id_and_user_id_and_created_at"
     t.index ["workspace_id"], name: "index_chats_on_workspace_id"
+  end
+
+  create_table "expert_knowledge_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "expert_knowledge_id", null: false
+    t.text "gemini_file_error"
+    t.string "gemini_file_id"
+    t.string "gemini_file_status", default: "pending", null: false
+    t.string "gemini_file_uri"
+    t.string "gemini_operation_name"
+    t.datetime "gemini_uploaded_at"
+    t.integer "segment_count", default: 0, null: false
+    t.text "txt_body", size: :medium
+    t.datetime "txt_generated_at"
+    t.datetime "updated_at", null: false
+    t.index ["expert_knowledge_id"], name: "index_expert_knowledge_files_on_expert_knowledge_id"
+    t.index ["gemini_file_id"], name: "index_expert_knowledge_files_on_gemini_file_id", unique: true
   end
 
   create_table "expert_knowledges", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -134,10 +151,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_000000) do
   create_table "sales_experts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.text "gemini_store_error"
+    t.string "gemini_store_id"
+    t.string "gemini_store_state", default: "pending", null: false
+    t.datetime "gemini_store_synced_at"
     t.boolean "is_active", default: true, null: false
     t.string "name", null: false
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["gemini_store_id"], name: "index_sales_experts_on_gemini_store_id", unique: true
     t.index ["product_id"], name: "index_sales_experts_on_product_id"
   end
 
@@ -377,6 +399,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_000000) do
   add_foreign_key "chats", "sales_experts"
   add_foreign_key "chats", "users"
   add_foreign_key "chats", "workspaces"
+  add_foreign_key "expert_knowledge_files", "expert_knowledges"
   add_foreign_key "expert_knowledges", "sales_experts"
   add_foreign_key "expert_knowledges", "users", column: "upload_user_id"
   add_foreign_key "knowledge_chunks", "expert_knowledges"

@@ -14,9 +14,9 @@
 - **TranscriptionJob / Transcription / TranscriptionSegment**
   - 音声・動画ファイルを AWS Transcribe で文章化するための中間テーブル。
   - `Transcription` が全文テキストと構造化 JSON、`TranscriptionSegment` が話者区間を保持。
-- **KnowledgeChunk**
-  - RAG 取り込み用に整形したテキストチャンク。
-  - `chunk_text` と `metadata`（話者情報など）を保持し、`ExpertRag` で検索対象になる。
+- **ExpertKnowledgeFile**
+  - `TranscriptionSegment` をテキストファイルに束ねた派生テーブル。
+  - `txt_body` / `segment_count` / `gemini_file_status` / `gemini_file_id` などを保持し、Gemini File Search へのアップロード状態を追跡する。
 
 ## 2. アップロード〜保存
 
@@ -41,9 +41,11 @@ Transcription / TranscriptionSegment
       ↓ after_create_commit
 TextRefineTranscriptionJob
       ↓
-CreateKnowledgeChunksJob
+KnowledgeTranscriptBundlerJob
       ↓
-KnowledgeChunk
+Gemini::SyncExpertKnowledgeFileJob
+      ↓
+Gemini File Search Store
 ```
 
 ### 3.1 TranscribeAudioJob
@@ -59,54 +61,54 @@ KnowledgeChunk
 - Transcript JSON を取得して `Transcription` と `TranscriptionSegment` を生成。
 - 話者ラベルを `SpeakerIdentifier` で人間向けに補正（できない場合はラベルを維持）。
 - ExpertKnowledge の `transcription_status` を `completed` にし、完了日時を記録。
-- 続けて `CreateKnowledgeChunksJob` をキューに積む。
+- 続けて `TextRefineTranscriptionJob`・`KnowledgeTranscriptBundlerJob` を通じて Gemini 連携用 txt を準備する。
 
 ### 3.4 TextRefineTranscriptionJob
 - `Transcription` 作成後に実行。
 - OpenAI（設定されていれば）またはヒューリスティックで文面を校正し、読みやすい文章に整える。
 - 全文だけでなく各 `TranscriptionSegment` も対象。
 
-## 4. チャンク生成と RAG
+## 4. Gemini File Search 連携
 
-### 4.1 CreateKnowledgeChunksJob / KnowledgeChunker
-- `KnowledgeChunker` が校正済みセグメントを順番に束ね、最大 1200 文字 / 30 セグメントを超えたら分割。
-- 各チャンクには以下を保存:
-  - `chunk_text`: 「話者: 内容」の列挙。
-  - `transcription_segment_ids`: 元セグメント ID。UI から該当箇所へリンクする用途。
-  - `metadata`: 話者名リスト等を格納。
-- 既存チャンクは `delete_all` 後に再作成するため、ナレッジ更新時も最新内容で置き換わる。
+### 4.1 SalesExpert ごとの FileSearchStore
+- 先輩営業 (`SalesExpert`) 単位で Gemini File Search の `fileSearchStores` を 1 つ割り当てる。
+- `sales_experts` テーブルに `gemini_store_id`・`gemini_store_state`（`pending` / `ready` / `failed`）を追加し、`GeminiFileSearchClient#create_store` で生成した ID を保持する。
+- Expert が削除された場合は `delete_store` を呼び出し、Gemini 側の不要なリソースをクリーンアップする。
 
-### 4.2 RAG 取り込みと検索
-- 現状は `KnowledgeChunk` レコードをそのまま検索対象にしており、`ExpertRag.fetch` が実装。
-  - BM25 + 文字 n-gram のオーバーラップで一次スコアリング。
-  - OpenAI Embeddings が利用可能なら上位 `rerank_top_k` 件をコサイン類似度で再ランキング。
-- チャット応答 (`Chats::StreamingResponseService`) 内で、ユーザー発話と紐づく先輩営業が設定されている場合に `ExpertRag.fetch` を呼び出し、上位 3 件を「出典」として回答末尾に添付。
-- 将来的なベンダー連携:
-  - `UploadToBedrockKnowledgeBaseJob` を用意（未実装）。`KnowledgeChunk` を AWS Bedrock Knowledge Bases 等へ同期する場合に拡張可能。
+### 4.2 TranscriptionSegment の txt 生成
+- `Transcription` 完了後に `KnowledgeTranscriptBundlerJob` を起動し、対象 `ExpertKnowledge` に紐づく `TranscriptionSegment` を 1 つの txt ファイルへ連結する。
+- フォーマットは `[mm:ss-mm:ss] SpeakerName: 発話内容` の 1 行構成とし、冒頭にファイル名や撮影日などのメタ情報をヘッダーとして追加する。これにより発話者・内容・時系列が明示される。
+- 生成ファイルは一時ディレクトリに保存しつつ、`expert_knowledge_files` テーブルで `txt_body` / `segment_count` / `txt_generated_at` を追跡する。
+
+### 4.3 Gemini へのアップロード
+- `Gemini::SyncExpertKnowledgeFileJob` が txt を `GeminiFileSearchClient#upload_file_to_store` 経由でアップロードし、レスポンスの `document` 名や `operation` 名を `expert_knowledge_files` に同期する。
+- 同一ナレッジを更新した場合は、最新 txt を再アップロードし、旧 Document を削除したうえで置き換える。
+- API のステータスが `PROCESSING` の間はオペレーションをポーリングし、完了後に `gemini_file_status` を `ready` へ更新する。
+
+### 4.4 Expert RAG（検索）
+- チャット回答では `ExpertRag` を経由して `GeminiFileSearchClient#query_document` を呼び出す。
+- `SalesExpert` が未指定の場合は `gemini_store_id` を持つ全先輩から最大 3 名を補完し、それぞれの Store を横断検索してスコア上位から 3 件を採用する。
+- Gemini のレスポンスには抜粋テキストと `chunk_uri` が含まれるため、UI 出典リンクは `chunk_uri` + タイムスタンプ（txt 内ヘッダーから算出）で表示する。
 
 ## 5. UI とアクセシビリティ
 
 - 製品詳細画面
-  - SalesExpert カード内で ExpertKnowledge をアップロードし、DirectUpload の進捗表示や書き起こしステータスを確認できる。
-  - Transcription が完了すると、書き起こし閲覧画面 (`TranscriptionsController`) から各セグメントを参照可能。
+  - SalesExpert カードに Gemini 連携ステータス (`gemini_store_state`) と txt 生成日を表示し、失敗時は再実行ボタンを提供する。
+  - Transcription 閲覧画面から「Gemini 送信用テキストを確認」リンクを配置し、生成された txt をブラウザでプレビューできるようにする。
 - チャット画面サイドバー
-  - 選択中の製品に紐づく SalesExpert / ExpertKnowledge / 資料が一覧化され、ナレッジ資産を探しやすくしている。
+  - 各先輩カードに最新の Gemini 反映日時を表示し、出典リンクは Gemini の `chunk_uri` をベースにした「参考: 先輩RAG（mm:ss〜）」形式に更新する。
 
 ## 6. エラー処理とステータス
 
-- ExpertKnowledge `transcription_status`:
-  - `pending` → `processing` → `completed` / `failed`
-  - UI ではバッジ表示し、`failed` の場合はエラーメッセージを表示。
-- ジョブ失敗時
-  - 各ジョブで rescue ログ出力。
-  - 必ず `transcription_status` を `failed` へ更新して UI が固まらないようにする。
-  - AWS SDK が無い環境では NameError を捕捉し、即座に `failed` に落とす。
+- `KnowledgeTranscriptBundlerJob`・`Gemini::SyncExpertKnowledgeFileJob` で例外が発生した場合は `gemini_store_state` / `gemini_file_status` を `failed` に設定し、UI から再試行できるようにする。
+- Gemini API へのリクエスト失敗は `Gemini::Error` としてラップし、再試行可能なステータスコード（429/5xx）は Exponential backoff で最大 5 回リトライする。
+- `ExpertRag` は Store 未作成時にフォールバック文を返し、「先輩ナレッジがまだインデックス化されていない」ことを明示する。
 
 ## 7. 今後の拡張ポイント
 
-- **テキスト/PDF の自動チャンク化**: 現状は音声/動画からの書き起こしを主導。PDF 等も自動テキスト抽出→チャンク化する処理を追加可能。
-- **外部ベクトルストア連携**: `UploadToBedrockKnowledgeBaseJob` を実装し、`KnowledgeChunk` を AWS Bedrock や Vertex AI RAG へ連携。
-- **再利用 API**: `ExpertRag` を外部 API 化し、チャット以外の画面でも先輩ナレッジ検索を提供できる。
+- **複数ファイルサポート**: txt 以外に PDF/スライドも同じ Store にアップロードし、Gemini のマルチモーダル検索を活用する。
+- **自動クレンジング**: 長大な書き起こしを分割して複数 txt に分け、Store の上限（現状 32MB）を超えないようにする。
+- **検索ログ連携**: Gemini から返る `citations` を `RetrievalTrace` 的なテーブルに保存し、検索品質を継続的にモニタリングできるようにする。
 
 ---
 

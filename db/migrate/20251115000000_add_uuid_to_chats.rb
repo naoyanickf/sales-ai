@@ -9,7 +9,7 @@ class AddUuidToChats < ActiveRecord::Migration[8.1]
 
   def up
     add_column :chats, :uuid, :string
-    add_index :chats, :uuid, unique: true, algorithm: :concurrently
+    add_index :chats, :uuid, unique: true
 
     MigrationChat.reset_column_information
     say_with_time("Backfilling chat uuids") do

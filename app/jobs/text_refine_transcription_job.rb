@@ -20,9 +20,10 @@ class TextRefineTranscriptionJob < ApplicationJob
       next if refined.blank? || refined == seg.text
       seg.update_column(:text, refined)
     end
+
+    KnowledgeTranscriptBundlerJob.perform_later(transcription.expert_knowledge_id) if transcription.expert_knowledge_id.present?
   rescue => e
     Rails.logger.error("TextRefineTranscriptionJob failed: #{e.class} #{e.message}")
     raise
   end
 end
-

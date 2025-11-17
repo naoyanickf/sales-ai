@@ -16,7 +16,6 @@ module Chats
       # prompt_messages = Message.for_openai(chat.messages)
       prompt_messages = ChatPromptBuilder.build(chat: chat)
       stream_response(prompt_messages, placeholders)
-      append_expert_sources_footer
     rescue StandardError => e
       Rails.logger.error("[ChatStreaming] #{e.class}: #{e.message}")
       handle_stream_error(placeholders, e)
@@ -79,45 +78,6 @@ module Chats
       placeholders.each do |message|
         message.update(content: "回答の生成中にエラーが発生しました: #{error.message}")
       end
-    end
-
-    def append_expert_sources_footer
-      return unless chat.sales_expert.present?
-      latest_user = chat.messages
-        .where(role: Message.roles[:user])
-        .order(created_at: :desc, id: :desc)
-        .limit(1)
-        .first
-      query = latest_user&.content.to_s
-      return if query.blank?
-
-      hits = ExpertRag.fetch(sales_expert: chat.sales_expert, query: query, limit: 3)
-      return if hits.blank?
-
-      lines = hits.map do |h|
-        chunk = KnowledgeChunk.find_by(id: h[:id])
-        next unless chunk
-        t = chunk.expert_knowledge&.transcription
-        next unless t
-        seg_id = Array(chunk.transcription_segment_ids).first
-        anchor = seg_id ? "#seg-#{seg_id}" : nil
-        path = Rails.application.routes.url_helpers.transcription_path(t)
-        link = [path, anchor].compact.join
-        # Build a short, safe summary label from chunk text
-        summary = chunk.chunk_text.to_s.split(/\n/).first.to_s.strip
-        summary = summary[0, 80]
-        summary << "…" if chunk.chunk_text.to_s.length > 80
-        summary = CGI.escapeHTML(summary)
-        label = %Q(<a href="#{link}" target="_blank" rel="noopener">#{summary}</a>)
-        "- 出典##{chunk.id}: #{label}"
-      end.compact
-
-      return if lines.blank?
-
-      content = "参考: 先輩RAG出典\n" + lines.join("\n")
-      chat.messages.create!(role: :assistant, content: content)
-    rescue => e
-      Rails.logger.warn("[ChatStreaming] append_expert_sources_footer failed: #{e.class} #{e.message}")
     end
   end
 end
