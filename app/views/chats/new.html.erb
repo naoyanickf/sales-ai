@@ -8,6 +8,9 @@
               <div>
                 <h2 class="h5 mb-0">AI営業相談</h2>
               </div>
+              <% if prompt_debug_enabled? && action_name == "show" %>
+                <%= link_to "【開発用】Promptログ", chat_prompt_logs_path(@chat), class: "btn btn-outline-secondary btn-sm" %>
+              <% end %>
             </div>
           </div>
           <div class="card-body d-flex flex-column">
@@ -137,6 +140,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>    
   </div>
 </section>

@@ -1,17 +1,15 @@
-<% content_for :title, "#{@sales_expert.name} | ナレッジ検索プレビュー" %>
+<% content_for :title, "#{@sales_expert.name} | Geminiプレビュー" %>
 
 <div class="container py-4">
   <div class="mb-3">
     <%= link_to "← 製品詳細に戻る", product_path(@product, tab: "sales_experts", anchor: "sales-experts-pane"), class: "text-decoration-none" %>
   </div>
 
-  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
     <div>
-      <p class="text-uppercase text-muted small mb-1">ナレッジプレビュー</p>
+      <p class="text-uppercase text-muted small mb-1">Gemini プレビュー</p>
       <h1 class="h3 mb-2"><%= @sales_expert.name %></h1>
-      <p class="text-muted mb-0">
-        ExpertRag が検索に利用するチャンクを対象に、質問に対する応答候補を確認できます。
-      </p>
+      <p class="text-muted mb-0">先輩営業のナレッジに対して簡易的なクエリを実行し、Gemini File Search の応答を確認します。</p>
     </div>
     <% if @can_manage_products %>
       <div class="btn-group">
@@ -20,143 +18,51 @@
     <% end %>
   </div>
 
-  <div class="row g-4 mb-4">
-    <div class="col-md-4">
-      <div class="border rounded-3 p-3 bg-light h-100">
-        <p class="text-muted small mb-1">ナレッジファイル</p>
-        <p class="display-6 fw-bold mb-0"><%= @knowledge_count %></p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="border rounded-3 p-3 bg-light h-100">
-        <p class="text-muted small mb-1">チャンク数</p>
-        <p class="display-6 fw-bold mb-0"><%= @chunk_count %></p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="border rounded-3 p-3 bg-light h-100">
-        <p class="text-muted small mb-1">最新アップロード</p>
-        <% if @recent_knowledge.present? %>
-          <p class="fw-semibold mb-0"><%= @recent_knowledge.file_name %></p>
-          <p class="text-muted small mb-0"><%= l @recent_knowledge.created_at, format: :short %></p>
-        <% else %>
-          <p class="text-muted mb-0">まだナレッジが登録されていません</p>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <h2 class="h5 mb-3">質問を送信</h2>
+      <h2 class="h5 mb-3">クエリを送信</h2>
       <%= form_with url: preview_product_sales_expert_path(@product, @sales_expert), method: :get, local: true do %>
         <div class="mb-3">
-          <label for="expert-query-field" class="form-label">質問内容</label>
+          <label for="sales-expert-query-field" class="form-label">質問内容</label>
           <%= text_area_tag :query,
                             @query,
-                            id: "expert-query-field",
-                            rows: 4,
+                            id: "sales-expert-query-field",
                             class: "form-control",
-                            placeholder: "例: 医療業界向けの勝ちパターンを教えてください" %>
+                            rows: 4,
+                            placeholder: "先輩営業のナレッジについて質問を入力してください",
+                            required: false %>
         </div>
-        <%= submit_tag "ExpertRag で検索", class: "btn btn-primary" %>
+        <%= submit_tag "Gemini に問い合わせる",
+                        class: "btn btn-primary",
+                        disabled: !@gemini_available %>
+      <% end %>
+      <% unless @gemini_available %>
+        <div class="alert alert-warning mt-3 mb-0">
+          Gemini File Search を利用できないため、プレビューを実行できません。
+        </div>
       <% end %>
     </div>
   </div>
 
-  <% if @preview_error.present? %>
-    <div class="alert alert-danger">ナレッジ検索に失敗しました: <%= @preview_error %></div>
-  <% elsif @query.present? %>
-    <% if @results.any? %>
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h2 class="h5 mb-3">検索結果（<%= @results.size %>件）</h2>
-          <div class="d-flex flex-column gap-3">
-            <% @results.each_with_index do |hit, index| %>
-              <div class="border rounded-3 p-3">
-                <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="badge text-bg-primary">#<%= index + 1 %></span>
-                    <% if hit[:knowledge] %>
-                      <span class="fw-semibold"><%= hit[:knowledge].file_name %></span>
-                    <% else %>
-                      <span class="text-muted">関連ファイル情報なし</span>
-                    <% end %>
-                  </div>
-                  <div class="d-flex flex-wrap gap-2">
-                    <% if hit[:score] %>
-                      <span class="badge text-bg-light text-dark">BM25 <%= number_with_precision(hit[:score], precision: 3) %></span>
-                    <% end %>
-                    <% if hit[:rerank] %>
-                      <span class="badge text-bg-light text-dark">Embedding <%= number_with_precision(hit[:rerank], precision: 3) %></span>
-                    <% end %>
-                  </div>
-                </div>
-                <pre class="small mb-3"><%= hit[:text] %></pre>
-                <% if hit[:knowledge] %>
-                  <div class="d-flex flex-wrap gap-3 small text-muted">
-                    <span>アップロード: <%= l hit[:knowledge].created_at, format: :short %></span>
-                    <span>タイプ: <%= hit[:knowledge].content_type %></span>
-                    <% if hit[:knowledge].file.attached? %>
-                      <%= link_to "ファイルを開く",
-                                  rails_blob_path(hit[:knowledge].file, disposition: :inline),
-                                  class: "text-decoration-none",
-                                  target: "_blank",
-                                  rel: "noopener" %>
-                    <% end %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
+  <% if @gemini_error.present? %>
+    <div class="alert alert-danger">Gemini の呼び出しに失敗しました: <%= @gemini_error %></div>
+  <% elsif @gemini_result_text.present? %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Gemini 応答</h2>
+        <pre class="mb-0"><%= @gemini_result_text %></pre>
       </div>
-    <% else %>
-      <div class="alert alert-info">該当するチャンクが見つかりませんでした。</div>
-    <% end %>
-  <% else %>
-    <div class="alert alert-secondary">質問を入力して ExpertRag の挙動を確認してください。</div>
+    </div>
+  <% elsif @query.present? && @gemini_available %>
+    <div class="alert alert-info">Gemini からテキスト応答を取得できませんでした。</div>
   <% end %>
 
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="h5 mb-3">登録済みナレッジ</h2>
-      <% if @knowledge_count.positive? %>
-        <div class="list-group">
-          <% @expert_knowledges.each do |knowledge| %>
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between flex-wrap gap-3">
-                <div>
-                  <p class="fw-semibold mb-1"><%= knowledge.file_name %></p>
-                  <p class="text-muted small mb-1">
-                    <%= knowledge.content_type %>・<%= l knowledge.created_at, format: :short %>
-                  </p>
-                  <div class="d-flex flex-wrap gap-2">
-                    <%= transcription_status_badge(knowledge) %>
-                    <% if knowledge.transcription.present? %>
-                      <span class="badge text-bg-light text-dark">書き起こし済み</span>
-                    <% end %>
-                  </div>
-                </div>
-                <div class="d-flex gap-2">
-                  <% if knowledge.file.attached? %>
-                    <%= link_to "ダウンロード",
-                                rails_blob_path(knowledge.file, disposition: :attachment),
-                                class: "btn btn-sm btn-outline-primary" %>
-                  <% end %>
-                  <% if knowledge.transcription.present? %>
-                    <%= link_to "書き起こしを開く",
-                                transcription_path(knowledge.transcription),
-                                class: "btn btn-sm btn-outline-secondary" %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-muted mb-0">登録済みのナレッジがありません。</p>
-      <% end %>
+  <% if @gemini_response.present? %>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 mb-3">Raw JSON</h2>
+        <pre class="small text-body-secondary mb-0"><%= JSON.pretty_generate(@gemini_response) %></pre>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>

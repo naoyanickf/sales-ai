@@ -7,8 +7,7 @@ class ChatPromptBuilder
   PRODUCT_BULLET_LIMIT = 5
   PRODUCT_BULLET_TRUNCATE = 280
   EXPERT_TEXT_LIMIT = 2_000
-  EXPERT_BULLET_LIMIT = 5
-  EXPERT_BULLET_TRUNCATE = 240
+  EXPERT_RESPONSE_GROUP_LIMIT = 5
   HISTORY_PLACEHOLDER = "（まだ会話履歴はありません）".freeze
   PRODUCT_PLACEHOLDER = "製品RAGからの情報はありません。".freeze
   EXPERT_PLACEHOLDER = "参照可能な先輩営業のトークデータがありません。".freeze
@@ -29,18 +28,22 @@ class ChatPromptBuilder
 
     intent = classify_intent
     product_context = needs_product_context?(intent) ? fetch_product_context : { text: nil, sources: [] }
-    expert_context = needs_expert_context?(intent) ? fetch_expert_context : { text: nil, sources: [], name: sales_expert_name }
+    expert_context = needs_expert_context?(intent) ? fetch_expert_context : { text: nil, sources: [], name: sales_expert_name }    
 
     log_prompt_metrics(intent: intent, product_context: product_context, expert_context: expert_context)
 
-    [
+    prompt_messages = [
       { role: "system", content: base_system_prompt },
       { role: "system", content: context_message(product_context[:text], expert_context: expert_context) },
       { role: "user", content: query }
     ]
+    persist_prompt(prompt_messages)
+    prompt_messages
   rescue StandardError => e
     logger.error("[ChatPromptBuilder] Failed to build prompt for Chat##{chat&.id}: #{e.class} #{e.message}")
-    fallback_payload
+    payload = fallback_payload
+    persist_prompt(payload)
+    payload
   end
 
   private
@@ -152,11 +155,13 @@ class ChatPromptBuilder
 
   def base_system_prompt
     <<~PROMPT.squish
-      あなたは礼儀正しく信頼できるB2B営業の相談相手です。あなた自身が営業するのではなく、悩みを相談してきた営業担当が顧客に対して効果的に提案できるよう支援してください。
+      あなたは礼儀正しく信頼できるB2B営業の相談アシスタントです。あなた自身が営業するのではなく、悩みを相談してきた営業担当が顧客に対して効果的に提案できるよう支援してください。
       事実ベースで回答し、
       - 推測は避け、根拠のない数値は出さない
       - 不明点は率直に伝える
       - 同僚や顧客を尊重した敬語で回答する
+      - あなたの言葉を聞いた人が前向きな気持ちになるよう努める
+      - あなたの言葉を聞いた人の行動を促すよう努める
     PROMPT
   end
 
@@ -165,10 +170,10 @@ class ChatPromptBuilder
     expert_name = expert_context[:name].presence || "先輩営業未指定"
     expert_section = expert_context[:text].presence || EXPERT_PLACEHOLDER
     <<~CONTEXT.strip
-      ## Product Knowledge
+      ## 製品情報
       #{product_section}
 
-      ## Expert Advice (#{expert_name})
+      ## 先輩営業のトーク履歴 (#{expert_name})
       #{expert_section}
 
       ## 会話履歴
@@ -177,10 +182,12 @@ class ChatPromptBuilder
       ユーザーからの最新相談:
       #{query}
 
-      回答指針:
+      # 回答指針:
       1. 相談の意図を要約してから助言する
-      2. 製品情報を参照した箇所は簡潔に根拠を示す
-      3. 次のアクション案を1～2個提示する
+      2. 相談の内容に応じて、製品情報や先輩営業のトーク履歴を適宜参照し、適切な回答を行う。必要なく参照しないこと。
+      3. 製品情報を参照した箇所は簡潔に根拠を示す
+      4. 先輩営業のトーク履歴を参照した箇所は時系列、話者名、会話内容を省略せず、回答の末尾に示す
+      5. 一般的な話などは求められていない場合しない
     CONTEXT
   end
 
@@ -205,6 +212,14 @@ class ChatPromptBuilder
 
   def fallback_payload
     Message.for_openai(messages)
+  end
+
+  def persist_prompt(payload)
+    return if chat.nil? || payload.blank?
+
+    chat.store_prompt_payload!(payload)
+  rescue => e
+    logger.warn("[ChatPromptBuilder] Failed to persist prompt for Chat##{chat&.id}: #{e.class} #{e.message}")
   end
 
   class ProductContextFetcher
@@ -278,48 +293,79 @@ class ChatPromptBuilder
   end
 
   class ExpertContextFetcher
+    PROMPT_TEMPLATE = <<~PROMPT.freeze
+      次の文章は商談の記録です。「%{query}」に関して話している箇所を正確に抜き出してください。
+      複数あればすべて列挙し、抜き出す際には会話の前後も含めてください。
+      それぞれの抜粋には必ず以下を含めてください:
+      - 時系列（例: 00:10-00:25）
+      - 話者
+      - 内容（実際の発話をそのまま引用する。省略や要約をしない）
+    PROMPT
+
     def initialize(sales_expert, logger:)
       @sales_expert = sales_expert
       @logger = logger
     end
 
     def fetch(query)
-      return { text: nil, sources: [], name: sales_expert_name } if sales_expert.blank? || query.to_s.strip.empty?
+      normalized_query = query.to_s.squish
+      return empty_response if sales_expert.blank? || normalized_query.blank?
 
-      hits = ExpertRag.fetch(sales_expert: sales_expert, query: query, limit: EXPERT_BULLET_LIMIT)
-      return { text: nil, sources: [], name: sales_expert_name } if hits.empty?
+      response = sales_expert.query_gemini_rag(prompt_for(normalized_query))
+      text = summarize(response)
+      sources = extract_sources(response)
 
-      joined = hits.map { |h| h[:text].to_s.squish }.reject(&:blank?)
-      text = compress_text(joined.join("\n\n"))
-      sources = hits.map { |h| "chunk##{h[:id]}" }
       { text: text, sources: sources, name: sales_expert_name }
     rescue StandardError => e
       logger.warn("[ChatPromptBuilder] Expert context fetch failed for SalesExpert##{sales_expert&.id}: #{e.class} #{e.message}")
-      { text: nil, sources: [], name: sales_expert_name }
+      empty_response
     end
 
     private
 
     attr_reader :sales_expert, :logger
 
+    def prompt_for(normalized_query)
+      format(PROMPT_TEMPLATE, query: normalized_query)
+    end
+
+    def summarize(response)
+      raw_text = extract_text(response)
+      return if raw_text.blank?
+
+      normalized = raw_text.to_s.strip
+      return if normalized.blank?
+
+      grouped = normalized.split(/\n{2,}/).reject(&:blank?).first(EXPERT_RESPONSE_GROUP_LIMIT)
+      grouped.join("\n\n")[0, EXPERT_TEXT_LIMIT]
+    end
+
+    def extract_text(response)
+      candidates = Array(response["candidates"])
+      parts = candidates.flat_map { |candidate| Array(candidate.dig("content", "parts")) }
+      texts = parts.map { |part| part["text"].to_s }.reject(&:blank?)
+      texts.join("\n\n")
+    end
+
+    def extract_sources(response)
+      Array(response["candidates"]).flat_map.with_index do |candidate, c_index|
+        metadata = candidate["groundingMetadata"] || {}
+        chunks = Array(metadata["groundingChunks"])
+        chunks.map.with_index do |chunk, index|
+          chunk["id"].presence ||
+            chunk.dig("retrievedContext", "title").presence ||
+            chunk.dig("retrievedContext", "fileSearchStore").presence ||
+            "candidate#{c_index}_chunk#{index}"
+        end
+      end.compact.uniq
+    end
+
     def sales_expert_name
       sales_expert&.name.to_s
     end
 
-    def compress_text(text)
-      normalized = text.to_s.strip
-      return if normalized.blank?
-
-      paragraphs = normalized.split(/\n{2,}/).map(&:squish).reject(&:blank?)
-      bullets = paragraphs.first(EXPERT_BULLET_LIMIT).map do |section|
-        "- #{truncate(section, EXPERT_BULLET_TRUNCATE)}"
-      end
-      bullets.join("\n")[0, EXPERT_TEXT_LIMIT]
-    end
-
-    def truncate(text, limit)
-      return text if text.length <= limit
-      "#{text[0, limit]}…"
+    def empty_response
+      { text: nil, sources: [], name: sales_expert_name }
     end
   end
 end

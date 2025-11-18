@@ -10,6 +10,7 @@ class ExpertKnowledge < ApplicationRecord
   has_one :transcription_job, dependent: :destroy
   has_one :transcription, dependent: :destroy
   has_many :knowledge_chunks, dependent: :destroy
+  has_one :expert_knowledge_file, dependent: :destroy
 
   validates :content_type, presence: true, length: { maximum: 40 }
   validates :file_name, presence: true

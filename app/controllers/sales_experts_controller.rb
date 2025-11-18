@@ -39,27 +39,23 @@ class SalesExpertsController < ApplicationController
   def preview
     @can_manage_products = current_workspace_membership&.admin?
     @query = params[:query].to_s.strip
-    @results = []
-    @preview_error = nil
-    @expert_knowledges = @sales_expert.expert_knowledges.includes(:transcription, :uploader, file_attachment: :blob)
-    @knowledge_count = @expert_knowledges.size
-    knowledge_ids = @expert_knowledges.map(&:id)
-    @chunk_count = knowledge_ids.empty? ? 0 : KnowledgeChunk.where(expert_knowledge_id: knowledge_ids).count
-    @recent_knowledge = @expert_knowledges.first
+    @gemini_available = @sales_expert.gemini_store_available? && GeminiFileSearchClient.configured?
+    @gemini_response = nil
+    @gemini_result_text = nil
+    @gemini_error = nil
 
     return if @query.blank?
 
+    unless @gemini_available
+      @gemini_error = "Gemini File Search が利用できません。"
+      return
+    end
+
     begin
-      hits = ExpertRag.fetch(sales_expert: @sales_expert, query: @query, limit: 5)
-      chunk_map = KnowledgeChunk.includes(:expert_knowledge).where(id: hits.map { |h| h[:id] }).index_by(&:id)
-      @results = hits.map do |hit|
-        chunk = chunk_map[hit[:id]]
-        knowledge = chunk&.expert_knowledge
-        hit.merge(chunk: chunk, knowledge: knowledge)
-      end
+      @gemini_response = @sales_expert.query_gemini_rag(@query)
+      @gemini_result_text = extract_preview_text(@gemini_response)
     rescue StandardError => e
-      Rails.logger.error("[SalesExpertPreview] Failed ExpertRag fetch for SalesExpert##{@sales_expert.id}: #{e.class} #{e.message}")
-      @preview_error = e.message
+      @gemini_error = e.message
     end
   end
 
@@ -75,5 +71,19 @@ class SalesExpertsController < ApplicationController
 
   def sales_expert_params
     params.require(:sales_expert).permit(:name, :description, :is_active)
+  end
+
+  def extract_preview_text(response)
+    return if response.blank?
+
+    hash_response = response.respond_to?(:to_h) ? response.to_h : response
+    candidates = hash_response["candidates"] || hash_response[:candidates]
+    parts = candidates&.first&.dig("content", "parts") || candidates&.first&.dig(:content, :parts)
+    return if parts.blank?
+
+    texts = parts.filter_map { |part| part["text"] || part[:text] }.map(&:to_s).map(&:strip).reject(&:blank?)
+    texts.join("\n\n").presence
+  rescue StandardError
+    nil
   end
 end

@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :ensure_workspace!
   before_action :prepare_sidebar_context, if: :user_signed_in?
 
-  helper_method :sidebar_memberships, :sidebar_recent_chats, :current_workspace, :current_workspace_membership
+  helper_method :sidebar_memberships, :sidebar_recent_chats, :current_workspace, :current_workspace_membership, :prompt_debug_enabled?
 
   private
 
@@ -91,5 +91,9 @@ class ApplicationController < ActionController::Base
     return if current_workspace_membership&.admin?
 
     redirect_to authenticated_root_path, alert: "ワークスペースの管理者のみ操作できます。"
+  end
+
+  def prompt_debug_enabled?
+    Rails.env.development? || ENV["PROMPT_DEBUG"].present?
   end
 end
