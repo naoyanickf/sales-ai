@@ -80,9 +80,8 @@ GEM
       activesupport (>= 6.1, < 8.2)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    anthropic (0.1.0)
-      faraday (>= 1)
-      faraday-multipart (>= 1)
+    anthropic (1.15.1)
+      connection_pool
     ast (2.4.3)
     aws-eventstream (1.3.2)
     aws-partitions (1.1109.0)
@@ -455,7 +454,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid
-  anthropic (~> 0.1.0)
+  anthropic (~> 1.15.1)
   aws-sdk-bedrockagent (~> 1.0)
   aws-sdk-bedrockagentruntime (~> 1.0)
   aws-sdk-s3 (~> 1.145)
