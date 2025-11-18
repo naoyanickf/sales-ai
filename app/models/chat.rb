@@ -5,6 +5,7 @@ class Chat < ApplicationRecord
   belongs_to :sales_expert, optional: true
 
   has_many :messages, -> { order(:created_at, :id) }, dependent: :destroy
+  has_many :prompt_logs, class_name: "ChatPromptLog", dependent: :destroy
 
   before_validation :assign_uuid, on: :create
   before_validation :assign_product_from_sales_expert
@@ -38,6 +39,51 @@ class Chat < ApplicationRecord
 
   def to_param
     uuid
+  end
+
+  def store_prompt_payload!(payload)
+    return if payload.nil?
+
+    snapshot = build_prompt_log_snapshot(payload)
+    serialized =
+      case snapshot
+      when String then snapshot
+      else
+        JSON.pretty_generate(snapshot)
+      end
+    
+    prompt_logs.create!(payload: serialized)
+  rescue StandardError => e
+    Rails.logger.warn("[Chat] Failed to store prompt payload for Chat##{id}: #{e.class} #{e.message}")
+  end
+
+  def build_prompt_log_snapshot(payload)
+    history_entries = messages.order(:created_at, :id).each_with_index.map do |message, index|
+      {
+        order: index + 1,
+        role: message.role,
+        role_label: prompt_history_label_for(message),
+        timestamp: message.created_at&.iso8601,
+        display_timestamp: message.created_at ? I18n.l(message.created_at, format: :long) : nil,
+        content: message.content.to_s
+      }
+    end
+
+    {
+      prompt: payload,
+      history: history_entries
+    }
+  end
+
+  def prompt_history_label_for(message)
+    case message.role.to_s
+    when "user"
+      "User"
+    when "assistant"
+      "Sales AI"
+    else
+      message.role.to_s.titleize
+    end
   end
 
   private

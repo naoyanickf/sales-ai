@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_15_111000) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_18_103000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,8 +40,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_111000) do
     t.index ["blob_id"], name: "index_active_storage_variant_records_on_blob_id"
   end
 
+  create_table "chat_prompt_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.text "payload", size: :medium
+    t.datetime "updated_at", null: false
+    t.index ["chat_id", "created_at"], name: "index_chat_prompt_logs_on_chat_id_and_created_at"
+    t.index ["chat_id"], name: "index_chat_prompt_logs_on_chat_id"
+  end
+
   create_table "chats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.text "last_prompt_payload", size: :medium
     t.bigint "product_id"
     t.bigint "sales_expert_id"
     t.string "title"
@@ -395,6 +405,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_111000) do
     t.index ["uuid"], name: "index_workspaces_on_uuid", unique: true
   end
 
+  add_foreign_key "chat_prompt_logs", "chats"
   add_foreign_key "chats", "products"
   add_foreign_key "chats", "sales_experts"
   add_foreign_key "chats", "users"

@@ -32,14 +32,18 @@ class ChatPromptBuilder
 
     log_prompt_metrics(intent: intent, product_context: product_context, expert_context: expert_context)
 
-    [
+    prompt_messages = [
       { role: "system", content: base_system_prompt },
       { role: "system", content: context_message(product_context[:text], expert_context: expert_context) },
       { role: "user", content: query }
     ]
+    persist_prompt(prompt_messages)
+    prompt_messages
   rescue StandardError => e
     logger.error("[ChatPromptBuilder] Failed to build prompt for Chat##{chat&.id}: #{e.class} #{e.message}")
-    fallback_payload
+    payload = fallback_payload
+    persist_prompt(payload)
+    payload
   end
 
   private
@@ -178,9 +182,9 @@ class ChatPromptBuilder
       ユーザーからの最新相談:
       #{query}
 
-      回答指針:
+      # 回答指針:
       1. 相談の意図を要約してから助言する
-      2. 相談の内容に応じて、製品情報や先輩営業のトーク履歴を適宜参照し、適切な回答を行う
+      2. 相談の内容に応じて、製品情報や先輩営業のトーク履歴を適宜参照し、適切な回答を行う。必要なく参照しないこと。
       3. 製品情報を参照した箇所は簡潔に根拠を示す
       4. 先輩営業のトーク履歴を参照した箇所は時系列、話者名、会話内容を省略せず、回答の末尾に示す
       5. 一般的な話などは求められていない場合しない
@@ -208,6 +212,14 @@ class ChatPromptBuilder
 
   def fallback_payload
     Message.for_openai(messages)
+  end
+
+  def persist_prompt(payload)
+    return if chat.nil? || payload.blank?
+
+    chat.store_prompt_payload!(payload)
+  rescue => e
+    logger.warn("[ChatPromptBuilder] Failed to persist prompt for Chat##{chat&.id}: #{e.class} #{e.message}")
   end
 
   class ProductContextFetcher
