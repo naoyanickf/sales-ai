@@ -69,7 +69,7 @@ gem "image_processing", "~> 1.2"
 
 # AWS/AI integrations (planned)
 gem 'aws-sdk-transcribeservice', '~> 1.0', require: false
-gem 'aws-sdk-bedrockagent', '~> 1.0', require: false
+gem 'aws-sdk-bedrockagent', '~> 1.67', require: false
 gem 'aws-sdk-bedrockagentruntime', '~> 1.0', require: false
 gem 'anthropic', '~> 0.1.0', require: false
 
