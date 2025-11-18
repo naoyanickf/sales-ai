@@ -1,6 +1,8 @@
 <%= turbo_frame_tag dom_id(chat, :context) do %>
   <% all_experts = available_sales_experts || SalesExpert.none %>
   <% experts_payload = all_experts.map { |expert| { id: expert.id, name: expert.name, product_id: expert.product_id } } %>
+  <% allow_product_switch = local_assigns.fetch(:allow_product_switch, true) %>
+  <% chat_product = local_assigns[:chat_product] || chat.product %>
   <div class="chat-context-inline bg-light border rounded-3 p-3"
        data-chat-context="true"
        data-chat-experts="<%= experts_payload.to_json %>">
@@ -8,14 +10,24 @@
       <div class="row g-3 align-items-end">
         <div class="col-12 col-lg-6">
           <%= chat_form.label :product_id, "製品 (必須)", class: "form-label small fw-semibold text-muted mb-1" %>
-          <%= chat_form.collection_select :product_id,
-                                          products,
-                                          :id,
-                                          :name,
-                                          { include_blank: "選択してください" },
-                                          class: "form-select form-select-sm",
-                                          required: true,
-                                          data: { chatContextProduct: true } %>
+          <% if allow_product_switch %>
+            <%= chat_form.collection_select :product_id,
+                                            products,
+                                            :id,
+                                            :name,
+                                            { include_blank: "選択してください" },
+                                            class: "form-select form-select-sm",
+                                            required: true,
+                                            data: { chatContextProduct: true } %>
+          <% else %>
+            <div class="input-group input-group-sm">
+              <%= text_field_tag nil,
+                                 chat_product&.name || "未設定",
+                                 class: "form-control form-control-sm bg-light",
+                                 disabled: true %>
+            </div>
+            <%= chat_form.hidden_field :product_id %>
+          <% end %>
         </div>
 
         <% blank_label =

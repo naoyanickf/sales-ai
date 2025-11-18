@@ -1,3 +1,4 @@
+<% allow_product_switch = local_assigns.fetch(:allow_product_switch, true) %>
 <%= turbo_frame_tag dom_id(chat, :message_form) do %>
   <% if chat.messages.exists? %>
     <%= form_with(model: [chat, message],
@@ -24,7 +25,9 @@
                    chat: chat,
                    products: products,
                    sales_experts: sales_experts,
-                   available_sales_experts: available_sales_experts %>
+                   available_sales_experts: available_sales_experts,
+                   allow_product_switch: allow_product_switch,
+                   chat_product: chat.product %>
       </div>
 
       <% if message.errors[:base].present? %>

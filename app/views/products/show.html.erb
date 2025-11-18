@@ -15,6 +15,16 @@
   else
     documents_tab_active = true
     sales_experts_tab_active = false
+
+    requested_tab = params[:tab].presence
+    case requested_tab
+    when "sales_experts"
+      documents_tab_active = false
+      sales_experts_tab_active = true
+    when "documents"
+      documents_tab_active = true
+      sales_experts_tab_active = false
+    end
   end
 
   documents_allowed_formats = ProductDocument::ALLOWED_EXTENSIONS.map { ".#{_1.upcase}" }.join(", ")
@@ -39,11 +49,12 @@
         <%= link_to "Geminiプレビュー", preview_product_path(@product), class: "btn btn-primary" %>
       <% end %>
       <% if @can_manage_products %>
-        <div class="btn-group">
+        <div class="d-flex flex-wrap gap-2 justify-content-end">
           <%= link_to "編集", edit_product_path(@product), class: "btn btn-outline-secondary" %>
-          <%= button_to "削除", product_path(@product), method: :delete,
-                        data: { turbo_confirm: "この製品を削除しますか？" },
-                        class: "btn btn-outline-danger" %>
+          <%= link_to "削除",
+                      product_path(@product),
+                      class: "btn btn-outline-danger",
+                      data: { turbo_method: :delete, turbo_confirm: "この製品を削除しますか？" } %>
         </div>
       <% end %>
     </div>
@@ -142,14 +153,7 @@
                           <h3 class="h6 mb-3">資料をアップロード</h3>
                           <%= form_with model: [@product, @product_document], html: { multipart: true } do |form| %>
                             <%= render "shared/form_errors", object: @product_document %>
-                            <div class="mb-3">
-                              <%= form.label :document_name, "資料名", class: "form-label" %>
-                              <%= form.text_field :document_name, class: "form-control", required: true %>
-                            </div>
-                            <div class="mb-3">
-                              <%= form.label :document_type, "種類", class: "form-label" %>
-                              <%= form.text_field :document_type, class: "form-control" %>
-                            </div>
+                            
                             <div class="mb-3">
                               <%= form.label :file, "ファイル", class: "form-label" %>
                               <%= form.file_field :file,
@@ -157,9 +161,13 @@
                                                   required: true,
                                                   direct_upload: true %>
                               <div class="form-text">
-                                対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %>
+                                対応形式: <%= documents_allowed_formats %> ／ 上限サイズ: <%= documents_max_size %> ／ 資料名はアップロードしたファイル名がそのまま利用されます。
                               </div>
                               <div class="direct-upload-status list-group small mt-2 mb-3 d-none"></div>
+                            </div>
+                            <div class="mb-3">
+                              <%= form.label :document_type, "説明（任意）", class: "form-label" %>
+                              <%= form.text_field :document_type, class: "form-control" %>
                             </div>
                             <div class="text-end">
                               <%= form.submit "アップロード", class: "btn btn-primary" %>
@@ -178,12 +186,16 @@
                       <% @product_documents.each do |document| %>
                         <div class="list-group-item d-flex justify-content-between align-items-start">
                           <div>
-                            <p class="fw-semibold mb-1"><%= document.document_name %></p>
+                            <p class="fw-semibold mb-1">
+                              <%= document.document_name %>
+                            </p>
                             <p class="mb-0 text-muted small">
-                              <%= document.document_type.presence || "未分類" %>・
+                              <%= document.document_type.presence%>
+                            </p>
+                            <p class="mb-0 text-muted small">
                               <% if document.file.attached? %>
-                                <%= document.file.filename.to_s %>（<%= number_to_human_size(document.file.byte_size) %>）・
-                              <% end %>
+                                <%= number_to_human_size(document.file.byte_size) %>・
+                              <% end %>                                                          
                               <%= l document.created_at, format: :short %>・
                               <%= document.uploader.name %>
                             </p>
@@ -292,6 +304,11 @@
                                 登録日: <%= l expert.created_at, format: :short %>
                               </p>
                               <p class="mb-0"><%= expert.description.presence || "自己紹介文はまだありません。" %></p>
+                              <div class="d-flex flex-wrap gap-2 mt-3">
+                                <%= link_to "ナレッジ検索プレビュー",
+                                            preview_product_sales_expert_path(@product, expert),
+                                            class: "btn btn-sm btn-outline-primary" %>
+                              </div>
                             </div>
                             <% if @can_manage_products %>
                               <div class="d-flex gap-2">

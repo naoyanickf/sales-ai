@@ -6,6 +6,7 @@ class MessagesController < ApplicationController
   before_action :load_chat_form_options, only: :create
 
   def create
+    @allow_chat_product_switch = false
     @message = @chat.messages.build(message_params.merge(role: :user))
 
     if @chat.messages.none?

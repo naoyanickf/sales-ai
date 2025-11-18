@@ -1,0 +1,20 @@
+<%
+  flash_messages = flash.to_a
+  wrapper_classes = ["flash-messages-wrapper", (wrapper_class if defined?(wrapper_class))]
+  container_classes = wrapper_classes.compact.join(" ").presence || "flash-messages-wrapper"
+%>
+
+<% if flash_messages.any? %>
+  <div class="<%= container_classes %> px-3 px-md-4 pt-3">
+    <% flash_messages.each do |type, message| %>
+      <% bootstrap_class = case type.to_sym
+         when :notice then "alert-success"
+         when :alert then "alert-danger"
+         else "alert-secondary"
+         end %>
+      <div class="alert <%= bootstrap_class %> shadow-sm border-0 mb-3" role="alert">
+        <%= message %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

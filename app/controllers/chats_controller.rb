@@ -9,11 +9,13 @@ class ChatsController < ApplicationController
   end
 
   def new
+    @allow_chat_product_switch = true
     preload_context
   end
 
   def show
     session[:current_chat_id] = @chat.id
+    @allow_chat_product_switch = false
     preload_context
     render :new
   end
@@ -51,6 +53,7 @@ class ChatsController < ApplicationController
   end
 
   def update
+    @allow_chat_product_switch = false
     if @chat.update(chat_params)
       preload_context
       respond_to do |format|
@@ -97,6 +100,25 @@ class ChatsController < ApplicationController
     @products = load_chat_products
     @sales_experts = load_sales_experts_for(@chat.product_id)
     @available_sales_experts = load_workspace_sales_experts
+    @chat_product = @chat&.product
+    @chat_product_documents =
+      if @chat_product.present?
+        @chat_product.product_documents
+                     .with_attached_file
+                     .includes(:uploader)
+                     .order(created_at: :desc)
+                     .limit(5)
+      else
+        ProductDocument.none
+      end
+    @chat_product_sales_experts =
+      if @chat_product.present?
+        @chat_product.sales_experts
+                     .includes(:expert_knowledges)
+                     .order(:name)
+      else
+        SalesExpert.none
+      end
   end
 
   def validate_initial_chat_form

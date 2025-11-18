@@ -7,6 +7,8 @@ class ProductDocument < ApplicationRecord
 
   has_one_attached :file, dependent: :purge_later
 
+  before_validation :assign_document_name_from_file, on: :create
+
   validates :document_name, presence: true, length: { maximum: 160 }
   validate :file_presence
   validate :file_type_allowlist
@@ -76,5 +78,12 @@ class ProductDocument < ApplicationRecord
 
     errors.add(:base, "Gemini File Search からの削除に失敗しました: #{e.message}")
     throw :abort
+  end
+
+  def assign_document_name_from_file
+    return if document_name.present?
+    return unless file.attached?
+
+    self.document_name = file.filename.to_s
   end
 end
