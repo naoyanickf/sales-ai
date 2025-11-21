@@ -9,7 +9,7 @@ class ProductDocument < ApplicationRecord
 
   before_validation :assign_document_name_from_file, on: :create
 
-  validates :document_name, presence: true, length: { maximum: 160 }
+  validates :document_name, presence: true, length: { maximum: 160 }, uniqueness: { scope: :product_id, case_sensitive: false, message: "はこの製品で既に使用されています。資料名を変更してください。" }
   validate :file_presence
   validate :file_type_allowlist
   validate :file_size_within_limit
