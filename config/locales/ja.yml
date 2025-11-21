@@ -13,3 +13,5 @@ ja:
         password_confirmation: "パスワード（確認）"
         current_password: "現在のパスワード"
         remember_me: "ログイン情報を保存"
+      product_document:
+        document_name: "資料名"
