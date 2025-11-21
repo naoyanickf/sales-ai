@@ -7,7 +7,7 @@ class WorkspaceInvitationMailer < ApplicationMailer
 
     mail(
       to: @invitation.email,
-      subject: "[Sales AI] #{@workspace.name} への招待"
+      subject: "[営業太郎] #{@workspace.name} への招待"
     )
   end
 end

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Sales Ai" %></title>
+    <title><%= content_for(:title) || "営業太郎" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -27,7 +27,7 @@
     <% unless user_signed_in? %>
       <header class="border-bottom bg-white">
         <div class="container d-flex flex-wrap align-items-center py-3 gap-3">
-          <%= link_to "Sales AI", root_path, class: "navbar-brand fs-4 fw-semibold text-decoration-none text-dark" %>
+          <%= link_to "営業太郎", root_path, class: "navbar-brand fs-4 fw-semibold text-decoration-none text-dark" %>
           <div class="ms-auto d-flex gap-2">
             <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-primary" %>
             <%= link_to "無料登録", new_user_registration_path, class: "btn btn-primary" %>
@@ -48,7 +48,7 @@
     <% unless user_signed_in? %>
       <footer class="bg-white border-top">
         <div class="container py-3 text-center text-body-secondary small">
-          &copy; <%= Time.current.year %> Sales AI. All rights reserved.
+          &copy; <%= Time.current.year %> 営業太郎. All rights reserved.
         </div>
       </footer>
     <% end %>

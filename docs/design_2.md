@@ -26,7 +26,7 @@
 3. **プロンプト生成**
    - `SystemPromptBuilder` で一貫した敬語・事実ベース指針を定義。
    - `ContextAssembler` が `## Product Knowledge` と `## Expert Advice` の 2 セクションを構築。未取得時はそれぞれ既定の欠損メッセージを入れる。
-   - `HistoryFormatter` が既存履歴を `User`/`Sales AI` 表記へ正規化。
+   - `HistoryFormatter` が既存履歴を `User`/`営業太郎` 表記へ正規化。
    - Expert 指定が必須だが `sales_expert_id` が無い場合は、最新ユーザー発話の直前に「希望する先輩営業を指定してください」といったユーザー向けフラグメントを埋め込む。
 4. **メッセージ配列返却**
    - `[system, assistant_context, history..., latest_user]` 構成。context メッセージ内に Product / Expert / 会話履歴 / 最新相談 / 回答指針を含める。

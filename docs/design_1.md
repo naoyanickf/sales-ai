@@ -28,7 +28,7 @@
 3. **プロンプト生成**
    - `SystemPromptBuilder` で固定の口調・制約を定義。
    - `ContextAssembler` が取得済み RAG テキストを `## Product Knowledge` セクションに整形。
-   - 既存 `messages` を `HistoryFormatter` で role 変換（user→`User`, assistant→`Sales AI` 等）。
+   - 既存 `messages` を `HistoryFormatter` で role 変換（user→`User`, assistant→`営業太郎` 等）。
 4. **最終メッセージ配列**
    - `[system, context, history..., latest_user]` で返却。context は assistant role でも systemでも可だが、OpenAI GPT-4o 系なら system 2段構成で安定。
 
