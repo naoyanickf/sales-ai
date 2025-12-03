@@ -64,7 +64,7 @@ gem 'rails-i18n'
 gem 'devise-i18n-views'
 gem "acts_as_paranoid"
 gem 'dotenv-rails'
-gem "aws-sdk-s3", "~> 1.145", require: false
+gem "aws-sdk-s3", "~> 1.206", require: false
 gem "image_processing", "~> 1.2"
 
 # AWS/AI integrations (planned)
