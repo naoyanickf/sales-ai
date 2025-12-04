@@ -76,6 +76,6 @@ gem 'anthropic', '~> 0.1.0', require: false
 gem 'mime-types', '~> 3.5'
 gem 'pry'
 gem "turbo-rails"
-gem "ruby-openai", "~> 7.0.1"
+gem "ruby-openai", "~> 8.3.0"
 gem "kramdown", "~> 2.4"
 gem "kramdown-parser-gfm", "~> 1.1"
